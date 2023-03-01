@@ -1,0 +1,159 @@
+<div class="modal-header">
+  <h5 class="modal-title">Reporte de Celula!</h5>
+  <button type="button" class="btn btn-warning" [routerLink]="['/listcelula']">
+    Regresar
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <div class="container mt-4 ">
+          <form [formGroup]="reportecelulaForm" (ngSubmit)="reportar()" class="w-100 d-block form-group">
+
+            <div class="input-group mb-3">
+              <input type="text" formControlName="temaCelula" class="form-control border-end-0"
+                placeholder="Nombre del tema" required>
+              <span class="input-group-text bg-transparent">
+              </span>
+            </div>
+
+            <div class="input-group mb-3">
+              <input type="text" formControlName="citaCelula" placeholder="Cita biblica"
+                class="form-control border-end-0" required>
+              <span class="input-group-text bg-transparent">
+              </span>
+            </div>
+
+            <div class="input-group mb-3">
+              <input type="number" formControlName="ofrendaCelula" class="form-control border-end-0"
+                placeholder="Valor de la ofrenda" disable required>
+              <span class="input-group-text bg-transparent">
+              </span>
+            </div>
+            <div class="input-group mb-3">
+              <input type="date" formControlName="fechaCelula" class="form-control border-end-0"
+                placeholder="Fecha de celula">
+              <span class="input-group-text bg-transparent">
+              </span>
+            </div>
+            <div class="input-group mb-3">
+              <select class="form-select" formControlName="idMedioCelula" placeholder="Red">
+                <option value="">Elige el medio...</option>
+                <option *ngFor="let itemt of medios " [ngValue]="itemt.idMedioCelula">{{itemt.medio}}</option>
+              </select>
+            </div>
+            <hr>
+
+            <div class="alert alert-info my-4" *ngIf="discipuloscelula?.length == 0">
+              No hay discipulos asignados para la celula. Debe agregar al menos uno!
+            </div>
+            <div *ngIf="discipuloscelula?.length > 0">
+              <h5 class="text-success">Asistentes a la celula</h5>
+              <table class="table table-striped table-hover table-sm">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre Completo </th>
+                    <th>Asistio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr formArrayName="asistecheck" *ngFor="let itemd of discipuloscelula let i= index"
+                    [ngStyle]="{'background-color': itemd.idMiembro.estado =='Activo' ? 'white' : 'red' }">
+                    <td>{{i+1}}</td>
+                    <td>{{itemd.idMiembro.nomCompleto | uppercase}}</td>
+                    <td>
+                      <input type="checkbox" [formControlName]="i" [value]="itemd.idMiembro.idMiembro">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button (click)="reportar()" type="button" class="btn btn-success" data-dismiss="modal">Reportar
+                Celula</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <div class="col-sm">
+        <ul *ngIf="celula" class="list-group text-dark mb-3">
+          <li class="list-group-item active"><img *ngIf="celula.idMiembroLider?.imgPerfil"
+              src="http://localhost:8080/api/uploads/img/{{celula.idMiembroLider.imgPerfil}}"
+              alt="{{celula.idMiembroLider.imgPerfil}}" class="img-thumbnail rounded" height="64"
+              width="64">{{celula.idMiembroLider.nomCompleto}}</li>
+          <li class="list-group-item">Anfitrion: {{celula.nombreAnfitrion}}</li>
+          <li class="list-group-item">Fecha de apertura: {{celula.fecApertura | date:"longDate"}}</li>
+          <li class="list-group-item">Red de la celula: {{celula.idRed.nomRed}}</li>
+          <li class="list-group-item">Dirección: {{celula.direccion}}</li>
+          <li class="list-group-item">Barrio de la celula: {{celula.barrio}}</li>
+          <li class="list-group-item">Dia de la celula: {{celula.diaCelula}}</li>
+          <li class="list-group-item">Hora de la celula: {{celula.horaCelula }}</li>
+        </ul>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!--
+<app-temascelula [idCelula]="this.celula.idCelula"></app-temascelula>
+-->
+
+<div class="alert alert-info my-4" *ngIf="listtema?.length == 0">
+  No hay temas reportados a esta celula!
+</div>
+<div *ngIf="listtema?.length > 0">
+  <table class="table table-striped table-hover table-sm">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Fecha</th>
+        <th>Nombre del tema </th>
+        <th>Cita biblica</th>
+        <th>Medio</th>
+        <th>Ofrenda</th>
+        <th>Nro. Asistentes</th>
+        <th>Verificada</th>
+        <th>Eliminar</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let itemt of listtema let i= index">
+        <td>{{itemt.fechaCelula | date: 'w'}}</td>
+        <td>{{itemt.fechaCelula | date: 'YYYY-MM-dd'}}</td>
+        <td>{{itemt.temaCelula | uppercase}}</td>
+        <td>{{itemt.citaCelula}}</td>
+        <td>{{itemt.idMedioCelula.medio}}</td>
+        <td class="text-end">{{itemt.ofrendaCelula}}</td>
+        <td class="text-center">{{itemt.nroAsistentes}}</td>
+
+        <td class="text-center" *ngIf="itemt.verificada===false"> Pendiente
+          <i class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+        </td>
+        <td class="text-center" *ngIf="itemt.verificada===true"> Ok
+          <i class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
+        </td>
+
+        <td> <button *ngIf="itemt.verificada===false" class="btn btn-danger btn-sm" type="button"
+            (click)="eliminarReporteCelula(itemt)">
+            <i class=" fa-sharp fa-solid fa-xmark"></i>Eliminar </button>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!--
+<pre>
+  {{this.reportecelulaForm.value | json}}
+</pre>
+
+-->

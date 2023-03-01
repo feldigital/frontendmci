@@ -1,0 +1,11 @@
+<div class="alert d-flex align-items-center position-relative" [ngClass]="'alert-' + theme" role="alert">
+    <ng-container *ngIf="icon !== ''">
+        <div class="bi flex-shrink-0 me-3">
+            <i [ngClass]="icon"></i>
+        </div>
+    </ng-container>
+    <div class="col px-0">
+        <ng-content select="[body]"></ng-content>
+    </div>
+    <button type="button" class="btn-close" *ngIf="btnClosed"></button>
+</div>

@@ -1,0 +1,9 @@
+<div class="d-block p-3 rounded-4 shadow-sm bg-white border">
+    <h5 class="border-bottom pb-2 border-secondary fs-6 fw-bolder text-secondary-dark"><i class="me-2" [ngClass]="icon"></i> {{ title }}</h5>
+    <table class="table table-sm">
+        <ng-content select="[colgroup]"></ng-content>
+        <tbody>
+            <ng-content select="[tbody]"></ng-content>
+        </tbody>
+    </table>
+</div>

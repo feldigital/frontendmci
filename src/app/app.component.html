@@ -1,0 +1,89 @@
+<mat-toolbar class="mat-elevation-z8">
+  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+    <mat-icon *ngIf="!sidenav.opened"> menu </mat-icon>
+    <mat-icon *ngIf="sidenav.opened"> close </mat-icon>
+  </button>
+
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="assets/logo.png" alt="" width="130">
+    </a>
+  </div>
+  <button *ngIf="logueado" class="btn btn-sm px-6 fs-6" type="button" (click)="cerrar()" >   
+    <i class="fa fa-sign-in" aria-hidden="true"></i>Cerrar sesión
+</button>
+<button *ngIf="!logueado" class="btn btn-sm  px-6 fs-6" type="button" (click)="abrir()" > 
+  <i class="fa fa-sign-in" aria-hidden="true"></i>Iniciar sesión
+</button>
+
+  
+
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
+
+    <img *ngIf="lider?.imgPerfil" class="avatar mat-elevation-z8"
+      src="http://localhost:8080/api/uploads/img/{{lider.imgPerfil}}" />
+
+    <img *ngIf="!lider?.imgPerfil" class="avatar mat-elevation-z8" src="http://localhost:8080/images/no-usuario.png" />
+
+    <div *ngIf="!logueado">
+      <h6 class="name">Nombre del lider </h6>
+    </div>
+
+    <div *ngIf="logueado">
+      <h6 *ngIf="logueado" class="name">{{lider.nomCompleto}} </h6>
+    </div>
+    <p class="designation">MCI Santa Marta</p>
+
+    <mat-divider></mat-divider>
+
+    <div *ngIf="logueado">
+      <button mat-button class="menu-button" routerLink="/home">
+        <mat-icon>home</mat-icon>
+        <span>Inicio</span>
+      </button>
+      <button mat-button class="menu-button" routerLink="/miembro">
+        <mat-icon>person</mat-icon>
+        <span>Mis datos</span>
+      </button>
+      <button mat-button class="menu-button" routerLink="/listcelula">
+        <mat-icon>group_add</mat-icon>
+        <span>Mis celulas</span>
+      </button>
+
+      <button mat-button class="menu-button" routerLink="/ministerio">
+        <mat-icon> bubble_chart</mat-icon>
+        <span>Mi ministerio</span>
+      </button>
+      <mat-divider></mat-divider>
+
+      <button mat-button class="menu-button" routerLink="/nuevo">
+        <mat-icon>supervisor_account</mat-icon>
+        <span>Ganar</span>
+      </button>
+    
+      <button mat-button class="menu-button" routerLink="/seguimiento">
+        <mat-icon>list</mat-icon>
+        <span>G. Nuevo</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button  *ngIf="lider.numDocumento==='800195397'" mat-button class="menu-button" routerLink="/gestiono">
+        <mat-icon>done_all</mat-icon>
+        <span>G. Ofrenda</span>
+      </button>
+
+      <button  mat-button class="menu-button" routerLink="/reporte">
+        <mat-icon> insert_chart_outlined</mat-icon>
+        <span>Reportes</span>
+      </button>
+     
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="content mat-elevation-z8">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

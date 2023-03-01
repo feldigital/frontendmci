@@ -1,0 +1,42 @@
+<div class="card border-primary mb-3">
+    <div class="card-header">Discipulos</div>
+    <div class="card-body text-primary">
+      <h5 class="card-title">Asistentes a celula ID # XXX de FELIPE CORREA</h5>
+      <div class="my-2 text-left">
+        <button class="btn btn-rounded btn-primary" type="button"  routerLink="/miembro">
+          Inscribir para asistencia
+        </button>
+      </div>
+      <div *ngIf="miembros?.length == 0" class="alert alert-info">
+        No hay discipulos asociados a esta celula en la base de datos!
+      </div>
+      <table class="table table-bordered table-striped" *ngIf="miembros?.length>0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre Completo </th>
+            <th>F. Nacimiento</th>
+            <th>Celular</th>
+            <th>Mostrar</th>
+            <th>Quitar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of miembros  let i= index" [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'red' }" >
+            <td>{{i+1}}</td>
+            <td>{{ item.nomCompleto | uppercase }}</td>
+            <td>{{ item.fecNacimiento | date: 'MMM d'}}</td>           
+            <td>{{ item.celular }}</td>    
+            <td>
+              <button type="button" class="btn btn-light" [routerLink]="['/miembro', item.idMiembro]" >
+                <i style ="color: cornflowerblue; " class="far fa-edit"></i> </button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-light"  (click)='delete(item)'>
+                <i class="fa-sharp fa-solid fa-xmark"></i> </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

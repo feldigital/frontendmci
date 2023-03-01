@@ -1,0 +1,66 @@
+<div class="card border-primary mb-3">
+  <div class="card-header">La llave de la multiplicación una celula con amor.</div>
+  <div class="card-body">
+    <h6 class="card-title">Celulas ministerio {{nombreActual}}</h6>
+       <div class="row my-2 text-left">
+      <div class="col">
+        <div class="input-group">
+          <input type="text" name="listFilter" class="form-control border-end-0"
+            placeholder="Filtrar por nombre del lider, por barrio" [(ngModel)]="listFilter">
+          <span class="input-group-text bg-transparent">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </span>
+        </div>
+      </div>
+      <div class="col">
+        <button class="btn btn-rounded btn btn-success" type="button" routerLink="/celulanueva">
+          Crear celula nueva
+        </button>
+      </div>
+    </div>
+    <div *ngIf="celulas?.length == 0" class="alert alert-info">
+      No hay celulas registradas de tu ministerio en la base de datos!
+    </div>
+    <table class="table table-bordered table-striped" *ngIf="celulas?.length>0">
+      <thead>
+        <tr>
+          <th>Novedad</th>
+          <th>#</th>
+          <th>Nombre del lider </th>
+          <th>Anfitrion </th>
+          <th>Direccion de la celula</th>
+          <th>Barrio</th>
+          <th>Dia</th>
+          <th>Hora</th>
+          <th>Red</th>
+          <th>editar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filterCelulas ; let i= index"
+          [ngStyle]="{'background-color': item.estado =='Activa' ? 'white' : 'orange' }">
+          <td>
+            <div class="btn-group">
+              <button *ngIf="(item.estado==='Activa')" type="button" class="btn btn-info btn-sm"
+              [routerLink]="['/celulareporte', item.idCelula]">               
+                Reportar</button>              
+            </div>
+          </td>
+          <td>{{i+1}}</td>
+          <td>{{ item.idMiembroLider.nomCompleto| uppercase }}</td>
+          <td>{{ item.nombreAnfitrion| uppercase }}</td>
+          <td>{{ item.direccion }}</td>
+          <td>{{ item.barrio }}</td>
+          <td>{{ item.diaCelula }}</td>
+          <td>{{ item.horaCelula }}</td>
+          <td>{{ item.idRed.nomRed }}</td>
+
+          <td>
+            <button type="button" class="btn btn-light" [routerLink]="['/celula', item.idCelula]">
+              <i style="color: cornflowerblue; " class="far fa-edit"></i> </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

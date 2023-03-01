@@ -1,0 +1,56 @@
+<div class="container mt-4">
+    <form [formGroup]="reporteForm" (ngSubmit)="generarReporte()" class="w-100 d-block">
+        <div class="row">
+            <div class="form-outline w-100">
+                <label for="" class="fs-6 mb-2">Seleccione el reporte a generar</label>
+                <select class="form-select" formControlName="reporte">
+                    <option selected value="0">Seleccionar reporte</option>
+                    <option value="1">Reporte consolidado de ganados</option>
+                    <option value="2">Reporte detallado de ganados</option>
+                    <option value="3">Reporte consolidado de Celulas</option>
+                    <option value="4">Reporte detallado de celulas</option>
+                    <option value="5">Reporte consolidado de novedades de celulas</option>
+                    <option value="6">Reporte detallado de temas de celulas</option>
+                    <option value="7">Reporte detallado de novedades de Celulas</option>
+                    <option value="8">Reporte detallado de miembros de la iglesia no inscritos en una celula</option>
+                    <option value="9">Reporte detallado de celulas no realizadas</option>
+                    <option value="10">Reporte detallado de celulas activas</option>
+                    <option value="11">Reporte detallado de celulas cerradas</option>
+                    <option value="12">Reporte detallado de celulas suspendidas</option>
+                    <option value="13">Reporte consolidado de celulas por estados</option>
+                    <option value="14">Reporte detallado de miembros</option>
+                </select>
+            </div>
+
+            <div class=" row input-group">
+                <div class="cols-sm input-group">
+                    <label for="" class="fs-6 mb-2">Seleccione fecha de inicio del reporte</label>
+                </div>
+                <div class="cols-sm">
+                    <input type="date" formControlName="fechaInicial" class="form-control border-end-0"
+                        placeholder="Fecha de inicio del reporte">
+                    <span class="input-group-text bg-transparent">
+                    </span>
+                </div>
+            </div>
+            <div class=" row input-group">
+                <div class="cols-sm input-group">
+                    <label for="" class="fs-6 mb-2">Seleccione fecha de finalización del reporte</label>
+                </div>
+                <div class="cols-sm">
+                    <input type="date" formControlName="fechaFinal" class="form-control border-end-0"
+                        placeholder="Fecha de finalización del reporte">
+                    <span class="input-group-text bg-transparent">
+                    </span>
+
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-6">
+                    <button type="submit" class="btn btn-outline-primary w-100"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Exportar a Excel</button>
+                </div>
+            </div>
+            </div>
+    </form>
+</div>

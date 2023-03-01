@@ -1,0 +1,178 @@
+<div class="container mt-4">
+    <form [formGroup]="celulaForm" (ngSubmit)="update()" class="w-100 d-block">
+        <div class="row">
+            <div class="col-sm">
+
+                <div>
+                    Nombre del lider de la celula
+                    <select class="form-select" formControlName="idMiembroLider" placeholder="Lider inmediato" required>
+                        <option selected value="">Elige el lider de la celula</option>
+                        <option *ngFor="let item of lideres" [ngValue]="item.idMiembro"
+                            [selected]="parametrolider == item.idMiembro">{{item.nomCompleto}}</option>
+                    </select>
+                </div>
+                <hr Datos ministeriales />
+
+
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="nombreAnfitrion" placeholder="Nombre del anfitrion"
+                        class="form-control border-end-0" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-user"></i>
+                    </span>
+                </div>                
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="direccion" class="form-control border-end-0"
+                        placeholder="Dirección de la celula" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="barrio" class="form-control border-end-0"
+                        placeholder="Barrio de la celula" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-street-view" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="input-group mb-2">
+                    <select class="form-select" formControlName="diaCelula" placeholder="Dia de la celula" required>
+                        <option selected value="">Elige el dia</option>
+                        <option value="Lunes">Lunes</option>
+                        <option value="Martes">Martes</option>
+                        <option value="Miercoles">Miercoles</option>
+                        <option value="Jueves">Jueves</option>
+                        <option value="Viernes">Viernes</option>
+                        <option value="Sabado">Sabado</option>
+                        <option value="Domingo">Domingo</option>
+                    </select>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="time" formControlName="horaCelula" class="form-control border-end-0"
+                        placeholder="Hora de la celula" required>
+                    <span class="input-group-text bg-transparent">
+                    </span>
+                </div>
+                <div class="input-group mb-2">
+                    <select class="form-select" formControlName="idRed" placeholder="Red" required>
+                        <option selected value="undefined">Elige la red...</option>
+                        <option *ngFor="let itemt of red " [ngValue]="itemt.idRed">{{itemt.nomRed}}</option>
+                    </select>
+                </div>
+                <div class="input-group mb-2">
+                    <select class="form-select" formControlName="estado" placeholder="estado" required>
+                        <option selected value="">Seleccione estado</option>
+                        <option value="Activa">Activa</option>
+                        <option value="Suspendida">Suspendida</option>
+                        <option value="Cerrada">Cerrada</option>
+                    </select>
+                </div>
+                <hr>
+                Fecha de apertura de la celula
+                <div class="input-group mb-2">
+                    <input type="date" formControlName="fecApertura" class="form-control border-end-0"
+                        placeholder="Fecha de apertura">
+                    <span class="input-group-text bg-transparent">
+                    </span>
+                </div>
+                <div class="input-group mb-2">
+                    <input class="form-check-input" type="checkbox" formControlName="gcompleto">  Es un grupo completo de 12?
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="alert alert-info my-4" *ngIf="discipuloscelula?.length == 0">
+                    No hay discipulos asignados para la celula. Debe agregar al menos uno!
+                </div>
+                <div *ngIf="discipuloscelula?.length > 0">
+                    <table class="table table-striped table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Nombre Completo </th>
+                                <th>Cumpleaños</th>
+                                <th>Celular</th>
+                                <th>Quitar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngFor="let item of discipuloscelula let i= index"
+                                [ngStyle]="{'background-color': item.idMiembro.estado =='Activo' ? 'white' : 'red' }">
+                                <td>{{i+1}}</td>
+                                <td>{{item.idMiembro.nomCompleto}}</td>
+                                <td>{{item.idMiembro.fecNacimiento | date:"MMM-dd"}}</td>
+                                <td>{{item.idMiembro.celular}}</td>
+                                <td> <button class="btn btn-danger btn-sm" type="button"
+                                        (click)="eliminarDiscipuloCelula(item)">
+                                        <i class="fa-sharp fa-solid fa-xmark"></i>Quitar </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <button class="btn btn-outline-primary w-100">Actualizar celula</button>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+
+
+<div class="col">
+    <h5 class="text-primary">Lista de discipulos de tu ministerio</h5>
+    <div class="input-group mb-2">
+        <input type="text" name="listFilter" class="form-control border-end-0"
+            placeholder="Buscar por nombres y apellidos" [(ngModel)]="listFilter">
+        <span class="input-group-text bg-transparent">
+            <i class="fa fa-search" aria-hidden="true"></i>
+        </span>
+    </div>
+</div>
+<div *ngIf="miembros?.length == 0" class="alert alert-info mb-3">
+    No hay discipulos de tu ministerio registrados en la base de datos!
+</div>
+<div class="container mt-4">
+
+    <table class="table table-bordered table-striped" *ngIf="miembros?.length>0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nombre Completo </th>
+                <th>Edad</th>
+                <th>Celular</th>
+                <th>Direccion</th>
+                <th>Agregar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of filterMiembros let i= index"
+                [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'red' }">
+                <td>
+                    <img *ngIf="item?.imgPerfil" src="http://localhost:8080/api/uploads/img/{{item.imgPerfil}}"
+                        alt="{{item.imgPerfil}}" class="img-thumbnail rounded" style="width:64px; cursor: pointer;">
+
+                    <img *ngIf="!item?.imgPerfil" src="http://localhost:8080/images/no-usuario.png" alt="Sin foto"
+                        class="img-thumbnail rounded" style="width:64px; cursor: pointer;">
+
+                </td>
+                <td>{{ item.nomCompleto| uppercase }}</td>
+                <td>{{CalcularEdad(item)}} </td>
+                <td>{{ item.celular }}</td>
+                <td>{{ item.direccion }}</td>
+                <td>
+                    <button *ngIf="item.estado==='Activo'" type="button" class="btn btn-info"
+                        (click)="agregarDiscipuloCelula(item)">
+                        Agregar a Celula </button>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>

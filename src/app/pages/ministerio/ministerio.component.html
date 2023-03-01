@@ -1,0 +1,78 @@
+<div class="card border-primary mb-3">
+  <div class="card-header">Total de Discipulos {{ miembros?.length }}</div>
+  <div class="card-body ">
+    <h6 class="card-title">Ministerio de {{nombreActual}}.</h6>
+    <div class="row my-2 text-left">
+      <div class="col">
+        <div class="input-group mb-2">
+          <input type="text" name="listFilter" class="form-control border-end-0"
+            placeholder="Buscar por nombre, barrio, direccion, documento" [(ngModel)]="listFilter">
+            <span class="input-group-text bg-transparent">
+              <i class="fa fa-search" aria-hidden="true"></i>
+          </span>
+        </div>
+      </div>
+      <div class="col">
+        <button class="btn btn-rounded btn-primary" type="button" routerLink="/miembro">
+          Crear Discipulo
+        </button>
+      </div>
+      <div *ngIf="miembros?.length == 0" class="alert alert-info mb-3">
+        No hay registros en la base de datos!
+      </div>
+      <table class="table table-bordered table-striped" *ngIf="miembros?.length>0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre Completo </th>
+            <th>Cumpleaños</th>
+            <th>Edad</th>
+            <th>Celular</th>
+            <th>Direccion</th>
+            <th class="text-center" >Celula</th>
+            <th class="text-center" >Editar</th>
+            <th class="text-center" >Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filterMiembros let i= index"
+            [ngStyle]="{'color': item.estado =='Activo' ? 'black' : 'red' }">
+            <td>
+              <img (click)="agregarimg(item)" *ngIf="item?.imgPerfil"
+                src="http://localhost:8080/api/uploads/img/{{item.imgPerfil}}" alt="{{item.imgPerfil}}"
+                class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
+
+              <img (click)="agregarimg(item)" *ngIf="!item?.imgPerfil" src="http://localhost:8080/images/no-usuario.png"
+                alt="Sin foto" class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
+
+            </td>
+            <td>{{ item.nomCompleto| uppercase }}</td>
+            <td>{{ item.fecNacimiento | date: 'MMM dd'}}</td>
+            <td>{{CalcularEdad(item)}} </td>
+            <td>{{ item.celular }}</td>
+            <td>{{ item.direccion }}</td>
+            <td>
+              <!-- <i class="far fa-star" [ngStyle]="{'color': item.uvida? 'orange' : 'wheite'}"></i>
+                <i class="far fa-star" [ngStyle]="{'color': item.bautizado? 'orange' : 'wheite'}"></i>
+                <i class="far fa-star" [ngStyle]="{'color': item.cdestino? 'orange' : 'wheite'}"></i>
+                <i class="far fa-star" [ngStyle]="{'color': item.lider? 'orange' : 'wheite'}"></i>-->
+
+              <button  *ngIf="item.lider && (item.estado==='Activo')" type="button" class="btn btn-success btn-sm"
+                [routerLink]="['/celulanueva', item.idMiembro]">
+                <i class="fa-thin fa-people-roof"></i> <i class="fa-thin fa-people-line"></i> Crear </button>
+            </td>
+
+
+            <td>
+              <button type="button" class="btn btn-light btn-sm" [routerLink]="['/miembro', item.idMiembro]">
+                <i style="color: cornflowerblue; " class="far fa-edit"></i> </button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-light btn-sm" (click)='delete(item)'>
+                <i style="color: rgb(255, 49, 83); " class="far fa-trash-alt"></i> </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

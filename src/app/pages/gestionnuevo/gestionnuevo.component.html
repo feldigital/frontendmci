@@ -1,0 +1,94 @@
+<div class="modal-header">
+    <h5 class="modal-title">Gestión del seguimiento del nuevo!</h5>
+    <button type="button" class="btn btn-warning" [routerLink]="['/seguimiento']">
+      Regresar
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <ul *ngIf="nuevo" class="list-group text-dark mb-3">
+            <li class="list-group-item active">{{nuevo.idMiembro.nomCompleto}}</li>
+            <li class="list-group-item">Motivo de oración: {{nuevo.motivoOracion }}</li>
+            <li class="list-group-item">celular: {{nuevo.idMiembro.celular}}</li>
+            <li class="list-group-item">Dirección: {{nuevo.idMiembro.direccion}}</li>
+            <li class="list-group-item">Barrio: {{nuevo.idMiembro.barrio}}</li>     
+            <li class="list-group-item">Invitado por: {{nuevo.idMiembroQuienInvita.nomCompleto}}</li>
+            <li class="list-group-item">Reunion: {{nuevo.idReunion.descripcion}}  {{nuevo.idReunion.diaReunion}} {{nuevo.idReunion.horaReunion}}</li>
+            <li class="list-group-item">Fecha de la Reunion: {{nuevo.fechaReunion | date:"longDate"}}</li>
+            <li *ngIf="nuevo.nuevo"  class="list-group-item active">Tipo registro: Nuevo</li>
+            <li *ngIf="!nuevo.nuevo"  class="list-group-item active">Tipo registro: Rescatado</li>
+            
+          </ul>
+  
+        </div>
+        <div class="col-sm">
+          <div class="container mt-4 ">
+            <form [formGroup]="gestionNuevoForm" (ngSubmit)="reportar()" class="w-100 d-block form-group">
+  
+              <div class="col-sm mt-2">
+                <input class="form-check-input" type="checkbox" formControlName="fonollamada"> Llamada realizada (Si/No)
+              </div>
+              <div class="col-6">
+                <input *ngIf="gestionNuevoForm.value.fonollamada" type="date" formControlName="fecLlamada"
+                  class="form-control border-end-0">
+                 <!-- 
+                  <i class="col-3" *ngIf="gestionNuevoForm.value.fonollamada" class="text-left"  class="fa fa-user-plus" [ngStyle]="{'color':'green'}"></i> 
+                -->
+              </div>
+        
+              <div class="col-9 input-group mb-3">
+                <input *ngIf="gestionNuevoForm.value.fonollamada" type="text" formControlName="usuarioFonollamada" class="form-control border-end-0"
+                  placeholder="Nombre de quien realiza la llamada">
+              </div>
+
+              <div class="col-sm mt-2">
+                <input class="form-check-input" type="checkbox" formControlName="fonovisita"> Visita realizada (Si/No)
+              </div>
+              <div class="col-6">
+                <input *ngIf="gestionNuevoForm.value.fonovisita" type="date" formControlName="fecVisita"
+                  class="form-control border-end-0">
+              </div>
+        
+              <div class="col-9 input-group mb-3" >
+                <input *ngIf="gestionNuevoForm.value.fonovisita" type="text" formControlName="usuarioFonovisita" class="form-control border-end-0"
+                  placeholder="Nombre de quien realiza la visita">
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="cols-sm input-group">
+                  <label for="" class="fs-6 mb-2">Ingrese la dispocisón de la persona para seguir asistiendo</label>
+              </div>
+                <select class="form-select" formControlName="disposicion" placeholder="Red">
+                  <option value="No gestionado">No gestionada la respuesta</option>
+                  <option value="Si">Si hay dispocisión</option>
+                  <option value="No">No hay dsipocisión</option>
+                 
+                </select>
+              </div>
+  
+              <div class="input-group mb-3">
+                <div class="cols-sm input-group">
+                  <label for="" class="fs-6 mb-2">Ingrese si tiene alguna observación</label>
+              </div>
+                <input type="text" formControlName="observaciones" placeholder="Ingrese si hay alguna observación"
+                  class="form-control border-end-0" >
+                <span class="input-group-text bg-transparent">
+                </span>
+              </div>
+  
+                            
+              <div class="modal-footer">
+                <button (click)="reportar()" type="button" class="btn btn-success" data-dismiss="modal">Guardar 
+                  Seguimiento </button>
+              </div>
+  
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

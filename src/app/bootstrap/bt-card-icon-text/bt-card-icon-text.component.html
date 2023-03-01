@@ -1,0 +1,11 @@
+<div class="card text-center animate-card-icon rounded-4 shadow-lg text-bg-{{ date?.color }} border-0">
+    <div class="card-body">
+        <div class="item-icon bg-{{ date?.color }}">
+            <i class="fs-1" [ngClass]="date?.icon"></i>
+        </div>
+        <h5 class="my-2">Agendar Cita</h5>
+        <p class="mb-0">
+            {{ date?.title | textMayus }}
+        </p>
+    </div>
+</div>

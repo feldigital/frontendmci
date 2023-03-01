@@ -1,0 +1,43 @@
+<div class="container mt-4">
+<form [formGroup]="loginForm" (ngSubmit)="validarIngreso()" class="w-60">   
+    <div class="row">
+        <div class="col-6">
+            <img src="./assets/ingresar.jpg"
+            alt="Bienvenidos" class="img-thumbnail rounded" >
+            
+           
+        </div>
+        <div class="col-sm">
+            <div class="mb-3">
+                <label for="" class="fs-6 mb-2">Ingrese su documento</label>
+                <div class="input-group">
+                    <input type="number" formControlName="documento" class="form-control border-end-0" 
+                    placeholder="Ingrese el numero de documento">
+                    <span class="input-group-text bg-transparent text-muted" >
+                        <i class="fa fa-user"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="" class="fs-6 mb-2">ingrese su contraseña</label>
+                <div class="input-group">
+                    <input type="password" formControlName="pwd" class="form-control border-end-0" 
+                    placeholder="Ingrese su contraseña">
+                    <span class="input-group-text bg-transparent text-muted" >
+                        <i class="fa fa-lock"></i>
+                    </span>
+                </div>
+                <div class="d-block text-end">
+                    <a href="#" class="small text-decoration-none text-black">¿Olvidaste tu contraseña?</a>
+                </div>
+            </div>
+
+            <div>
+                <button class="btn btn-info px-5 fs-5" type="button" (click)="validarIngreso()" >
+                    Iniciar sesión
+                </button>
+            </div>
+        </div>      
+    </div>
+</form>
+</div>

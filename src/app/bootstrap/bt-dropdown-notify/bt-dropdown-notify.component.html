@@ -1,0 +1,13 @@
+<button class="btn btn-lg text-white position-relative dropdown">
+    <div role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-bell"></i>
+        <bt-badge-counter [counter]="12"></bt-badge-counter>
+    </div>
+    <ul class="dropdown-menu dropdown-menu-end p-2" style="min-width: 300px;">
+        <ng-container *ngFor="let item of [1,2,3]">
+            <li class="mb-2">
+                <bt-card-notify></bt-card-notify>
+            </li>
+        </ng-container>
+    </ul>
+</button>

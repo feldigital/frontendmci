@@ -1,0 +1,33 @@
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr class="text-white">
+                    <th class="bg-secondary-dark rounded-start">#</th>
+                    <th class="bg-secondary-dark">Nombre</th>
+                    <th class="bg-secondary-dark">Apellido</th>
+                    <th class="bg-secondary-dark">edad</th>
+                    <th class="bg-secondary-dark rounded-end text-end">Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let item of [1,2,3]">
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Camila</td>
+                        <td>Herreira Pertuz</td>
+                        <td>34</td>
+                        <td class="text-end">
+                            <button type="button" class="btn btn-sm text-tertiary">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer text-end border-top-0">
+        <button type="button" class="btn bg-secondary-dark text-white btn-sm px-5">Agregar un nuevo beneficiario</button>
+    </div>
+</div>

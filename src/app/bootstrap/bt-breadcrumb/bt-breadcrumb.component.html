@@ -1,0 +1,13 @@
+<div class="d-block border py-1 px-3 text-primary rounded-2">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item">
+                <a routerLink="/dashboard/home"><i class="fa fa-home"></i></a>
+            </li>
+            <ng-container *ngFor="let bread of breadcrumb">
+                <li class="breadcrumb-item"><a [routerLink]="bread?.path">{{ bread?.name }}</a></li>
+            </ng-container>
+            <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbEnd?.name }}</li>
+        </ol>
+    </nav>
+</div>

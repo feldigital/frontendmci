@@ -1,0 +1,100 @@
+<div class="container mt-4">
+    <form [formGroup]="celulaForm" (ngSubmit)="create()" class="w-100 d-block">
+        <div class="row">
+
+            <div class="col-sm">
+                <div class="mb-3">
+                    Nombre del lider de la celula
+                    <select class="form-select" formControlName="idMiembroLider" placeholder="Lider inmediato" required>
+                        <option selected value="">Elige el lider de la celula</option>
+                        <option *ngFor="let item of lideres" [ngValue]="item.idMiembro"
+                            [selected]="parametro == item.idMiembro">{{item.nomCompleto}}</option>
+                    </select>
+                </div>
+                <hr Datos ministeriales />
+
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="nombreAnfitrion" placeholder="Nombre del anfitrion"
+                        class="form-control border-end-0" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-user"></i>
+                    </span>
+                </div>
+
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="direccion" class="form-control border-end-0"
+                        placeholder="Dirección de la celula" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="barrio" class="form-control border-end-0"
+                        placeholder="Barrio de la celula" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-street-view" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="input-group mb-2">
+                    <select class="form-select" formControlName="diaCelula" placeholder="Dia de la celula" required>
+                        <option selected value="">Elige el dia</option>
+                        <option value="Lunes">Lunes</option>
+                        <option value="Martes">Martes</option>
+                        <option value="Miercoles">Miercoles</option>
+                        <option value="Jueves">Jueves</option>
+                        <option value="Viernes">Viernes</option>
+                        <option value="Sabado">Sabado</option>
+                        <option value="Domingo">Domingo</option>
+                    </select>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="time" formControlName="horaCelula" class="form-control border-end-0"
+                        placeholder="Hora de la celula" required>
+                    <span class="input-group-text bg-transparent">
+                    </span>
+                </div>
+                <div class="input-group mb-2">
+                    <select class="form-select" formControlName="idRed" placeholder="Red" required>
+                        <option selected value="">Elige la red...</option>
+                        <option *ngFor="let itemt of red " [ngValue]="itemt.idRed">{{itemt.nomRed}}</option>
+                    </select>
+                </div>
+
+                <div class="input-group mb-2">
+                    <select class="form-select" formControlName="estado" placeholder="estado" required>
+                        <option value="">Seleccione el estado</option>
+                        <option value="Activa">Activa</option>
+                        <option value="Suspendida">Suspendida</option>
+                        <option value="Cerrada">Cerrada</option>
+                    </select>
+                </div>
+                <hr>
+                Fecha de apertura de la celula
+                <div class="input-group mb-2">
+                    <input type="date" formControlName="fecCelula" class="form-control border-end-0"
+                        placeholder="Fecha de apertura">
+                    <span class="input-group-text bg-transparent">
+                    </span>
+                </div>
+                <div class="input-group mb-2">
+                    <input class="form-check-input" type="checkbox" formControlName="gcompleto"> Es un grupo completo de 12?
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-outline-primary w-100">Crear nueva celula</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm">
+                <img src="./assets/celula.jpg" alt="Bienvenidos" class="img-thumbnail rounded">
+            </div>
+        </div>
+
+    </form>
+</div>
+<!--
+<pre>
+    {{this.celulaForm.value | json}}
+</pre>
+-->

@@ -1,0 +1,248 @@
+<div class="container mt-4">
+  <form [formGroup]="nuevoForm" (ngSubmit)="create()" class="w-100 d-block">
+
+    <div class="row">
+      <div class="col-sm">
+
+        <div>
+          Nombre del lider inmediato:
+          <select class="form-select" formControlName="liderInmediato" placeholder="Lider inmediato" required>
+            <option selected value="">Seleccione el lider inmediato</option>
+            <option *ngFor="let item of lideres" [ngValue]="item.idMiembro">{{item.nomCompleto}}</option>
+          </select>
+        </div>
+        <hr Datos ministeriales />
+        Datos básicos
+        <div class="form-outline w-100">
+          <select class="form-select" formControlName="tipoDoc" placeholder="tipo de documento" required>
+            <option selected value="">Seleccionar tipo de documento </option>
+            <option *ngFor="let itemt of tipos" [ngValue]="itemt.tipo">{{itemt.nombreTipo}}</option>
+          </select>
+        </div>
+
+
+        <div class="input-group mb-2 mt-2">
+          <input type="text" #box (blur)='BuscarDocumento(box.value)' formControlName="numDocumento"
+            class="form-control border-end-0" placeholder="Numero del documento" required>
+          <span class="input-group-text bg-transparent">
+            <i class="fa fa-address-card" aria-hidden="true"></i>
+          </span>
+        </div>
+
+        <div class="input-group mb-2">
+          <input type="text" formControlName="nomCompleto" class="form-control border-end-0" autocomplete="on"
+            [class.is-invalid]="nombreNovalido" placeholder="Nombre y apellidos" required><small *ngIf="nombreNovalido"
+            class="text-danger">El nombre del miembro no puede ser vacio
+          </small>
+          <span class="input-group-text bg-transparent">
+            <i class="fa fa-user"></i>
+          </span>
+        </div>
+
+        <div class="input-group mb-2">
+          <input type="date" formControlName="fecNacimiento" class="form-control border-end-0"
+            placeholder="Fecha de nacimiento">
+          <span class="input-group-text bg-transparent">
+          </span>
+        </div>
+        <div class="d-flex">
+          <div class="col-auto me-3">
+            <div class="d-flex align-items-center mb-2">
+              <div class="form-outline w-100">
+                <select class="form-select" formControlName="sexo" placeholder="Sexo" required>
+                  <option selected value="">Seleccionar sexo</option>
+                  <option value="F">Femenino</option>
+                  <option value="M">Masculino</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <select class="form-select" formControlName="estadoCivil" placeholder="Estado civil">
+                <option selected value="">Seleccionar estado civil</option>
+                <option value="C">Casado(a)</option>
+                <option value="S">Soltero(a)</option>
+                <option value="D">Divorciado(a)</option>
+                <option value="V">Viudo(a)</option>
+                <option value="UL">Union libre</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm">
+        Datos de contacto
+        <div class="input-group mb-2">
+          <input type="text" formControlName="direccion" class="form-control border-end-0"
+            placeholder="Dirección de residencia" required>
+          <span class="input-group-text bg-transparent">
+            <i class="fa fa-map-marker" aria-hidden="true"></i>
+          </span>
+        </div>
+
+        <div class="input-group mb-2">
+          <input type="text" formControlName="barrio" class="form-control border-end-0"
+            placeholder="Barrio de residencia">
+          <span class="input-group-text bg-transparent">
+            <i class="fa fa-street-view" aria-hidden="true"></i>
+          </span>
+        </div>
+
+        <div class="input-group mb-2">
+          <input type="text" formControlName="ciudad" class="form-control border-end-0"
+            placeholder="Ciudad de residencia">
+          <span class="input-group-text bg-transparent">
+            <i class="fa fa-map-signs" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div class="input-group mb-2">
+          <input type="text" formControlName="celular" class="form-control border-end-0" placeholder="Celular" required>
+          <span class="input-group-text bg-transparent">
+            <i class="fa fa-phone" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div class="input-group mb-2">
+          <input type="email" formControlName="email" class="form-control border-end-0"
+            placeholder="Correo electronico">
+          <span class="input-group-text bg-transparent">
+            <i class="fa fa-envelope"></i>
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <hr Datos ministeriales />
+    Datos ministeriales.
+    <div class="row">
+
+      <div class="col-3">
+        <input class="form-check-input m" type="checkbox" formControlName="lider"> Lider
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <input *ngIf="nuevoForm.value.lider" type="date" formControlName="fechaIngreso"
+            class="form-control border-end-0">
+        </div>
+        <div class="col-3">
+          <input *ngIf="nuevoForm.value.lider" type="text" formControlName="citaBiblica"
+            class="form-control border-end-0" placeholder="Cita biblica de tu llamado">
+        </div>
+        <div class="col-6">
+          <input *ngIf="nuevoForm.value.lider" type="text" formControlName="textoBiblico" aria-multiline="true"
+            class="form-control border-end-0" placeholder="Texto biblico de tu llamado">
+        </div>
+        <div class="col-6">
+          <input *ngIf="nuevoForm.value.lider" type="password" formControlName="pwd" aria-multiline="true"
+            class="form-control border-end-0" placeholder="Ingrese su contraseña">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <input class="form-check-input" type="checkbox" formControlName="bautizado"> Bautizado
+      </div>
+      <div class="col-3">
+        <input *ngIf="nuevoForm.value.bautizado" type="date" formControlName="fechaBautismo"
+          class="form-control border-end-0">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <input class="form-check-input" type="checkbox" formControlName="uvida"> Universidad de la vida
+      </div>
+      <div class="col-3">
+        <input *ngIf="nuevoForm.value.uvida" type="date" formControlName="fechaUvida" class="form-control border-end-0">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <input class="form-check-input" type="checkbox" formControlName="cdestino"> Capacitación Destino
+      </div>
+      <div class="col-3">
+        <input *ngIf="nuevoForm.value.cdestino" type="date" formControlName="fechaCdestino"
+          class="form-control border-end-0">
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-6">
+        <select class="form-select" formControlName="estado" placeholder="Estado" id="validationDefault04">
+          <option selected value="">Seleccionar estado</option>
+          <option value="Activo">Activo</option>
+          <option value="Suspendido">Suspendido</option>
+          <option value="Retirado">Retirado</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+
+      <div class="col-6">
+        <button type="submit" class="btn btn-outline-primary w-100"><i class="far fa-save"></i>
+          {{this.nombrebtn}}</button>
+      </div>
+      <div class="col-6">
+        <button type="button" class="btn btn-outline-primary w-100 ml-2" (click)="cancelar()"><i class="fas fa-ban"></i>
+          Cancelar </button>
+      </div>
+    </div>
+
+    <div class="card-header">Relacion de discipulos </div>
+    <div *ngIf="ministerio12?.length == 0" class="alert alert-info mb-3">
+      No hay registros en la base de datos!
+    </div>
+    <table class="table table-bordered table-striped" *ngIf="ministerio12?.length>0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre Completo </th>
+          <th>Cumple</th>
+          <th>Edad</th>
+          <th>Celular</th>
+          <th>Dirección</th>
+          <th class="text-center">Datos ministeriales</th>
+          <th class="text-center">Gestión</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of ministerio12 let i= index"
+          [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'red' }">
+          <td>{{i+1}}</td>
+          <td> <i *ngIf="item.lider" class="fa fa-user-plus" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.lider" class="fa fa-user" [ngStyle]="{'color':'orange'}"></i>
+            {{ item.nomCompleto| uppercase }}
+          </td>
+          <td>{{ item.fecNacimiento | date: 'MMM dd'}}</td>
+          <td>{{CalcularEdad(item)}} </td>
+          <td>{{ item.celular }}</td>
+          <td>{{ item.direccion }}</td>
+          <td class="text-center">
+
+            <i *ngIf="item.uvida" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+            <i *ngIf="!item.uvida" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+            <i *ngIf="item.bautizado" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+            <i *ngIf="!item.bautizado" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+            <i *ngIf="item.uvida" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+            <i *ngIf="!item.uvida" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+          </td>
+          <td>
+            <button type="button" class="btn btn-info btn-sm" (click)='refrescar(item)'>
+              Editar </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+
+<!--
+<pre>
+  {{this.nuevoForm.value | json}}
+</pre>
+-->

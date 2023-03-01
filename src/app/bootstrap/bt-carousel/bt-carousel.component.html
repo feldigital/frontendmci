@@ -1,0 +1,21 @@
+<div [id]="idCarousel" class="carousel slide carousel-home" data-bs-ride="true">
+    <div class="carousel-indicators mb-5">
+        <ng-container *ngFor="let item of items">
+            <button type="button" [attr.data-bs-target]="'#' + idCarousel" [attr.data-bs-slide-to]="item" 
+             
+            [attr.aria-current]="itemActive === item" [attr.aria-label]="'Slide ' + item"></button>
+        </ng-container>
+       <!-- [ngClass]="{'active' : itemActive === item}" -->
+    </div>
+    <div class="carousel-inner">
+        <ng-content select="[body]"></ng-content>
+    </div>
+    <button class="carousel-control-prev" type="button" [attr.data-bs-target]="'#' + idCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" [attr.data-bs-target]="'#' + idCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>

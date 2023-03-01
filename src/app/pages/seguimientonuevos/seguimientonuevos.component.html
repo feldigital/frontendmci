@@ -1,0 +1,74 @@
+<div class="card border-primary mb-3">
+    <div class="card-header">La llave de la multiplicación cuidar al nuevo.</div>
+    <div class="card-body ">
+        <h6 class="card-title">Nuevos del ministerio de {{nombreActual}} </h6>
+        <div class="row my-2 text-left">
+            <div class="col">
+                <div class="input-group">
+                    <input type="text" name="listFilter" class="form-control border-end-0"
+                        placeholder="Filtrar por nombre del nuevo" [(ngModel)]="listFilter">
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col">
+                <button class="btn btn-rounded btn btn-success" type="button" routerLink="/nuevo">
+                    Ingresar un nuevo
+                </button>
+            </div>
+        </div>
+        <div *ngIf="nuevos?.length == 0" class="alert alert-info">
+            No hay nuevos registrados de tu ministerio en la base de datos!
+        </div>
+        <table class="table table-bordered table-striped" *ngIf="nuevos?.length>0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre del invitado </th>
+                    <th>Celular </th>
+                    <th>Dirección </th>
+                    <th>Invitad@ por </th>
+                    <th>Seguimiento</th>
+                    <th>Dispocisión</th>
+                    <th>Gestionar</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filterNuevos ; let i= index"
+                    [ngStyle]="{'background-color': item.idMiembro.estado =='Activo' ? 'white' : 'orange' }">
+                    <td>{{i+1}}</td>
+                    <td>{{ item.idMiembro.nomCompleto| uppercase }}</td>
+                    <td>{{ item.idMiembro.celular }}</td>
+                    <td>{{ item.idMiembro.direccion }}</td>
+                    <td>{{ item.idMiembroQuienInvita.nomCompleto }}</td>
+                    <td>
+                        <i  class="text-left" *ngIf="item.fonollamada" class="fa fa-check-circle" [ngStyle]="{'color': item.disposicion==='No gestionado'? 'orange':'green'}"></i>
+                        <i  class="text-center" *ngIf="!item.fonollamada" class="fa fa-times-circle" [ngStyle]="{'color': item.disposicion==='No gestionado'? 'orange':'red'}"></i>
+                        <i  class="text-end" *ngIf="item.fonovisita" class="fa fa-check-circle" [ngStyle]="{'color': item.disposicion==='No gestionado'? 'orange':'green'}"></i>
+                        <i  class="text-end" *ngIf="!item.fonovisita" class="fa fa-times-circle" [ngStyle]="{'color':item.disposicion==='No gestionado'? 'orange':'red'}"></i>
+
+                    </td>
+                    <td>
+                        <i *ngIf="(item.disposicion==='Si')" class="fa fa-user-plus" [ngStyle]="{'color':'green'}"></i>
+                        <i *ngIf="(item.disposicion==='No')" class="fa fa-user-times" [ngStyle]="{'color':'red'}"></i>
+                        <i *ngIf="(item.disposicion==='No gestionado')" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+                        {{ item.disposicion }}
+                    </td>
+                    <td>
+                        <button *ngIf="(item.idMiembro.estado==='Activo')" type="button" 
+                        class="btn btn-info btn-sm"
+                            [routerLink]="['/gestionn', item.idGanados]">
+                            Gestionar</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm"
+                            [routerLink]="['/miembro', item.idMiembro.idMiembro]">
+                            Editar </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

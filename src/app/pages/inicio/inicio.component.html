@@ -1,0 +1,101 @@
+<div class="row">
+    <h2 *ngIf="logueado" class="text-center">{{lider.citaBiblica}}</h2>
+    <hr>
+    <p *ngIf="logueado"> {{lider.textoBiblico}}</p>
+    <div class="col-sm">
+        <div class="d-block p-3 bg-white rounded-4 shadow-sm border card-chart">
+            <div class="card-header-chart text-fourth">
+                <i class="fa fa-cogs" aria-hidden="true" [ngStyle]="{'color':'red'}"></i>
+                Grafica equipo de 12
+                <!--<h6 class="text-center">Grafica de mi equipo de 12</h6> -->
+                <hr>
+            </div>
+            <div class="d-flex position-relative align-items-center justify-content-center">
+                <div class="position-absolute fs-1 fw-bold text-fourth">
+                    {{12}}
+                </div>
+                <canvas [id]="idChart" width="30" height="30"></canvas>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between flex-row">
+                <div class="col-auto">
+                    <div class="fs-3 text-primary">{{  ministerio12?.length }}</div>
+                    <div class="d-flex align-items-center">
+                        <span class="cirle-color bg-primary"></span>
+                        <small>Lideres <br>en formacion</small>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="fs-3 text-tertiary">{{12 -  ministerio12?.length }}</div>
+                    <div class="d-flex align-items-center">
+                        <span class="cirle-color bg-tertiary"></span>
+                        <small>Pendiente<br>de conquistar</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div class="d-block p-3 bg-white rounded-4 shadow-sm border card-chart">
+            <div class="card-header-chart text-fourth"> 
+                <i class="fa fa-spinner" aria-hidden="true" [ngStyle]="{'color':'orange'}"></i>
+                Grafica equipo de 144
+                <!--<h6 class="text-center">Grafica de mi equipo de 144</h6>-->
+                <hr>
+            </div>
+            <div class="d-flex position-relative align-items-center justify-content-center">
+                <div class="position-absolute fs-1 fw-bold text-fourth">
+                    144
+                </div>
+                <canvas [id]="idChartO" width="30" height="30"></canvas>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between flex-row">
+                <div class="col-auto">
+                    <div class="fs-3 text-primary">{{  ministerio144?.length }}</div>
+                    <div class="d-flex align-items-center">
+                        <span class="cirle-color bg-primary"></span> <small>Lideres <br>en formacion</small>
+                    </div>
+                </div>
+                <div class="col-auto">
+
+                    <div class="fs-3 text-tertiary">{{ 144 -ministerio144?.length }}</div>
+                    <div class="d-flex align-items-center">
+                        <span class="cirle-color bg-tertiary"></span> <small>Pendiente<br>de conquistar</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div class="d-block p-3 bg-white rounded-4 shadow-sm border card-chart">
+            <div class="card-header-chart text-fourth">
+                <i class="fa fa-users" aria-hidden="true" [ngStyle]="{'color':'green'}"></i> Listado de mis discipulos
+                <hr>
+            </div>
+
+            <div *ngIf="ministerio12?.length == 0" class="alert alert-info">
+                No hay discipilos registrados de tu ministerio en la base de datos!
+            </div>
+            <table class="table table-bordered table-striped" *ngIf="ministerio12?.length>0">
+                <thead>
+                    <tr>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of ministerio12 ; let i= index" 
+                        [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'orange' }">                        
+                        <td >
+                            <p style="font-size: 12px">
+                            <i *ngIf="item.lider" class="fa fa-user-plus" [ngStyle]="{'color':'green'}"></i>
+                            <i *ngIf="!item.lider" class="fa fa-user" [ngStyle]="{'color':'orange'}"></i>
+                           {{ item.nomCompleto| uppercase }}
+                        </p>
+                        </td>                       
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
