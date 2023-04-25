@@ -62,7 +62,7 @@
                   <tr formArrayName="asistecheck" *ngFor="let itemd of discipuloscelula let i= index"
                     [ngStyle]="{'background-color': itemd.idMiembro.estado =='Activo' ? 'white' : 'red' }">
                     <td>{{i+1}}</td>
-                    <td>{{itemd.idMiembro.nomCompleto | uppercase}}</td>
+                    <td>{{itemd.idMiembro.nomCompleto | titlecase }}</td>
                     <td>
                       <input type="checkbox" [formControlName]="i" [value]="itemd.idMiembro.idMiembro">
                     </td>
@@ -82,16 +82,16 @@
       <div class="col-sm">
         <ul *ngIf="celula" class="list-group text-dark mb-3">
           <li class="list-group-item active"><img *ngIf="celula.idMiembroLider?.imgPerfil"
-              src="http://localhost:8080/api/uploads/img/{{celula.idMiembroLider.imgPerfil}}"
+              src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{celula.idMiembroLider.imgPerfil}}"
               alt="{{celula.idMiembroLider.imgPerfil}}" class="img-thumbnail rounded" height="64"
-              width="64">{{celula.idMiembroLider.nomCompleto}}</li>
+              width="64">{{celula.idMiembroLider.nomCompleto}} (lider) </li>
           <li class="list-group-item">Anfitrion: {{celula.nombreAnfitrion}}</li>
           <li class="list-group-item">Fecha de apertura: {{celula.fecApertura | date:"longDate"}}</li>
           <li class="list-group-item">Red de la celula: {{celula.idRed.nomRed}}</li>
           <li class="list-group-item">Dirección: {{celula.direccion}}</li>
           <li class="list-group-item">Barrio de la celula: {{celula.barrio}}</li>
           <li class="list-group-item">Dia de la celula: {{celula.diaCelula}}</li>
-          <li class="list-group-item">Hora de la celula: {{celula.horaCelula }}</li>
+          <li class="list-group-item">Hora de la celula: {{celula.horaCelula}}</li>
         </ul>
 
       </div>
@@ -131,7 +131,7 @@
         <td>{{itemt.temaCelula | uppercase}}</td>
         <td>{{itemt.citaCelula}}</td>
         <td>{{itemt.idMedioCelula.medio}}</td>
-        <td class="text-end">{{itemt.ofrendaCelula}}</td>
+        <td class="text-end">{{itemt.ofrendaCelula | currency: '$':true: '1.0-2'}}</td>
         <td class="text-center">{{itemt.nroAsistentes}}</td>
 
         <td class="text-center" *ngIf="itemt.verificada===false"> Pendiente

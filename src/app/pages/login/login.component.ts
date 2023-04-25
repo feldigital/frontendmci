@@ -40,11 +40,11 @@ export class LoginComponent implements OnInit {
                 .subscribe((resp: MiembroI) => {
                     this.lider = resp;
                     this.lider = this.lider[0];
-                    console.log(this.lider);
-                    if(this.lider.estado != "Activo") {
+                    //console.log(this.lider);
+                    if(this.lider.estado != "Activo" || this.lider.lider != true) {
                         Swal.fire({
                             title: '!Error',
-                            text: `El usuario se enucuentra inactivo!`,
+                            text: `El usuario que esta ingresando se encuentra inactivo o no es un lider de celula!`,
                             icon: 'error',
                         });
                     }else{
@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
                         let miembro = this.lider.idMiembro
                         sessionStorage.setItem("lidersistema", miembro);   
                         sessionStorage.setItem("nombsistema", this.lider.nomCompleto);                        
-                        window.location.assign('http://localhost:4200/inicio');
+                        window.location.assign('http://54.163.179.39/');
                         //this.router.navigate(['/inicio']);
                        
                        
@@ -74,9 +74,17 @@ export class LoginComponent implements OnInit {
                         });
 
                     }
-                }
+                }         
                     (err: any) => { console.error(err) }
                 });
+
+                if (this.lider==null){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: "!Alerta",
+                        text: 'El usuario que esta intentando acceder a la plataforma de la iglesia MCI no existe!'
+                    });
+                }
         } else {
             Swal.fire({
                 icon: 'warning',

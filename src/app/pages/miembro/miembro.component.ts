@@ -5,7 +5,7 @@ import { MiembroService } from 'src/app/servicios/miembro.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NuevoService } from 'src/app/servicios/nuevo.service';
+
 
 
 
@@ -21,7 +21,7 @@ export class MiembroComponent implements OnInit {
   nuevoForm!: FormGroup;
   nombrebtn!: string
   edad!: number;
-  liderAct: any;
+ //liderAct: any;
   ministerio12!: any;
 
 
@@ -40,7 +40,7 @@ export class MiembroComponent implements OnInit {
 
 
   ngOnInit() {
-    this.liderAct = null;
+    
     this.parametro = this.activatedRoute.snapshot.params.id;
     this.cargardatos();
     this.activatedRoute.params.subscribe(
@@ -69,9 +69,20 @@ export class MiembroComponent implements OnInit {
 
   }
 
-  cargarMembresia() {
+  /*cargarMembresia() {
     this.lideres = null;
     this.miembroService.getMiembrosLideres()
+      .subscribe((resp: MiembroI) => {
+        this.lideres = resp;
+      },
+        (err: any) => { console.error(err) }
+      );
+  }*/
+
+  cargarMembresia() {
+    this.lideres = null;
+    let liderAct = sessionStorage.getItem("lidersistema");
+    this.miembroService.getMiembrosLideres(liderAct)
       .subscribe((resp: MiembroI) => {
         this.lideres = resp;
       },
@@ -224,7 +235,7 @@ export class MiembroComponent implements OnInit {
     this.miembroService.getMiembrosDocumento(documento)
       .subscribe((resp: MiembroI) => {
         this.registro = resp;
-        console.log(this.registro[0].nomCompleto);
+       // console.log(this.registro[0].nomCompleto);
         this.registro = this.registro[0];
         this.mostrarDatos();
         Swal.fire({
@@ -258,8 +269,7 @@ export class MiembroComponent implements OnInit {
   cargarMinisterio12() {
     this.miembroService.getMinisterio12(this.registro.idMiembro)
       .subscribe(resp => {
-        this.ministerio12 = resp;
-        console.log(this.ministerio12);
+        this.ministerio12 = resp;      
       },
         err => { console.error(err) }
       );

@@ -9,7 +9,7 @@ Watch the tutorial step by step [here](https://www.youtube.com/watch?v=4CYuOiRHH
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://54.163.179.39/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 

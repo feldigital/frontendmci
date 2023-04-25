@@ -7,7 +7,7 @@ import { map } from 'rxjs/internal/operators/map';
   providedIn: 'root'
 })
 export class ArchivosService {
-  private url = 'http://localhost:8080';
+  private url = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com';
 
   constructor(private http: HttpClient) {
   }

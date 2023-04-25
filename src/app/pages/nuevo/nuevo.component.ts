@@ -137,7 +137,22 @@ export class NuevoComponent implements OnInit {
       // "si quien lo invita es un lider ese sera su lider osea idMiembro sino se le asigna el lider inmediato de quien lo invito"
       if (this.invitadoPor.lider) this.miembroNuevo.liderInmediato = this.invitadoPor.idMiembro;
       else this.miembroNuevo.liderInmediato = this.invitadoPor.liderInmediato;
-      if (this.existe) {
+      if (this.existe) {        
+        this.miembroNuevo.idMiembro=this.registro.idMiembro;
+        this.miembroNuevo.imgPerfil=this.registro.imgPerfil;
+        this.miembroNuevo.email=this.registro.email;
+        this.miembroNuevo.citaBiblica=this.registro.citaBiblica;
+        this.miembroNuevo.textoBiblico=this.registro.textoBiblico;
+      /* definir criterio del recatado*/
+        this.miembroNuevo.bautizado=this.registro.bautizado;
+        this.miembroNuevo.fechaBautismo=this.registro.fechaBautismo;
+        this.miembroNuevo.lider=this.registro.lider;
+        this.miembroNuevo.fechaIngreso=this.registro.fechaIngreso;
+        this.miembroNuevo.uvida=this.registro.uvida;
+        this.miembroNuevo.fechaUvida=this.registro.fechaUvida;
+        this.miembroNuevo.cdestino=this.registro.cdestino;
+        this.miembroNuevo.fechaCdestino=this.registro.fechaCdestino;
+
         this.miembroService.create(this.miembroNuevo).subscribe((resp: MiembroI) => {
           this.registro = resp;
           this.llenarNuevo();        
@@ -173,7 +188,6 @@ export class NuevoComponent implements OnInit {
         this.registro = resp;
         this.registro = this.registro[0];
         Swal.fire({
-         // title: 'Ya existe!',
           text: `El documento ${this.registro.numDocumento} ya esta registrado a nombre de ${this.registro.nomCompleto} en la tabla de nuevos desea agregarlo como rescatado?`,
           icon: 'question',
           showCancelButton: true,

@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe } from '@angular/core';
+import { Component, OnInit, Pipe, ViewChild } from '@angular/core';
 import { CelulaService } from 'src/app/servicios/celula.service';
 import { CelulaI } from 'src/app/models/celula.model';
 import Swal from 'sweetalert2';
@@ -40,7 +40,7 @@ export class ListcelulaComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    
   }
 
   ListarCelulas() {
@@ -68,5 +68,6 @@ export class ListcelulaComponent implements OnInit {
 
   delete(celula: CelulaI): void { }
 
+  
 
 }

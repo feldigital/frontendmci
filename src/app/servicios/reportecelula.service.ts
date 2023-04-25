@@ -10,7 +10,8 @@ import { AsistenciaCelula } from '../models/asistencia.model';
 @Injectable()
 export class ReporteCelulaService {
   private urlEndPoint: string = 'http://localhost:8080/api/asistencia_celula';
-
+  //private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/asistencia_celula';
+  
   constructor(private http: HttpClient, private router: Router) { }
 
   getReporteCelula(id: any): Observable<ReporteCelula> {

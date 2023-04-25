@@ -1,21 +1,26 @@
 <div class="card border-primary mb-3">
-  <div class="card-header">La llave de la multiplicación una celula con amor.</div>
+  <div class="card-header">Una clave de la multiplicación es hacer una celula con amor.</div>
   <div class="card-body">
     <h6 class="card-title">Celulas ministerio {{nombreActual}}</h6>
-       <div class="row my-2 text-left">
-      <div class="col">
-        <div class="input-group">
-          <input type="text" name="listFilter" class="form-control border-end-0"
-            placeholder="Filtrar por nombre del lider, por barrio" [(ngModel)]="listFilter">
-          <span class="input-group-text bg-transparent">
-            <i class="fa fa-search" aria-hidden="true"></i>
-          </span>
+    <div class="row my-2 text-left">
+      <div class="row my-2 text-left">
+        <div class="col-sm">
+          <div class="input-group mb-2">
+            <input type="text" name="listFilter" class="form-control border-end-0"
+              placeholder="Filtrar por nombre del lider, por barrio" [(ngModel)]="listFilter">
+            <span class="input-group-text bg-transparent">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+
+            <button class="btn btn-rounded btn btn-success" type="button" routerLink="/celulanueva">
+              Crear celula nueva
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="col">
-        <button class="btn btn-rounded btn btn-success" type="button" routerLink="/celulanueva">
-          Crear celula nueva
-        </button>
+        <div class="col text-left">
+          <h5 class="card-title"> <i class="fa fa-cogs" aria-hidden="true" [ngStyle]="{'color':'orange'}"></i>
+            {{celulas?.length }}</h5>
+        </div>
       </div>
     </div>
     <div *ngIf="celulas?.length == 0" class="alert alert-info">
@@ -26,7 +31,7 @@
         <tr>
           <th>Novedad</th>
           <th>#</th>
-          <th>Nombre del lider </th>
+          <th>Nombre del lider de la celula</th>
           <th>Anfitrion </th>
           <th>Direccion de la celula</th>
           <th>Barrio</th>
@@ -40,10 +45,11 @@
         <tr *ngFor="let item of filterCelulas ; let i= index"
           [ngStyle]="{'background-color': item.estado =='Activa' ? 'white' : 'orange' }">
           <td>
-            <div class="btn-group">
+            <div class="btn-group">              
               <button *ngIf="(item.estado==='Activa')" type="button" class="btn btn-info btn-sm"
-              [routerLink]="['/celulareporte', item.idCelula]">               
-                Reportar</button>              
+                [routerLink]="['/celulareporte', item.idCelula]">
+                Reportar</button>   
+                <i *ngIf="item.gcompleto" class="fa fa-users mt-2" aria-hidden="true" [ngStyle]="{'color':'green'}"></i>          
             </div>
           </td>
           <td>{{i+1}}</td>

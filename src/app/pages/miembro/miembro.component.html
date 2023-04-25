@@ -8,7 +8,7 @@
           Nombre del lider inmediato:
           <select class="form-select" formControlName="liderInmediato" placeholder="Lider inmediato" required>
             <option selected value="">Seleccione el lider inmediato</option>
-            <option *ngFor="let item of lideres" [ngValue]="item.idMiembro">{{item.nomCompleto}}</option>
+            <option *ngFor="let item of lideres" [ngValue]="item.idMiembro">{{item.nomCompleto | uppercase}}</option>
           </select>
         </div>
         <hr Datos ministeriales />
@@ -98,7 +98,7 @@
           </span>
         </div>
         <div class="input-group mb-2">
-          <input type="text" formControlName="celular" class="form-control border-end-0" placeholder="Celular" required>
+          <input type="number" formControlName="celular" class="form-control border-end-0" placeholder="Celular" required>
           <span class="input-group-text bg-transparent">
             <i class="fa fa-phone" aria-hidden="true"></i>
           </span>
@@ -116,55 +116,56 @@
 
     <hr Datos ministeriales />
     Datos ministeriales.
-    <div class="row">
 
-      <div class="col-3">
-        <input class="form-check-input m" type="checkbox" formControlName="lider"> Lider
+    <div class="row">        
+      <div class="col-sm mb-2">
+        <input type="text" formControlName="citaBiblica"
+          class="form-control border-end-0" placeholder="Cita biblica de tu llamado">
       </div>
-      <div class="row">
-        <div class="col-3">
-          <input *ngIf="nuevoForm.value.lider" type="date" formControlName="fechaIngreso"
-            class="form-control border-end-0">
-        </div>
-        <div class="col-3">
-          <input *ngIf="nuevoForm.value.lider" type="text" formControlName="citaBiblica"
-            class="form-control border-end-0" placeholder="Cita biblica de tu llamado">
-        </div>
-        <div class="col-6">
-          <input *ngIf="nuevoForm.value.lider" type="text" formControlName="textoBiblico" aria-multiline="true"
-            class="form-control border-end-0" placeholder="Texto biblico de tu llamado">
-        </div>
-        <div class="col-6">
-          <input *ngIf="nuevoForm.value.lider" type="password" formControlName="pwd" aria-multiline="true"
-            class="form-control border-end-0" placeholder="Ingrese su contraseña">
-        </div>
+      <div class="col-sm mb-2">
+        <input  type="text" formControlName="textoBiblico" aria-multiline="true"
+          class="form-control border-end-0" placeholder="Texto biblico de tu llamado">
+      </div>
+      <div class="col-sm mb-2">
+        <input type="password" formControlName="pwd" aria-multiline="true"
+          class="form-control border-end-0" placeholder="Ingrese su contraseña">
       </div>
     </div>
 
     <div class="row">
-      <div class="col-3">
-        <input class="form-check-input" type="checkbox" formControlName="bautizado"> Bautizado
+      <div class="col-sm">
+        <input class="form-check-input m" type="checkbox" formControlName="lider"> ¿Es lider de celula?
       </div>
-      <div class="col-3">
+      <div class="col-sm">
+        <input *ngIf="nuevoForm.value.lider" type="date" formControlName="fechaIngreso"
+          class="form-control border-end-0">
+      </div>     
+    </div>
+
+    <div class="row">
+      <div class="col-sm">
+        <input class="form-check-input" type="checkbox" formControlName="bautizado"> ¿Esta bautizad@?
+      </div>
+      <div class="col-sm">
         <input *ngIf="nuevoForm.value.bautizado" type="date" formControlName="fechaBautismo"
           class="form-control border-end-0">
-      </div>
+      </div> 
     </div>
 
     <div class="row">
-      <div class="col-3">
-        <input class="form-check-input" type="checkbox" formControlName="uvida"> Universidad de la vida
+      <div class="col-sm">
+        <input class="form-check-input" type="checkbox" formControlName="uvida"> ¿Fue a un encuentro?
       </div>
-      <div class="col-3">
+      <div class="col-sm">
         <input *ngIf="nuevoForm.value.uvida" type="date" formControlName="fechaUvida" class="form-control border-end-0">
       </div>
     </div>
 
     <div class="row">
-      <div class="col-3">
-        <input class="form-check-input" type="checkbox" formControlName="cdestino"> Capacitación Destino
+      <div class="col-sm">
+        <input class="form-check-input" type="checkbox" formControlName="cdestino"> ¿Curso capacitación destino?
       </div>
-      <div class="col-3">
+      <div class="col-sm">
         <input *ngIf="nuevoForm.value.cdestino" type="date" formControlName="fechaCdestino"
           class="form-control border-end-0">
       </div>
@@ -195,7 +196,7 @@
 
     <div class="card-header">Relacion de discipulos </div>
     <div *ngIf="ministerio12?.length == 0" class="alert alert-info mb-3">
-      No hay registros en la base de datos!
+      No hay discipul@s asociados en la base de datos!
     </div>
     <table class="table table-bordered table-striped" *ngIf="ministerio12?.length>0">
       <thead>
@@ -216,20 +217,19 @@
           <td>{{i+1}}</td>
           <td> <i *ngIf="item.lider" class="fa fa-user-plus" [ngStyle]="{'color':'green'}"></i>
             <i *ngIf="!item.lider" class="fa fa-user" [ngStyle]="{'color':'orange'}"></i>
-            {{ item.nomCompleto| uppercase }}
+            {{ item.nomCompleto | uppercase }}
           </td>
           <td>{{ item.fecNacimiento | date: 'MMM dd'}}</td>
           <td>{{CalcularEdad(item)}} </td>
           <td>{{ item.celular }}</td>
-          <td>{{ item.direccion }}</td>
+          <td>{{ item.direccion }} {{ item.barrio }}</td>
           <td class="text-center">
-
-            <i *ngIf="item.uvida" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
-            <i *ngIf="!item.uvida" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
             <i *ngIf="item.bautizado" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
-            <i *ngIf="!item.bautizado" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+            <i *ngIf="!item.bautizado" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>            
             <i *ngIf="item.uvida" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
             <i *ngIf="!item.uvida" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+            <i *ngIf="item.cdestino" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+            <i *ngIf="!item.cdestino" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
           </td>
           <td>
             <button type="button" class="btn btn-info btn-sm" (click)='refrescar(item)'>

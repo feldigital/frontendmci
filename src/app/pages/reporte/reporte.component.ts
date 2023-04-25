@@ -16,6 +16,9 @@ export class ReporteComponent implements OnInit {
   sales!: any[];
   reporteForm!: FormGroup;
   datareporte: any;
+  finicial!:Date;
+  ffinal!: Date;
+
 
   constructor(
     private miembroService: MiembroService,
@@ -45,7 +48,7 @@ export class ReporteComponent implements OnInit {
       const worksheet = xlsx.utils.json_to_sheet(this.datareporte); // Sale Data
       const workbook = { Sheets: { 'Datos': worksheet }, SheetNames: ['Datos'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, "sales");
+      this.saveAsExcelFile(excelBuffer, "MCI");
     });
   }
   saveAsExcelFile(buffer: any, fileName: string): void {
@@ -63,10 +66,21 @@ export class ReporteComponent implements OnInit {
     });
   }
 
+  verReporte(){
+    Swal.fire({
+      icon: 'info',
+      title: `Ok`,
+      text: `Reporte en construcción, muy pronto disfrutaras de la información que necesitas`,
+      showConfirmButton: false,
+      timer: 1500
+    });
 
+  }
 
 
   generarReporte() {
+    this.finicial= this.reporteForm.get('finicial')?.value;
+    this.ffinal= this.reporteForm.get('ffinal')?.value;
     switch (this.reporteForm.get('reporte')?.value) {
       case '0':
         Swal.fire({
@@ -158,7 +172,7 @@ export class ReporteComponent implements OnInit {
   ListarCelulasMinisterio() {
     let liderAct = sessionStorage.getItem("lidersistema");
     this.datareporte = null;
-    this.celulaService.getCelulasMinisterio(liderAct)
+    this.celulaService.getCelulasMinisterioReporte(liderAct)
       .subscribe(resp => {
         this.datareporte = resp;
         this.exportExcel();

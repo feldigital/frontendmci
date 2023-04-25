@@ -5,10 +5,11 @@
             <div class="col-sm">
                 <div class="mb-3">
                     Nombre del lider de la celula
-                    <select class="form-select" formControlName="idMiembroLider" placeholder="Lider inmediato" required>
+                    <select class="form-select" formControlName="idMiembroLider" placeholder="Lider inmediato" required
+                    (change)="buscarCelulasLider()"> <!---->
                         <option selected value="">Elige el lider de la celula</option>
                         <option *ngFor="let item of lideres" [ngValue]="item.idMiembro"
-                            [selected]="parametro == item.idMiembro">{{item.nomCompleto}}</option>
+                            [selected]="parametro == item.idMiembro">{{item.nomCompleto | uppercase }}</option>
                     </select>
                 </div>
                 <hr Datos ministeriales />
@@ -81,7 +82,7 @@
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <button class="btn btn-outline-primary w-100">Crear nueva celula</button>
+                        <button class="btn btn-outline-primary w-100"><i class="far fa-save"></i>Crear Celula</button>
                     </div>
 
                 </div>
@@ -90,8 +91,45 @@
                 <img src="./assets/celula.jpg" alt="Bienvenidos" class="img-thumbnail rounded">
             </div>
         </div>
-
     </form>
+
+    <div *ngIf="filterCelulas?.length == 0" class="alert alert-info mb-3">
+        No hay celulas creadas a este lider en la base de datos!
+    </div>
+    <div class="card-header" *ngIf="filterCelulas?.length>0"> Relacion de celulas creadas a este lider </div>
+
+    <table class="table table-bordered table-striped" *ngIf="filterCelulas?.length>0">
+        <thead>
+          <tr>    
+            <th>Apertura </th>      
+            <th>Anfitrion </th>
+            <th>Direccion de la celula</th>
+            <th>Barrio</th>
+            <th>Dia</th>
+            <th>Hora</th>
+            <th>Red</th>
+            <th>editar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filterCelulas ; let i= index"
+            [ngStyle]="{'background-color': item.estado =='Activa' ? 'white' : 'orange' }">
+          
+            <td>{{ item.fecApertura | date: 'dd-MM-YYYY'}}</td>
+            <td>{{ item.nombreAnfitrion| uppercase }}</td>
+            <td>{{ item.direccion }}</td>
+            <td>{{ item.barrio }}</td>
+            <td>{{ item.diaCelula }}</td>
+            <td>{{ item.horaCelula }}</td>
+            <td>{{ item.idRed.nomRed }}</td>
+  
+            <td>
+              <button type="button" class="btn btn-light" [routerLink]="['/celula', item.idCelula]">
+                <i style="color: cornflowerblue; " class="far fa-edit"></i> </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 </div>
 <!--
 <pre>

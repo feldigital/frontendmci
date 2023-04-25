@@ -4,6 +4,26 @@ import { DOCUMENT } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { MiembroI } from 'src/app/models/miembro.model';
 import { MiembroService } from 'src/app/servicios/miembro.service';
+/*import { AngularD3TreeLibService } from 'angular-d3-tree';
+
+const dataTreeSimple = {
+  "result": [
+    { "id": "1", "description": "Platform 1" },
+
+    { "id": "2", "description": "lv 2", "parent": "1" },
+    { "id": "3", "description": "lv 3", "parent": "1" },
+    { "id": "4", "description": "lv 4", "parent": "1" },
+
+    { "id": "5", "description": "lv 5", "parent": "2" },
+    { "id": "6", "description": "lv 6", "parent": "2" },
+
+    { "id": "7", "descripition": "lv 7", "parent": "3" },
+    { "id": "8", "description": "lv 8", "parent": "3" },
+
+    { "id": "9", "description": "lv 9", "parent": "4" },
+    { "id": "10", "description": "lv 10", "parent": "4" }
+  ]
+};*/
 
 @Component({
   selector: 'app-inicio',
@@ -12,10 +32,11 @@ import { MiembroService } from 'src/app/servicios/miembro.service';
 })
 
 export class InicioComponent implements OnInit { //AfterViewInit
-  lider: any; 
-  ministerio12!: any; 
-  ministerio144!: any; 
-  logueado!: boolean; 
+ // data: any[];
+  lider: any;
+  ministerio12!: any;
+  ministerio144!: any;
+  logueado!: boolean;
   liderAct: any;
   chartDonnus: any;
   @Input() idChart = '1';
@@ -23,23 +44,33 @@ export class InicioComponent implements OnInit { //AfterViewInit
 
 
 
-  constructor( private miembroService: MiembroService,  @Inject(DOCUMENT) private document: Document) {  }
-
-
-  ngOnInit(): void { 
-    Chart.register(...registerables);
-    this.logueado=false;
-    this.liderAct=null;
-    this.buscarlideract(); 
-    this.cargarMinisterio12(); 
-    this.cargarMinisterio144(); 
- 
+  constructor(private miembroService: MiembroService,
+    @Inject(DOCUMENT) private document: Document
+    //,private treeService: AngularD3TreeLibService
+    ) {
+    //this.data = dataTreeSimple.result;
   }
 
- // ngAfterViewInit(): void {
-   // this.chartInit12();
-    //this.chartInit144();
- // }
+  selectedNode: any;
+  nodeUpdated(node: any) {
+  }
+  nodeSelected(node: any) {
+    this.selectedNode = node;
+  }
+  ngOnInit(): void {
+    Chart.register(...registerables);
+    this.logueado = false;
+    this.liderAct = null;
+    this.buscarlideract();
+    this.cargarMinisterio12();
+    this.cargarMinisterio144();
+
+  }
+
+  // ngAfterViewInit(): void {
+  // this.chartInit12();
+  //this.chartInit144();
+  // }
   chartInit12() {
     const el: any = this.document.getElementById(this.idChart);
     const ctx = el.getContext('2d');
@@ -47,7 +78,7 @@ export class InicioComponent implements OnInit { //AfterViewInit
       type: 'doughnut',
       data: {
         datasets: [{
-          data: [ this.ministerio12?.length, 12-this.ministerio12?.length],
+          data: [this.ministerio12?.length, 12 - this.ministerio12?.length],
           backgroundColor: [
             '#ffa5a5',
             '#2bb6d7',
@@ -65,7 +96,7 @@ export class InicioComponent implements OnInit { //AfterViewInit
       type: 'doughnut',
       data: {
         datasets: [{
-          data: [ this.ministerio144?.length, 144-this.ministerio144?.length],
+          data: [this.ministerio144?.length, 144 - this.ministerio144?.length],
           backgroundColor: [
             '#a5a5ff',
             '#C5E7D7',
@@ -76,39 +107,39 @@ export class InicioComponent implements OnInit { //AfterViewInit
       }
     });
   }
- 
+
 
   buscarlideract() {
     if (sessionStorage.getItem("lidersistema")) {
-       this.liderAct= sessionStorage.getItem("lidersistema");
+      this.liderAct = sessionStorage.getItem("lidersistema");
       this.lider = null;
       this.miembroService.getMiembro(this.liderAct)
         .subscribe((resp: MiembroI) => {
           this.lider = resp;
-          this.logueado=true;
+          this.logueado = true;
           (err: any) => { console.error(err) }
         });
     }
   }
-cargarMinisterio12(){
- // console.log(this.liderAct);
-  this.miembroService.getMinisterio12(this.liderAct)
-  .subscribe(resp => {
-    this.ministerio12 = resp; 
-    this.chartInit12(); 
-     },
-    err => { console.error(err) }
-  );
-}
+  cargarMinisterio12() {
+    // console.log(this.liderAct);
+    this.miembroService.getMinisterio12(this.liderAct)
+      .subscribe(resp => {
+        this.ministerio12 = resp;
+        this.chartInit12();
+      },
+        err => { console.error(err) }
+      );
+  }
 
-cargarMinisterio144(){
-  this.miembroService.getMinisterio144(this.liderAct)
-  .subscribe(resp => {
-    this.ministerio144 = resp;  
-    this.chartInit144(); 
-     },
-    err => { console.error(err) }
-  );
-}
+  cargarMinisterio144() {
+    this.miembroService.getMinisterio144(this.liderAct)
+      .subscribe(resp => {
+        this.ministerio144 = resp;
+        this.chartInit144();
+      },
+        err => { console.error(err) }
+      );
+  }
 
 }

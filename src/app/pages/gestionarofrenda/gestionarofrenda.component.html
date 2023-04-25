@@ -1,5 +1,5 @@
 <div class="card border-primary mb-3">
-    <div class="card-header">Gestionando celulas en amor.</div>
+    <div class="card-header">Gestionando ofrendas de celulas con diligencia.</div>
     <div class="card-body">
         <h6 class="card-title">Celulas MCI Santa Marta </h6>
         <div class="row my-2 text-left">
@@ -40,7 +40,7 @@
                         <td>{{item.idCelula.idMiembroLider.celular}}</td>
                         <td>{{item.temaCelula | uppercase}}</td> <!--titlecase-->
                         <td class="text-center">{{item.nroAsistentes}}</td>
-                        <td class="text-end">{{item.ofrendaCelula}}</td>
+                        <td class="text-end">{{item.ofrendaCelula | currency: '$':true: '1.0-2' }}</td>
                         <td class="text-center" *ngIf="item.verificada===true">
                             <i class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
                         </td>

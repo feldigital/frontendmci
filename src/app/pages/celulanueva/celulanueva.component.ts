@@ -19,8 +19,9 @@ export class CelulanuevaComponent implements OnInit {
   red!: any;
   celulaForm!: FormGroup;
   lideres: any;
-
+  filterCelulas!: any;
   parametro: any;
+
   constructor(
     private fb: FormBuilder,
     private miembroService: MiembroService,
@@ -28,7 +29,8 @@ export class CelulanuevaComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private celulaServicio: CelulaService) {
     this.cargarRed();
-    this.cargarMembresia();
+    this.cargarMembresia();   
+    this.filterCelulas = null;
 
   }
 
@@ -39,7 +41,8 @@ export class CelulanuevaComponent implements OnInit {
       .subscribe((lider: MiembroI) => {
         this.lider = lider;
         this.celulaForm.controls['idMiembroLider'].setValue(this.parametro);
-        this.celulaForm.controls['idMiembroLider'].setValue(this.lider.idMiembro);    
+        this.celulaForm.controls['idMiembroLider'].setValue(this.lider.idMiembro);  
+        this.buscarCelulasLider();  
       });
       this.celulaForm.controls['gcompleto'].setValue(false);
     this.activatedRoute.params.subscribe(
@@ -110,11 +113,33 @@ export class CelulanuevaComponent implements OnInit {
   }
 
 
-  cargarMembresia() {
+  /*cargarMembresia() {
     this.lideres = null;
+    //let liderAct = sessionStorage.getItem("lidersistema");
     this.miembroService.getMiembrosLideres()
       .subscribe((resp: MiembroI) => {
         this.lideres = resp;
+      },
+        (err: any) => { console.error(err) }
+      );
+  }*/
+
+  cargarMembresia() {
+    this.lideres = null;
+    let liderAct = sessionStorage.getItem("lidersistema");
+    this.miembroService.getMiembrosLideres(liderAct)
+      .subscribe((resp: MiembroI) => {
+        this.lideres = resp;
+      },
+        (err: any) => { console.error(err) }
+      );
+  }
+
+  buscarCelulasLider(){   
+    this.filterCelulas = null; 
+    this.celulaServicio.getCelulaLider(this.celulaForm.get('idMiembroLider')?.value)
+      .subscribe((resp: CelulaI) => {
+        this.filterCelulas = resp;
       },
         (err: any) => { console.error(err) }
       );

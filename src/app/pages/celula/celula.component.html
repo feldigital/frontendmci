@@ -8,7 +8,7 @@
                     <select class="form-select" formControlName="idMiembroLider" placeholder="Lider inmediato" required>
                         <option selected value="">Elige el lider de la celula</option>
                         <option *ngFor="let item of lideres" [ngValue]="item.idMiembro"
-                            [selected]="parametrolider == item.idMiembro">{{item.nomCompleto}}</option>
+                            [selected]="parametrolider == item.idMiembro">{{item.nomCompleto | uppercase }}</option>
                     </select>
                 </div>
                 <hr Datos ministeriales />
@@ -81,7 +81,7 @@
             </div>
             <div class="col-sm">
                 <div class="alert alert-info my-4" *ngIf="discipuloscelula?.length == 0">
-                    No hay discipulos asignados para la celula. Debe agregar al menos uno!
+                    No hay discipul@s asignados para la celula. Debe agregar al menos uno!
                 </div>
                 <div *ngIf="discipuloscelula?.length > 0">
                     <table class="table table-striped table-hover table-sm">
@@ -99,7 +99,7 @@
                             <tr *ngFor="let item of discipuloscelula let i= index"
                                 [ngStyle]="{'background-color': item.idMiembro.estado =='Activo' ? 'white' : 'red' }">
                                 <td>{{i+1}}</td>
-                                <td>{{item.idMiembro.nomCompleto}}</td>
+                                <td>{{item.idMiembro.nomCompleto | titlecase}}</td>
                                 <td>{{item.idMiembro.fecNacimiento | date:"MMM-dd"}}</td>
                                 <td>{{item.idMiembro.celular}}</td>
                                 <td> <button class="btn btn-danger btn-sm" type="button"
@@ -136,7 +136,7 @@
     </div>
 </div>
 <div *ngIf="miembros?.length == 0" class="alert alert-info mb-3">
-    No hay discipulos de tu ministerio registrados en la base de datos!
+    No hay discipul@s registrados a para agregar a tu celula en la base de datos!
 </div>
 <div class="container mt-4">
 
@@ -153,13 +153,13 @@
         </thead>
         <tbody>
             <tr *ngFor="let item of filterMiembros let i= index"
-                [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'red' }">
+            [ngStyle]="{'color': item.estado =='Activo' ? 'black' : 'red' }">
                 <td>
-                    <img *ngIf="item?.imgPerfil" src="http://localhost:8080/api/uploads/img/{{item.imgPerfil}}"
-                        alt="{{item.imgPerfil}}" class="img-thumbnail rounded" style="width:64px; cursor: pointer;">
+                    <img *ngIf="item?.imgPerfil" src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{item.imgPerfil}}"
+                        alt="{{item.imgPerfil}}" class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
 
-                    <img *ngIf="!item?.imgPerfil" src="http://localhost:8080/images/no-usuario.png" alt="Sin foto"
-                        class="img-thumbnail rounded" style="width:64px; cursor: pointer;">
+                    <img *ngIf="!item?.imgPerfil" src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" alt="Sin foto"
+                        class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
 
                 </td>
                 <td>{{ item.nomCompleto| uppercase }}</td>

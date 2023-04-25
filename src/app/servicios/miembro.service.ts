@@ -9,7 +9,10 @@ import { ReunionI } from '../models/reunion.model';
 
 @Injectable()
 export class MiembroService {
+  
   private urlEndPoint: string = 'http://localhost:8080/api/miembros';
+  //private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/miembros';
+  
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -43,8 +46,17 @@ export class MiembroService {
     );
   }
 
+/* este es para el backen actal
   getMiembrosLideres(): Observable<any> {
     return this.http.get(this.urlEndPoint + '/lideres').pipe(
+      catchError(e => {
+        return throwError(e);
+      })
+    );
+  }*/
+
+  getMiembrosLideres(id: any): Observable<any> {
+    return this.http.get(`${this.urlEndPoint}/lideres/${id}`).pipe(
       catchError(e => {
         return throwError(e);
       })

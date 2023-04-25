@@ -14,6 +14,7 @@ import { MiembroCelula } from '../models/miembrocelula.model';
 @Injectable()
 export class CelulaService {
   private urlEndPoint: string = 'http://localhost:8080/api/celulas';
+  //private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/celulas';
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -49,6 +50,15 @@ export class CelulaService {
       })
     );
   }
+
+  getCelulasMinisterioReporte(id: any): Observable<any>  {
+    return this.http.get(this.urlEndPoint + `/reporte/${id}`).pipe(
+      catchError(e => {
+        return throwError(e);
+      })
+    );
+  }
+
   public create(registro: CelulaI) {
     const headers = { 'Content-Type': 'application/json' };   
     return this.http.post<CelulaI>(this.urlEndPoint, JSON.stringify(registro), { headers }).pipe(
@@ -97,6 +107,17 @@ export class CelulaService {
     return this.http.delete<void>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
         if (e.error.mensaje) {
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      }));
+  }
+
+  getCelulaLider(id: any): Observable<CelulaI> {
+    return this.http.get<CelulaI>(`${this.urlEndPoint}/lider/${id}`).pipe(
+      catchError(e => {
+        if (e.status != 401 && e.error.mensaje) {
+          this.router.navigate(['/celula']);
           console.error(e.error.mensaje);
         }
         return throwError(e);

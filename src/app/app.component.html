@@ -1,10 +1,11 @@
 <mat-toolbar class="mat-elevation-z8">
   <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
-    <mat-icon *ngIf="!sidenav.opened"> menu </mat-icon>
-    <mat-icon *ngIf="sidenav.opened"> close </mat-icon>
+    <mat-icon *ngIf="!sidenav.opened" [ngStyle]="{'color': 'grey'}"> menu </mat-icon>
+    <mat-icon *ngIf="sidenav.opened" [ngStyle]="{'color': 'grey'}" > close </mat-icon>
   </button>
 
   <div class="container-fluid">
+
     <a class="navbar-brand" href="#">
       <img src="assets/logo.png" alt="" width="130">
     </a>
@@ -24,9 +25,9 @@
   <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
 
     <img *ngIf="lider?.imgPerfil" class="avatar mat-elevation-z8"
-      src="http://localhost:8080/api/uploads/img/{{lider.imgPerfil}}" />
+      src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{lider.imgPerfil}}" />
 
-    <img *ngIf="!lider?.imgPerfil" class="avatar mat-elevation-z8" src="http://localhost:8080/images/no-usuario.png" />
+    <img *ngIf="!lider?.imgPerfil" class="avatar mat-elevation-z8" src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" />
 
     <div *ngIf="!logueado">
       <h6 class="name">Nombre del lider </h6>
@@ -40,22 +41,22 @@
     <mat-divider></mat-divider>
 
     <div *ngIf="logueado">
-      <button mat-button class="menu-button" routerLink="/home">
+      <button mat-button class="menu-button" routerLink="/inicio">
         <mat-icon>home</mat-icon>
         <span>Inicio</span>
       </button>
-      <button mat-button class="menu-button" routerLink="/miembro">
+      <button mat-button class="menu-button" [routerLink]="['/miembro', lider.idMiembro]"> 
         <mat-icon>person</mat-icon>
         <span>Mis datos</span>
       </button>
       <button mat-button class="menu-button" routerLink="/listcelula">
         <mat-icon>group_add</mat-icon>
-        <span>Mis celulas</span>
+        <span>Celulas</span>
       </button>
 
       <button mat-button class="menu-button" routerLink="/ministerio">
         <mat-icon> bubble_chart</mat-icon>
-        <span>Mi ministerio</span>
+        <span>Discipulos</span>
       </button>
       <mat-divider></mat-divider>
 

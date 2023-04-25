@@ -34,13 +34,15 @@ export class MinisterioComponent implements OnInit {
       //Preguntar si admin o de acuerdo a eso  listar listado de miembros  
     this.ListarMiembrosMinisterio();
     this.edad = 1;
+
   }
 
   performFilter(filterBy: string): MiembroI[] {
     if (filterBy === '' || filterBy.length < 3) return this.miembros
     filterBy = filterBy.toLocaleLowerCase();
-    return this.miembros.filter((miembro: MiembroI) => miembro.nomCompleto.toLocaleLowerCase().indexOf(filterBy) !== -1);
-    //|| miembro.barrio.toLocaleLowerCase().indexOf(filterBy) !== -1 || miembro.direccion.toLocaleLowerCase().indexOf(filterBy) !== -1)
+    return this.miembros.filter((miembro: MiembroI) => miembro.nomCompleto.toLocaleLowerCase().indexOf(filterBy) !== -1
+    || miembro.barrio.toLocaleLowerCase().indexOf(filterBy) !== -1);
+    // || miembro.toLocaleLowerCase().indexOf(filterBy) !== -1)
   }
 
 
@@ -124,5 +126,11 @@ export class MinisterioComponent implements OnInit {
 
   agregarimg(item: MiembroI): void {
     this.router.navigate(['/detalle', item.idMiembro]);
+  }
+
+  pipeCumple(fn: Date){
+    var cumple=new Date(fn);
+    return cumple.toJSON().slice(0,10)
+
   }
 }

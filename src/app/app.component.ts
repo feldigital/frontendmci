@@ -18,6 +18,7 @@ export class AppComponent {
   sidenav!: MatSidenav;
   lider: any;
   logueado!: boolean;
+ //liderAct: any;
  
 
   constructor(private observer: BreakpointObserver, private router: Router, private miembroService: MiembroService) {
@@ -59,13 +60,14 @@ export class AppComponent {
         .subscribe((resp: MiembroI) => {
           this.lider = resp;
           this.logueado = true;
+          console.log(this.logueado);
           (err: any) => { console.error(err) }
         });
     }
   }
 
   cerrar() {
-    console.log("ya llegue");
+    //console.log("ya llegue");
     localStorage.clear();
     sessionStorage.removeItem("lidersistema");
     sessionStorage.removeItem("nombsistema");

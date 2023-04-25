@@ -5,9 +5,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { registerLocaleData } from '@angular/common';
+import { HashLocationStrategy, LocationStrategy, registerLocaleData } from '@angular/common';
 import localePY from '@angular/common/locales/es';
 import { HttpClientModule } from '@angular/common/http';
+
 
 
 import { InicioComponent } from './pages/inicio/inicio.component';
@@ -35,6 +36,7 @@ import { AsistenciaCelulaService } from './servicios/asistenciacelula.service';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatToolbarModule } from '@angular/material/toolbar';
+//import {MatMenuModule} from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -91,6 +93,7 @@ registerLocaleData(localePY, 'es');
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatFormFieldModule,
+    //MatMenuModule
   //  FontAwesomeModule,
 
 
@@ -104,7 +107,8 @@ registerLocaleData(localePY, 'es');
     NuevoService,
     AsistenciaCelulaService,
     { provide: LOCALE_ID, useValue: 'es' },
-    { provide: DEFAULT_CURRENCY_CODE, useValue: 'es' }
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'es' },
+    { provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent],
 

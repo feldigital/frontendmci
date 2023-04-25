@@ -1,5 +1,7 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { $ } from 'protractor';
 import { ReporteCelula } from 'src/app/models/reportecelula.model';
 import { ReporteCelulaService } from 'src/app/servicios/reportecelula.service';
 import Swal from 'sweetalert2';
@@ -65,8 +67,8 @@ export class GestionarofrendaComponent implements OnInit {
     this.reportecelulaSevicio.update(itemt).subscribe(resp => {
       Swal.fire({
         icon: 'success',
-        title: `Ok`,
-        text: `La celula de ${itemt.idCelula.idMiembroLider.nomCompleto} realizada en la fecha ${itemt.fechaCelula} ha sido actualizada correctamente!`,
+        title: 'Ok',
+        text: `La celula de ${itemt.idCelula.idMiembroLider.nomCompleto} identificada con el ID ${itemt.idCelula.idCelula } ha sido gestionada correctamente!`,
       });
     },
       err => {

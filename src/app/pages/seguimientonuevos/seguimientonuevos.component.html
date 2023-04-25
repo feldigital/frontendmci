@@ -1,5 +1,5 @@
 <div class="card border-primary mb-3">
-    <div class="card-header">La llave de la multiplicación cuidar al nuevo.</div>
+    <div class="card-header">Una clave de la multiplicación es cuidar al nuevo con amor.</div>
     <div class="card-body ">
         <h6 class="card-title">Nuevos del ministerio de {{nombreActual}} </h6>
         <div class="row my-2 text-left">
@@ -26,6 +26,7 @@
                 <tr>
                     <th>#</th>
                     <th>Nombre del invitado </th>
+                    <th>Tipo de invitado </th>
                     <th>Celular </th>
                     <th>Dirección </th>
                     <th>Invitad@ por </th>
@@ -40,6 +41,12 @@
                     [ngStyle]="{'background-color': item.idMiembro.estado =='Activo' ? 'white' : 'orange' }">
                     <td>{{i+1}}</td>
                     <td>{{ item.idMiembro.nomCompleto| uppercase }}</td>
+                    <td class="text-center" *ngIf="item.nuevo===false">Rescatado
+                        <i class="fa fa-check" [ngStyle]="{'color':'orange'}"></i>
+                    </td>
+                    <td class="text-center" *ngIf="item.nuevo===true">Nuevo
+                        <i class="fa fa-check" [ngStyle]="{'color':'green'}"></i>
+                    </td>
                     <td>{{ item.idMiembro.celular }}</td>
                     <td>{{ item.idMiembro.direccion }}</td>
                     <td>{{ item.idMiembroQuienInvita.nomCompleto }}</td>

@@ -233,7 +233,7 @@ export class CelulaComponent implements OnInit {
       Swal.fire({
         icon: 'warning',
         title: `Denegado`,
-        text: `El discipiulo ${disc.nomCompleto}  no pudo ser agregado por que ya existe! `,
+        text: `El discipiulo ${disc.nomCompleto}  no pudo ser agregado, por que ya existe! `,
         showConfirmButton: false,
         timer: 2000
       });
@@ -259,13 +259,27 @@ export class CelulaComponent implements OnInit {
   }
 
    
-  cargarMembresia() {
+ /* cargarMembresia() {
     this.lideres = null;
+    let liderAct = sessionStorage.getItem("lidersistema");
     this.miembroService.getMiembrosLideres()
       .subscribe((resp: MiembroI) => {
         this.lideres = resp;
       },
         (err: any) => { console.error(err) }
       );
+  }*/
+
+  cargarMembresia() {
+    this.lideres = null;
+    let liderAct = sessionStorage.getItem("lidersistema");
+    this.miembroService.getMiembrosLideres(liderAct)
+      .subscribe((resp: MiembroI) => {
+        this.lideres = resp;
+      },
+        (err: any) => { console.error(err) }
+      );
   }
+
+
 }

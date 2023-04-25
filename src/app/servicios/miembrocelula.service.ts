@@ -9,7 +9,8 @@ import { MiembroCelula } from '../models/miembrocelula.model';
 @Injectable()
 export class MiembroCelulaService {
   private urlEndPoint: string = 'http://localhost:8080/api/celula_miembros';
-
+  //private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/celula_miembros';
+ 
   constructor(private http: HttpClient, private router: Router) { }
 
 
