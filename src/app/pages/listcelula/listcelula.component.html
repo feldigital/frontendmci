@@ -49,7 +49,9 @@
               <button *ngIf="(item.estado==='Activa')" type="button" class="btn btn-info btn-sm"
                 [routerLink]="['/celulareporte', item.idCelula]">
                 Reportar</button>   
-                <i *ngIf="item.gcompleto" class="fa fa-users mt-2" aria-hidden="true" [ngStyle]="{'color':'green'}"></i>          
+                <i *ngIf="item.gcompleto" class="fa fa-users mt-2" aria-hidden="true" [ngStyle]="{'color':'green'}"></i>   
+                
+               <label *ngIf="(item.estado!='Activa')">{{ item.estado }} </label>
             </div>
           </td>
           <td>{{i+1}}</td>
@@ -60,7 +62,6 @@
           <td>{{ item.diaCelula }}</td>
           <td>{{ item.horaCelula }}</td>
           <td>{{ item.idRed.nomRed }}</td>
-
           <td>
             <button type="button" class="btn btn-light" [routerLink]="['/celula', item.idCelula]">
               <i style="color: cornflowerblue; " class="far fa-edit"></i> </button>
@@ -69,4 +70,9 @@
       </tbody>
     </table>
   </div>
+</div>
+
+<div *ngIf="isLoading"> 
+  <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff897" type = "ball-clip-rotate-multiple" 
+  [fullScreen] = "true"><p style="color: rgb(226, 130, 34)" > Cargando... </p></ngx-spinner>    
 </div>

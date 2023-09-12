@@ -5,6 +5,7 @@ import { CelulaService } from 'src/app/servicios/celula.service';
 import { MiembroService } from 'src/app/servicios/miembro.service';
 import { NuevoService } from 'src/app/servicios/nuevo.service';
 import { ReporteCelulaService } from 'src/app/servicios/reportecelula.service';
+import { NgxSpinnerService } from "ngx-spinner";
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,8 +17,11 @@ export class ReporteComponent implements OnInit {
   sales!: any[];
   reporteForm!: FormGroup;
   datareporte: any;
-  finicial!:Date;
+  finicial!: Date;
   ffinal!: Date;
+  fechaInicial!: string;
+  fechaFinal!: string;
+  isLoading: boolean = false;
 
 
   constructor(
@@ -25,7 +29,8 @@ export class ReporteComponent implements OnInit {
     private reportecelulaSevicio: ReporteCelulaService,
     private celulaService: CelulaService,
     private nuevoService: NuevoService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.crearFormulario();
@@ -43,12 +48,18 @@ export class ReporteComponent implements OnInit {
   }
 
   //excel button click functionality
-  exportExcel() {
+  exportExcel(nomb: string) {
     import("xlsx").then(xlsx => {
       const worksheet = xlsx.utils.json_to_sheet(this.datareporte); // Sale Data
       const workbook = { Sheets: { 'Datos': worksheet }, SheetNames: ['Datos'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, "MCI");
+      this.saveAsExcelFile(excelBuffer, "Reporte_" + nomb + "_MCI");
+      Swal.fire({
+        icon: 'success',
+        title: `Ok`,
+        text: `Su reporte fue exportado en su carpeta de descargas en formato xslx`,
+        
+      });
     });
   }
   saveAsExcelFile(buffer: any, fileName: string): void {
@@ -61,12 +72,12 @@ export class ReporteComponent implements OnInit {
       });
       FileSaver.saveAs(
         data,
-        fileName + "_Reporte_" + new Date().getTime() + EXCEL_EXTENSION
+        fileName + new Date().getTime() + EXCEL_EXTENSION
       );
     });
   }
 
-  verReporte(){
+  verReporte() {
     Swal.fire({
       icon: 'info',
       title: `Ok`,
@@ -79,17 +90,27 @@ export class ReporteComponent implements OnInit {
 
 
   generarReporte() {
-    this.finicial= this.reporteForm.get('finicial')?.value;
-    this.ffinal= this.reporteForm.get('ffinal')?.value;
+
+    const freportData = {
+      fechaInicial: this.fechaInicial,
+      fechaFinal: this.fechaFinal
+    };
+
+    this.finicial = this.reporteForm.get('finicial')?.value;
+    this.ffinal = this.reporteForm.get('ffinal')?.value;
+    this.isLoading = true;
+    this.spinner.show();
     switch (this.reporteForm.get('reporte')?.value) {
       case '0':
         Swal.fire({
           icon: 'info',
           title: `Ok`,
-          text: `Reporte en construcción, muy pronto disfrutaras de la información que necesitas`,
+          text: `Seleccione el reporte del que necesite la informacions`,
           showConfirmButton: false,
           timer: 1500
         });
+        this.spinner.hide();
+        this.isLoading = false;
         break;
 
       case '1':
@@ -97,13 +118,13 @@ export class ReporteComponent implements OnInit {
         break;
 
       case '2':
-        // insert your code here
+        this.ListarNuevosMinisterio();
         break;
       case '3':
-        this.ListarNuevosMinisterio(); 
+        // insert your code here
         break;
       case '4':
-        // insert your code here
+        this.ListarCelulasMinisterio();
         break;
       case '5':
         // insert your code here
@@ -118,19 +139,19 @@ export class ReporteComponent implements OnInit {
         // insert your code here
         break;
       case '9':
-        this.ListarCelulasMinisterio();
+        // insert your code here
         break;
       case '10':
-
+        // insert your code here
         break;
       case '11':
-
+        // insert your code here
         break;
       case '12':
-      
+        // insert your code here   
         break;
       case '13':
-
+        // insert your code here
         break;
       case '14':
         this.ListarMiembrosMinisterio();
@@ -146,10 +167,12 @@ export class ReporteComponent implements OnInit {
   cargarTemas() {
     let liderAct = sessionStorage.getItem("lidersistema");
     this.datareporte = null;
-    this.reportecelulaSevicio.getOfrendaCelula()
+    this.reportecelulaSevicio.getReporteTemasCelula(liderAct)
       .subscribe((resp: ReporteCelula) => {
         this.datareporte = resp;
-        this.exportExcel();
+        this.spinner.hide();
+        this.isLoading = false;
+        this.exportExcel("Temas");
       },
         (err: any) => { console.error(err) }
       );
@@ -159,10 +182,12 @@ export class ReporteComponent implements OnInit {
   ListarMiembrosMinisterio() {
     let liderAct = sessionStorage.getItem("lidersistema");
     this.datareporte = null;
-    this.miembroService.getMiembrosMinisterio(liderAct)
+    this.miembroService.getReporteMinisterio(liderAct)
       .subscribe(resp => {
         this.datareporte = resp;
-        this.exportExcel();
+        this.spinner.hide();
+        this.isLoading = false;
+        this.exportExcel("Discipulos");
       },
         err => { console.error(err) }
       );
@@ -175,7 +200,9 @@ export class ReporteComponent implements OnInit {
     this.celulaService.getCelulasMinisterioReporte(liderAct)
       .subscribe(resp => {
         this.datareporte = resp;
-        this.exportExcel();
+        this.spinner.hide();
+        this.isLoading = false;
+        this.exportExcel("Celulas");
       },
         err => { console.error(err) }
       );
@@ -185,13 +212,23 @@ export class ReporteComponent implements OnInit {
   ListarNuevosMinisterio() {
     let liderAct = sessionStorage.getItem("lidersistema");
     this.datareporte = null;
-    this.nuevoService.getNuevosMinisterio(liderAct)
+    this.nuevoService.getReportelNuevo(liderAct)
       .subscribe(resp => {
         this.datareporte = resp;
-        this.exportExcel();
+        this.spinner.hide();
+        this.isLoading = false;
+        this.exportExcel("Nuevos");
       },
         err => { console.error(err) }
       );
+  }
+
+  onChange(reporteId: Event) {
+    console.log("Estoy en cambio" + reporteId); // Aquí iría tu lógica al momento de seleccionar algo
+   
+    this.reporteForm.get('fechaInicial')?.disable();
+    this.reporteForm.get('fechaFinal')?.disable();
+
   }
 
 }

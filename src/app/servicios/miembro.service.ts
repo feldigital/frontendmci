@@ -10,8 +10,8 @@ import { ReunionI } from '../models/reunion.model';
 @Injectable()
 export class MiembroService {
   
-  private urlEndPoint: string = 'http://localhost:8080/api/miembros';
-  //private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/miembros';
+  //private urlEndPoint: string = 'http://localhost:8080/api/miembros';
+   private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/miembros';
   
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -96,6 +96,16 @@ export class MiembroService {
       })
     );
   }
+  
+  getReporteMinisterio(idLider: any): Observable<any> {
+    return this.http.get(`${this.urlEndPoint}/reporteministerio/${idLider}`).pipe(
+      //console.log(${this.urlEndPoint}/ministerio/${idLider});
+      catchError(e => {
+        return throwError(e);
+      })
+    );
+  }
+
 
   getMiembro(id: any): Observable<MiembroI> {
     return this.http.get<MiembroI>(`${this.urlEndPoint}/${id}`).pipe(
@@ -151,4 +161,14 @@ export class MiembroService {
 
     return this.http.request(req);
   }
+
+  public enviarCorreo(registro: MiembroI) {
+    const headers = { 'Content-Type': 'application/json' };
+    return this.http.post<MiembroI>(`${this.urlEndPoint}/enviarCorreo`,JSON.stringify(registro),  { headers }).pipe(
+      catchError(e => {
+        return throwError(e);
+      })
+    );
+  }
+
 }

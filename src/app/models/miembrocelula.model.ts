@@ -13,6 +13,6 @@ export class MiembroCelula {
   
   constructor() {
     this.estado = true;
-    this.fechaIngreso= new Date();
+    this.fechaIngreso= new Date('');
   }
 }

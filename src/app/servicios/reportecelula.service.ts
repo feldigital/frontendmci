@@ -9,8 +9,8 @@ import { AsistenciaCelula } from '../models/asistencia.model';
 
 @Injectable()
 export class ReporteCelulaService {
-  private urlEndPoint: string = 'http://localhost:8080/api/asistencia_celula';
-  //private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/asistencia_celula';
+  //private urlEndPoint: string = 'http://localhost:8080/api/asistencia_celula';
+  private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/asistencia_celula';
   
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -24,6 +24,29 @@ export class ReporteCelulaService {
         return throwError(e);
       }));
   }
+
+  getReporteOfrendaCelula(id: any): Observable<ReporteCelula> {
+    return this.http.get<ReporteCelula>(`${this.urlEndPoint}/${id}`).pipe(
+      catchError(e => {
+        if (e.status != 401 && e.error.mensaje) {
+          this.router.navigate(['/celula']);
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      }));
+  }
+
+  getReporteTemasCelula(id: any): Observable<any> {
+    return this.http.get(`${this.urlEndPoint}/ministerio/${id}`).pipe(
+      catchError(e => {
+        if (e.status != 401 && e.error.mensaje) {
+          this.router.navigate(['/celula']);
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      }));
+  }
+
   getOfrendaCelula(): Observable<ReporteCelula> {
     return this.http.get<ReporteCelula>(`${this.urlEndPoint}/todas`).pipe(
       catchError(e => {

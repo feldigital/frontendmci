@@ -5,6 +5,7 @@ import { MiembroService } from 'src/app/servicios/miembro.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { from } from 'rxjs';
 
 
 
@@ -12,6 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-miembro',
   templateUrl: './miembro.component.html'
+
 })
 export class MiembroComponent implements OnInit {
   registro: any;
@@ -21,9 +23,9 @@ export class MiembroComponent implements OnInit {
   nuevoForm!: FormGroup;
   nombrebtn!: string
   edad!: number;
- //liderAct: any;
+  //liderAct: any;
   ministerio12!: any;
-
+  keyword = 'nomCompleto';  
 
 
   constructor(private fb: FormBuilder,
@@ -40,7 +42,7 @@ export class MiembroComponent implements OnInit {
 
 
   ngOnInit() {
-    
+
     this.parametro = this.activatedRoute.snapshot.params.id;
     this.cargardatos();
     this.activatedRoute.params.subscribe(
@@ -58,6 +60,8 @@ export class MiembroComponent implements OnInit {
     this.miembroService.getMiembro(this.parametro)
       .subscribe((registro: MiembroI) => {
         this.registro = registro;
+        console.log(registro);
+        console.log(registro.liderInmediato);
         this.mostrarDatos();
         this.cargarMinisterio12();
       });
@@ -115,8 +119,8 @@ export class MiembroComponent implements OnInit {
         sexo: [''],
         direccion: [''],
         barrio: [''],
-        email: [''],
-        celular: ['', [Validators.required]],
+        email: ['', Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")],
+        celular: ['', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]],
         ciudad: [''],
         estadoCivil: [''],
         bautizado: [false],
@@ -134,6 +138,10 @@ export class MiembroComponent implements OnInit {
         citaBiblica: [''],
         textoBiblico: [''],
         pwd: [''],
+        usuarioCrea: [sessionStorage.getItem("lidersistema")],
+        fecCreacion: [new Date()],
+        usuarioMod: [sessionStorage.getItem("lidersistema")],
+        fecModificacion: [new Date()],
       });
   }
 
@@ -174,6 +182,10 @@ export class MiembroComponent implements OnInit {
       citaBiblica: this.registro.citaBiblica,
       textoBiblico: this.registro.textoBiblico,
       pwd: this.registro.pwd,
+      usuarioCrea: this.registro.usuarioCrea,
+      fecCreacion: this.registro.fecCreacion,
+      usuarioMod: this.registro.usuarioMod,
+      fecModificacion: this.registro.fecModificacion,
     })
   }
 
@@ -200,6 +212,8 @@ export class MiembroComponent implements OnInit {
         );
       } else {
 
+        this.nuevoForm.value.usuarioMod = sessionStorage.getItem("lidersistema");
+        this.nuevoForm.value.fecModificacion= new Date();  
         this.miembroService.update(this.nuevoForm.value).subscribe(json => {
           Swal.fire({
             icon: 'success',
@@ -235,7 +249,7 @@ export class MiembroComponent implements OnInit {
     this.miembroService.getMiembrosDocumento(documento)
       .subscribe((resp: MiembroI) => {
         this.registro = resp;
-       // console.log(this.registro[0].nomCompleto);
+        // console.log(this.registro[0].nomCompleto);
         this.registro = this.registro[0];
         this.mostrarDatos();
         Swal.fire({
@@ -269,7 +283,7 @@ export class MiembroComponent implements OnInit {
   cargarMinisterio12() {
     this.miembroService.getMinisterio12(this.registro.idMiembro)
       .subscribe(resp => {
-        this.ministerio12 = resp;      
+        this.ministerio12 = resp;
       },
         err => { console.error(err) }
       );

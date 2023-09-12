@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NuevoI } from 'src/app/models/nuevo.model';
 import { NuevoService } from 'src/app/servicios/nuevo.service';
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,24 +15,28 @@ export class GestionnuevoComponent implements OnInit {
   nuevo: NuevoI = new NuevoI();
   parametro: any;
   gestionNuevoForm!: FormGroup;
+ 
 
   constructor(
     private fb: FormBuilder,
     private nuevoService: NuevoService,
     private router: Router,
     private activatedRoute: ActivatedRoute
+    
   ) {
     this.crearFormulario();
+   
   }
 
   ngOnInit() {
+   
     this.parametro = this.activatedRoute.snapshot.params.id;
     console.log(this.parametro);
     this.nuevoService.getNuevos(this.parametro)
       .subscribe((resp: NuevoI) => {
         this.nuevo = resp;
         this.mostrarDatos();
-        //this.gestionNuevoForm.controls['idMiembro'].setValue(this.nuevo.idMiembro);
+              //this.gestionNuevoForm.controls['idMiembro'].setValue(this.nuevo.idMiembro);
       });
     this.activatedRoute.params.subscribe(
       (params: Params) => {
@@ -54,6 +59,7 @@ export class GestionnuevoComponent implements OnInit {
         observaciones: [''],
         disposicion: ['No gestionado', [Validators.required]],
       });
+    
   }
   mostrarDatos() {
     this.gestionNuevoForm.patchValue({
@@ -79,6 +85,7 @@ export class GestionnuevoComponent implements OnInit {
       this.nuevo.fecVisita = this.gestionNuevoForm.get('fecVisita')?.value;
       this.nuevo.observaciones = this.gestionNuevoForm.get('observaciones')?.value;
       this.nuevo.disposicion = this.gestionNuevoForm.get('disposicion')?.value;
+      
 
       this.nuevoService.update(this.nuevo).subscribe(json => {
         Swal.fire({

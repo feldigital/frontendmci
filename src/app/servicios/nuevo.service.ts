@@ -9,9 +9,10 @@ import { NuevoI } from '../models/nuevo.model';
 @Injectable()
 export class NuevoService {
   
-  private urlEndPoint: string = 'http://localhost:8080/api/ganados';
-  //private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/ganados';
-  constructor(private http: HttpClient, private router: Router) { }
+  //private urlEndPoint: string = 'http://localhost:8080/api/ganados';
+  private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/ganados';
+  
+ constructor(private http: HttpClient, private router: Router) { }
 
 
   getNuevos(id: any): Observable<NuevoI> {
@@ -27,6 +28,16 @@ export class NuevoService {
   
   getHistorialNuevo(id: any): Observable<NuevoI> {
     return this.http.get<NuevoI>(`${this.urlEndPoint}/historial/${id}`).pipe(
+      catchError(e => {
+        if (e.status != 401 && e.error.mensaje) {
+         //this.router.navigate(['/nuevo']);
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      }));
+  }
+  getReportelNuevo(id: any): Observable<any> {
+    return this.http.get(`${this.urlEndPoint}/reporte/${id}`).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
          //this.router.navigate(['/nuevo']);

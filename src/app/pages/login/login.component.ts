@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { MiembroI } from 'src/app/models/miembro.model';
 import { MiembroService } from 'src/app/servicios/miembro.service';
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
+
+
 
 @Component({
     selector: 'login',
@@ -11,10 +14,13 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent implements OnInit {
     loginForm!: FormGroup;
-    lider: any;
+    lider: any;    
+    //const  TOKEN_KEY = 'AuthToken';
 
     constructor(private fb: FormBuilder,
-        private miembroService: MiembroService, private router: Router) {
+        private miembroService: MiembroService,
+        private tokenService: TokenService,
+        private router: Router) {
         this.crearFormulario();
     }
 
@@ -31,7 +37,7 @@ export class LoginComponent implements OnInit {
     }
 
 
-    validarIngreso() {       
+    validarIngreso() {
         if (this.loginForm.status == 'VALID') {
             this.lider = null;
             let username = this.loginForm.get('documento')?.value;
@@ -40,52 +46,47 @@ export class LoginComponent implements OnInit {
                 .subscribe((resp: MiembroI) => {
                     this.lider = resp;
                     this.lider = this.lider[0];
-                    //console.log(this.lider);
-                    if(this.lider.estado != "Activo" || this.lider.lider != true) {
+              //      console.log(this.lider);
+                    if (this.lider.estado != "Activo" || this.lider.lider != true) {
                         Swal.fire({
                             title: '!Error',
                             text: `El usuario que esta ingresando se encuentra inactivo o no es un lider de celula!`,
                             icon: 'error',
                         });
-                    }else{
-                    if (this.lider.pwd === pwd) {                                          
-                        let miembro = this.lider.idMiembro
-                        sessionStorage.setItem("lidersistema", miembro);   
-                        sessionStorage.setItem("nombsistema", this.lider.nomCompleto);                        
-                        window.location.assign('http://54.163.179.39/');
-                        //this.router.navigate(['/inicio']);
-                       
-                       
-                       /* Swal.fire({
-                            icon: 'success',
-                            title: `Ok`,
-                            text: `Bienvenid@ ${this.lider.nomCompleto} tu ingreso ha sido satisfactorio!`,
-                            showConfirmButton: false,
-                            timer: 2000
-                          });*/
-
-                         
-                          
-                    } else {
-                        Swal.fire({
-                            title: '!Error',
-                            text: `La contraseña del usuario ingresada no es correcta!`,
-                            icon: 'error',
-                        });
-
                     }
-                }         
+                    else {
+                        if (this.lider.pwd == pwd) {
+                //            console.log("si son igauales los adtos y cierra ciclo para inicir")
+                            let miembro = this.lider.idMiembro
+                            sessionStorage.setItem("lidersistema", miembro);
+                            sessionStorage.setItem("nombsistema", this.lider.nomCompleto);
+                            this.tokenService.setToken(miembro);          
+                           
+                            window.location.assign('http://54.163.179.39/');                                             
+
+                        } else {
+                  //          console.log(" existe el usuario pero no son igauales los adtos de la contraseña")
+                            Swal.fire({
+                                title: '!Error',
+                                text: `La contraseña del usuario ingresada no es correcta!`,
+                                icon: 'error',
+                            });
+                        }
+                    }
                     (err: any) => { console.error(err) }
                 });
-
-                if (this.lider==null){
-                    Swal.fire({
-                        icon: 'warning',
-                        title: "!Alerta",
-                        text: 'El usuario que esta intentando acceder a la plataforma de la iglesia MCI no existe!'
-                    });
-                }
-        } else {
+//console.log(this.lider);
+            if (this.lider === null) {
+                //console.log("estoy en que no existe el usuario");
+                Swal.fire({
+                    icon: 'success',
+                    title: "!Alerta",
+                    text: 'El usuario que esta intentando acceder a la plataforma de la iglesia MCI no existe!'
+                });
+            }
+            
+        }
+        else {
             Swal.fire({
                 icon: 'warning',
                 title: "!Alerta",

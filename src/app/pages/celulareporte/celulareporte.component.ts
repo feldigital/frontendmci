@@ -83,7 +83,7 @@ export class CelulareporteComponent implements OnInit {
         idCelula: ['', Validators.required],
         citaCelula: ['', Validators.required],
         temaCelula: ['', Validators.required],
-        ofrendaCelula: ['', Validators.required],
+        ofrendaCelula: ['0'],
         fecUsuario: [new Date()],
         idMedioCelula: ['', Validators.required],
         nroAsistentes: ['0'],
@@ -119,7 +119,7 @@ export class CelulareporteComponent implements OnInit {
   reportar() {
     if (this.reportecelulaForm.status == 'VALID') {
       //verificar si esa celula en esa semana ya fue ingresada
-      
+
       //CREANDO EL REGISTO DE LA CABECERA
       this.reportecreado.idRealizacionCelula = this.reportecelulaForm.get('idRealizacionCelula')?.value;
       this.reportecreado.idCelula = this.reportecelulaForm.get('idCelula')?.value;
@@ -128,6 +128,9 @@ export class CelulareporteComponent implements OnInit {
       this.reportecreado.fechaCelula = this.reportecelulaForm.get('fechaCelula')?.value;
       this.reportecreado.temaCelula = this.reportecelulaForm.get('temaCelula')?.value;
       this.reportecreado.idMedioCelula = this.reportecelulaForm.get('idMedioCelula')?.value;
+      this.reportecreado.usuarioIng = <string>sessionStorage.getItem("lidersistema");
+      this.reportecreado.fecUsuario = new Date();
+
       let contadorasistente = 0;
       for (let i = 0; i < this.discipuloscelula.length; i++) {
         if (this.reportecelulaForm.get('asistecheck')?.value[i] == true) {
@@ -137,19 +140,18 @@ export class CelulareporteComponent implements OnInit {
       this.reportecreado.nroAsistentes = contadorasistente;
       this.reportecelulaSevicio.create(this.reportecreado).subscribe((resp: ReporteCelula) => {
         this.reportederegreso = resp;
-        console.log(this.reportederegreso);
+
         for (let i = 0; i < this.discipuloscelula.length; i++) {
-          
+
           if (this.reportecelulaForm.get('asistecheck')?.value[i] == true) {
             this.asistente.idDac = NaN;
             this.asistente.idRealizacionCelula = this.reportederegreso.reportecelula.idRealizacionCelula;
             this.asistente.idMiembroDiscipulo = this.discipuloscelula[i].idMiembro;
-            console.log(this.asistente);
             this.asistenciacelulaSevicio.create(this.asistente).subscribe(resp => {
             });
           }
         }
-                Swal.fire({
+        Swal.fire({
           icon: 'success',
           title: `Ok`,
           text: `El reporte de la celula de la semana fue creado correctamente`,
@@ -168,7 +170,7 @@ export class CelulareporteComponent implements OnInit {
   }
 
 
-  eliminarReporteCelula(itemt: ReporteCelula) {    
+  eliminarReporteCelula(itemt: ReporteCelula) {
     Swal.fire({
       title: 'Desea eliminar?',
       text: `El tema de la celula ${itemt.temaCelula} de la base de datos.`,
@@ -187,13 +189,13 @@ export class CelulareporteComponent implements OnInit {
             text: `El tema ${itemt.temaCelula} ha sido eliminado correctamente.`,
           });
         },
-       
+
           err => {
-           /* Swal.fire({
-              icon: 'success',
-              title: `Ok`,
-              text: err.mensaje,
-            });*/
+            /* Swal.fire({
+               icon: 'success',
+               title: `Ok`,
+               text: err.mensaje,
+             });*/
 
           });
       }

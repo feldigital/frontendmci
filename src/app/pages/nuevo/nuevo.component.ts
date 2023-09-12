@@ -1,5 +1,6 @@
+import { getLocaleDateFormat } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MiembroI } from 'src/app/models/miembro.model';
 import { NuevoI } from 'src/app/models/nuevo.model';
@@ -8,6 +9,10 @@ import { TipoDocI } from 'src/app/models/tipodoc.model';
 import { MiembroService } from 'src/app/servicios/miembro.service';
 import { NuevoService } from 'src/app/servicios/nuevo.service';
 import Swal from 'sweetalert2';
+//import {Observable} from 'rxjs';
+//import {map, startWith} from 'rxjs/operators';
+
+
 
 @Component({
   selector: 'app-nuevo',
@@ -15,6 +20,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./nuevo.component.scss']
 })
 export class NuevoComponent implements OnInit {
+ 
   registro: any;
   reuniones: any;
   lideres: any;
@@ -23,8 +29,9 @@ export class NuevoComponent implements OnInit {
   tipos: any;
   nuevoForm!: FormGroup;
   existe: boolean;
-  invitadoPor: any;
-
+  invitadoPor: any;  
+  keyword = 'nomCompleto';
+  
 
   constructor(private fb: FormBuilder,
     private miembroService: MiembroService,
@@ -38,10 +45,15 @@ export class NuevoComponent implements OnInit {
     this.registro = null;
     this.invitadoPor = null;
     this.existe = false;
+    
+ 
   }
 
 
+
   ngOnInit() {
+    //this.nuevoForm.get('nuevo')?.disable();
+    
   }
 
   cargarTipos() {
@@ -67,7 +79,8 @@ export class NuevoComponent implements OnInit {
     this.lideres = null;
     this.miembroService.getMiembros()
       .subscribe((resp: MiembroI) => {
-        this.lideres = resp;
+        this.lideres = resp;       
+       
       },
         (err: any) => { console.error(err) }
       );
@@ -86,7 +99,7 @@ export class NuevoComponent implements OnInit {
         direccion: [''],
         barrio: [''],
         //email: [''],
-        celular: ['', [Validators.required, Validators.minLength(10)]],
+        celular: ['', [Validators.required, Validators.minLength(10), Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]],
         ciudad: [''],
         estadoCivil: [''],
         liderInmediato: [''],
@@ -94,7 +107,7 @@ export class NuevoComponent implements OnInit {
         fechaReunion: ['', [Validators.required]],
         idMiembroQuienInvita: ['', [Validators.required]],
         nuevo: ['true'],
-        motivoOracion: [''],
+        motivoOracion: [''],            
        // disposicion: [''],
 
       });
@@ -132,6 +145,12 @@ export class NuevoComponent implements OnInit {
       this.miembroNuevo.ciudad = this.nuevoForm.get('ciudad')?.value;
       this.miembroNuevo.estadoCivil = this.nuevoForm.get('estadoCivil')?.value;
       this.miembroNuevo.estado = "Activo";
+      this.miembroNuevo.usuarioCrea = <string>sessionStorage.getItem("lidersistema");
+      this.miembroNuevo.fecCreacion =new Date();
+      this.miembroNuevo.usuarioMod = <string>sessionStorage.getItem("lidersistema");
+      this.miembroNuevo.fecModificacion =new Date();
+     
+
       this.invitadoPor = null;
       this.invitadoPor = this.nuevoForm.get('idMiembroQuienInvita')?.value;
       // "si quien lo invita es un lider ese sera su lider osea idMiembro sino se le asigna el lider inmediato de quien lo invito"
@@ -143,7 +162,6 @@ export class NuevoComponent implements OnInit {
         this.miembroNuevo.email=this.registro.email;
         this.miembroNuevo.citaBiblica=this.registro.citaBiblica;
         this.miembroNuevo.textoBiblico=this.registro.textoBiblico;
-      /* definir criterio del recatado*/
         this.miembroNuevo.bautizado=this.registro.bautizado;
         this.miembroNuevo.fechaBautismo=this.registro.fechaBautismo;
         this.miembroNuevo.lider=this.registro.lider;
@@ -152,16 +170,19 @@ export class NuevoComponent implements OnInit {
         this.miembroNuevo.fechaUvida=this.registro.fechaUvida;
         this.miembroNuevo.cdestino=this.registro.cdestino;
         this.miembroNuevo.fechaCdestino=this.registro.fechaCdestino;
+        this.miembroNuevo.fecNacimiento=this.registro.fecNacimiento;
+        this.miembroNuevo.fecCreacion =this.registro.fecCreacion;
+        this.miembroNuevo.usuarioCrea = this.registro.usuarioCrea;
 
         this.miembroService.create(this.miembroNuevo).subscribe((resp: MiembroI) => {
-          this.registro = resp;
+          this.registro = resp;        
           this.llenarNuevo();        
         }
         );
       }
       else {
         this.miembroService.create(this.miembroNuevo).subscribe((resp: MiembroI) => {
-          this.registro = resp;
+          this.registro = resp;      
           this.llenarNuevo();
         }
         );
@@ -174,6 +195,7 @@ export class NuevoComponent implements OnInit {
         text: 'Datos incompletos para ingresar el reporte del nuevo'
       });
     }
+
   }
 
   cancelar() {
@@ -209,23 +231,23 @@ export class NuevoComponent implements OnInit {
 
   }
   llenarNuevo() {
-    this.ganadoNuevo.idMiembro = this.registro.Miembros.idMiembro;
+    this.ganadoNuevo.idMiembro = this.registro.Miembros;
     this.ganadoNuevo.nuevo = this.nuevoForm.get('nuevo')?.value;
     this.ganadoNuevo.idReunion = this.nuevoForm.get('idReunion')?.value;
     this.ganadoNuevo.fechaReunion = this.nuevoForm.get('fechaReunion')?.value;
     this.ganadoNuevo.motivoOracion = this.nuevoForm.get('motivoOracion')?.value;
     this.ganadoNuevo.idMiembroQuienInvita = this.nuevoForm.get('idMiembroQuienInvita')?.value;
     this.ganadoNuevo.disposicion="No gestionado"    
-
-    this.nuevoService.create(this.ganadoNuevo).subscribe(json => {
+    this.ganadoNuevo.usuarioIng = <string>sessionStorage.getItem("lidersistema");
+  
+    this.nuevoService.create(this.ganadoNuevo).subscribe((nue: NuevoI) => {
       Swal.fire({
         icon: 'success',
         title: `Ok`,
         text: `El registro ${this.nuevoForm.value.nomCompleto} ha sido creado correctamente`,
         showConfirmButton: false,
         timer: 1500
-      });
-        
+      });     
      this.nuevoForm.controls['motivoOracion'].setValue(''); 
      this.nuevoForm.controls['tipoDoc'].setValue(''); 
      this.nuevoForm.controls['numDocumento'].setValue(''); 
@@ -235,24 +257,24 @@ export class NuevoComponent implements OnInit {
      this.nuevoForm.controls['estadoCivil'].setValue(''); 
      this.nuevoForm.controls['barrio'].setValue(''); 
      this.nuevoForm.controls['ciudad'].setValue(''); 
-     this.nuevoForm.controls['celular'].setValue(''); 
-   
-    },
-      err => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error...',
-          text: 'No se pudo guardar el registro en la base de datos!',
-          footer: err.mensaje //JSON.stringify(err)
-        });
+     this.nuevoForm.controls['celular'].setValue('');    
+    }, 
+    err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error...',
+        text: 'No se pudo guardar el registro en la base de datos!',
+        footer: err.mensaje //JSON.stringify(err)
       });
-
-  }
+    });   
+      
+    }
 
   get nombreNovalido() {
     return this.nuevoForm.get('nomCompleto')?.invalid && this.nuevoForm.get('nomCompleto')?.touched
   }
 
-}
+ 
 
+}
 

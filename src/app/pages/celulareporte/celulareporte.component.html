@@ -25,12 +25,14 @@
               </span>
             </div>
 
-            <div class="input-group mb-3">
+            <!--
+             <div class="input-group mb-3">
               <input type="number" formControlName="ofrendaCelula" class="form-control border-end-0"
                 placeholder="Valor de la ofrenda" disable required>
               <span class="input-group-text bg-transparent">
               </span>
             </div>
+          -->
             <div class="input-group mb-3">
               <input type="date" formControlName="fechaCelula" class="form-control border-end-0"
                 placeholder="Fecha de celula">
@@ -46,7 +48,7 @@
             <hr>
 
             <div class="alert alert-info my-4" *ngIf="discipuloscelula?.length == 0">
-              No hay discipulos asignados para la celula. Debe agregar al menos uno!
+              No hay discipulos asignados para la celula. Debe agregar al menos uno! ingrese en Celulas boton editar
             </div>
             <div *ngIf="discipuloscelula?.length > 0">
               <h5 class="text-success">Asistentes a la celula</h5>
@@ -112,12 +114,12 @@
   <table class="table table-striped table-hover table-sm">
     <thead>
       <tr>
-        <th></th>
+        <th>Semana</th>
         <th>Fecha</th>
         <th>Nombre del tema </th>
         <th>Cita biblica</th>
         <th>Medio</th>
-        <th>Ofrenda</th>
+        <!--<th>Ofrenda</th> -->
         <th>Nro. Asistentes</th>
         <th>Verificada</th>
         <th>Eliminar</th>
@@ -127,11 +129,11 @@
     <tbody>
       <tr *ngFor="let itemt of listtema let i= index">
         <td>{{itemt.fechaCelula | date: 'w'}}</td>
-        <td>{{itemt.fechaCelula | date: 'YYYY-MM-dd'}}</td>
+        <td>{{itemt.fechaCelula | date: 'dd/MM/YYYY'}}</td>
         <td>{{itemt.temaCelula | uppercase}}</td>
         <td>{{itemt.citaCelula}}</td>
         <td>{{itemt.idMedioCelula.medio}}</td>
-        <td class="text-end">{{itemt.ofrendaCelula | currency: '$':true: '1.0-2'}}</td>
+       <!-- <td class="text-end">{{itemt.ofrendaCelula | currency: '$':true: '1.0-2'}}</td> -->
         <td class="text-center">{{itemt.nroAsistentes}}</td>
 
         <td class="text-center" *ngIf="itemt.verificada===false"> Pendiente
@@ -150,10 +152,3 @@
     </tbody>
   </table>
 </div>
-
-<!--
-<pre>
-  {{this.reportecelulaForm.value | json}}
-</pre>
-
--->

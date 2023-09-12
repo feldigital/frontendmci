@@ -10,23 +10,27 @@ export class ReporteCelula {
     temaCelula: String;
     ofrendaCelula: number;
     idMedioCelula: MedioI = new MedioI();
+    usuarioIng: String;
     fecUsuario: Date;
     verificada:boolean;
     nroAsistentes:number;
+    usuarioVer: String;
     fecVerificada: Date;
 
   
 
     constructor() {
         this.idRealizacionCelula=NaN;
-        this.fechaCelula = new Date();
+        this.fechaCelula = new Date('');
         this.citaCelula = "";
         this.temaCelula = "";
         this.ofrendaCelula = 0;
-        this.fecUsuario = new Date();
+        this.usuarioIng="";
+        this.fecUsuario = new Date('');
         this.verificada=false;
         this.nroAsistentes=0;
-        this.fecVerificada=new Date();
+        this.usuarioVer="";
+        this.fecVerificada=new Date('');
         
     }
 }

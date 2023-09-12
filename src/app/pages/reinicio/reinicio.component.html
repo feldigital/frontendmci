@@ -1,0 +1,32 @@
+<div class="container mt-4">
+    <form [formGroup]="reinicioForm" (ngSubmit)="notificar()" class="w-60">
+        <div class="row">
+            <div class="col-6">
+                <img src="./assets/reinicio.png" alt="Bienvenidos" class="img-thumbnail rounded">
+
+
+            </div>
+            <div class="col-sm">
+                <div class="mb-3">
+                    <label for="" class="fs-6 mb-2">Ingrese su documento</label>
+                    <div class="input-group">
+                        <input type="number" formControlName="documento" class="form-control border-end-0"
+                            placeholder="Ingrese el numero de documento">
+                        <span class="input-group-text bg-transparent text-muted">
+                            <i class="fa fa-user"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="fs-6 mb-2">Restablecer la contraseña</label>
+                    <div>
+
+                        <button class="btn btn-info px-5 fs-5" type="button" (click)="notificar()">
+                            Enviar al correo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

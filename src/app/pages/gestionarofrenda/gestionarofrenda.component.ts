@@ -5,6 +5,7 @@ import { $ } from 'protractor';
 import { ReporteCelula } from 'src/app/models/reportecelula.model';
 import { ReporteCelulaService } from 'src/app/servicios/reportecelula.service';
 import Swal from 'sweetalert2';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-gestionarofrenda',
@@ -15,10 +16,11 @@ export class GestionarofrendaComponent implements OnInit {
   listtema: any;
   filterOfrenda: ReporteCelula[] | any;
   _listFilter!: string;
+  isLoading: boolean = true;
 
-  
- 
-  
+
+
+
   get listFilter(): string {
     return this._listFilter;
   }
@@ -31,8 +33,10 @@ export class GestionarofrendaComponent implements OnInit {
   constructor(
     private reportecelulaSevicio: ReporteCelulaService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {
+    private activatedRoute: ActivatedRoute,
+    private spinner: NgxSpinnerService )
+     {
+    this.spinner.show();
 
   }
 
@@ -55,6 +59,8 @@ export class GestionarofrendaComponent implements OnInit {
       .subscribe((resp: ReporteCelula) => {
         this.listtema = resp;
         this.filterOfrenda = this.listtema;
+        this.spinner.hide();
+        this.isLoading = false;
       },
         (err: any) => { console.error(err) }
       );
@@ -64,11 +70,12 @@ export class GestionarofrendaComponent implements OnInit {
     if (itemt.verificada === true)
       itemt.verificada = false; else itemt.verificada = true;
     itemt.fecVerificada = new Date();
+    itemt.usuarioVer= <string>sessionStorage.getItem("lidersistema");
     this.reportecelulaSevicio.update(itemt).subscribe(resp => {
       Swal.fire({
         icon: 'success',
         title: 'Ok',
-        text: `La celula de ${itemt.idCelula.idMiembroLider.nomCompleto} identificada con el ID ${itemt.idCelula.idCelula } ha sido gestionada correctamente!`,
+        text: `La celula de ${itemt.idCelula.idMiembroLider.nomCompleto} identificada con el ID ${itemt.idCelula.idCelula} ha sido gestionada correctamente!`,
       });
     },
       err => {

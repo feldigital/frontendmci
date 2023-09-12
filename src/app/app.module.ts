@@ -8,7 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HashLocationStrategy, LocationStrategy, registerLocaleData } from '@angular/common';
 import localePY from '@angular/common/locales/es';
 import { HttpClientModule } from '@angular/common/http';
-
+import { NgxSpinnerModule } from "ngx-spinner";
 
 
 import { InicioComponent } from './pages/inicio/inicio.component';
@@ -26,17 +26,13 @@ import { CelulareporteComponent } from './pages/celulareporte/celulareporte.comp
 import { AsistenciaComponent } from './pages/celulareporte/asistencia/asistencia.component';
 import { NuevoComponent } from './pages/nuevo/nuevo.component';
 
-
-
 import { MiembroService } from './servicios/miembro.service';
 import { CelulaService } from './servicios/celula.service';
 import { MiembroCelulaService } from './servicios/miembrocelula.service';
 import { ReporteCelulaService } from './servicios/reportecelula.service';
 import { AsistenciaCelulaService } from './servicios/asistenciacelula.service';
 
-import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatToolbarModule } from '@angular/material/toolbar';
-//import {MatMenuModule} from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -48,7 +44,12 @@ import { ReporteComponent } from './pages/reporte/reporte.component';
 import { SeguimientonuevosComponent } from './pages/seguimientonuevos/seguimientonuevos.component';
 import { GestionnuevoComponent } from './pages/gestionnuevo/gestionnuevo.component';
 import { GestionarofrendaComponent } from './pages/gestionarofrenda/gestionarofrenda.component';
-//import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ReinicioComponent } from './pages/reinicio/reinicio.component';
+import { ArbolComponent } from './pages/arbol/arbol.component';
+import {AutocompleteLibModule} from 'angular-ng-autocomplete';
+import {MatTabsModule} from  '@angular/material/tabs' ;
+
+//import { JwtInterceptorInterceptor } from './jwt-interceptor.interceptor';
 
 
 registerLocaleData(localePY, 'es');
@@ -78,6 +79,9 @@ registerLocaleData(localePY, 'es');
     SeguimientonuevosComponent,
     GestionnuevoComponent,
     GestionarofrendaComponent,
+    ReinicioComponent,
+    ArbolComponent,
+   
   ],
   imports: [
     BrowserModule,
@@ -88,14 +92,13 @@ registerLocaleData(localePY, 'es');
     MatButtonModule,
     HttpClientModule,
     MatIconModule,
+    MatTabsModule,
     MatDividerModule,
     FormsModule,
     ReactiveFormsModule,
-    MatAutocompleteModule,
+    AutocompleteLibModule,
     MatFormFieldModule,
-    //MatMenuModule
-  //  FontAwesomeModule,
-
+    NgxSpinnerModule,
 
   ],
 
@@ -106,6 +109,7 @@ registerLocaleData(localePY, 'es');
     ReporteCelulaService,
     NuevoService,
     AsistenciaCelulaService,
+    //JwtInterceptorInterceptor,
     { provide: LOCALE_ID, useValue: 'es' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'es' },
     { provide: LocationStrategy, useClass: HashLocationStrategy}

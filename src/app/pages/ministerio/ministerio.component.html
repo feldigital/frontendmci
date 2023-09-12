@@ -11,8 +11,8 @@
             <span class="input-group-text bg-transparent">
               <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-
-            <button class="btn btn-rounded btn-primary" type="button" routerLink="/miembro">
+            
+            <button  class="btn btn-rounded btn-primary" type="button" routerLink="/miembro">
               Crear Discipulo
             </button>
           </div>
@@ -82,4 +82,8 @@
       </tbody>
     </table>
   </div>
+</div>
+<div *ngIf="isLoading"> 
+  <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff897" type = "ball-clip-rotate-multiple" 
+  [fullScreen] = "true"><p style="color: rgb(226, 130, 34)" > Cargando... </p></ngx-spinner>    
 </div>

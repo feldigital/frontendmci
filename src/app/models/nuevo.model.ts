@@ -28,15 +28,15 @@ export class NuevoI {
         this.nuevo = true
         this.motivoOracion = "";
         this.usuarioIng = "";
-        this.fechaReunion = new Date();
+        this.fechaReunion = new Date('');
         this.motivoOracion = "";
         this. fonollamada=false;
         this. fonovisita=false;
         this. disposicion="";
         this.usuarioFonollamada="";
-        this.fecLlamada= new Date();
+        this.fecLlamada= new Date('');
         this.usuarioFonovisita="";
-        this.fecVisita= new Date();
+        this.fecVisita= new Date('');
         this.observaciones="";
 
     }

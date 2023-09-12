@@ -23,12 +23,12 @@ export class CelulaI {
         this.nombreAnfitrion = "";
         this.direccion = "";
         this.barrio = "";
-        this.fecApertura = new Date();
+        this.fecApertura = new Date('');
         this.diaCelula = "";
         this.horaCelula = "";
         this.estado = "Activa";
         this.usuario = "";
-        this.fecUsuario = new Date();
+        this.fecUsuario = new Date('');
         this.gcompleto=false;
     }
 

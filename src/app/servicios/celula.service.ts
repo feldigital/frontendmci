@@ -13,8 +13,8 @@ import { MiembroCelula } from '../models/miembrocelula.model';
 
 @Injectable()
 export class CelulaService {
-  private urlEndPoint: string = 'http://localhost:8080/api/celulas';
-  //private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/celulas';
+  //private urlEndPoint: string = 'http://localhost:8080/api/celulas';
+  private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/celulas';
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -52,7 +52,7 @@ export class CelulaService {
   }
 
   getCelulasMinisterioReporte(id: any): Observable<any>  {
-    return this.http.get(this.urlEndPoint + `/reporte/${id}`).pipe(
+    return this.http.get(this.urlEndPoint + `/reporteministerio/${id}`).pipe(
       catchError(e => {
         return throwError(e);
       })

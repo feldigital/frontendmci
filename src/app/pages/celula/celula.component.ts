@@ -110,8 +110,8 @@ export class CelulaComponent implements OnInit {
         horaCelula: [''],
         idRed: [''],
         estado: [''],
-        usuario: [''],
-        fecUsuario: [''],
+        usuario: [<string>sessionStorage.getItem("lidersistema")],
+        fecUsuario: [new Date()],        
         gcompleto: ['false'],
       });
   }
@@ -214,6 +214,7 @@ export class CelulaComponent implements OnInit {
   }
 
   agregarDiscipuloCelula(disc: MiembroI) {
+    //if(this.celula.idMiembroLider.idMiembro===disc.liderInmediato.idMiembro){
     if(this.celula.idMiembroLider.idMiembro===disc.liderInmediato){
     if (!this.existeDiscipulo(disc.idMiembro)) {
       this.miembrocelula.estado = true;

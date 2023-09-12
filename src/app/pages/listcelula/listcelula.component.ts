@@ -1,8 +1,9 @@
 import { Component, OnInit, Pipe, ViewChild } from '@angular/core';
 import { CelulaService } from 'src/app/servicios/celula.service';
 import { CelulaI } from 'src/app/models/celula.model';
-import Swal from 'sweetalert2';
+//import Swal from 'sweetalert2';
 import { Router, ActivatedRoute } from '@angular/router';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-listcelula',
@@ -13,6 +14,7 @@ export class ListcelulaComponent implements OnInit {
   celulas!: any;
   nombreActual = sessionStorage.getItem("nombsistema");
   filterCelulas: CelulaI[] | any;
+  isLoading: boolean = true;
   _listFilter!: string;
   get listFilter(): string {
     return this._listFilter;
@@ -25,8 +27,10 @@ export class ListcelulaComponent implements OnInit {
   constructor(
     private celulaService: CelulaService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute,
+    private spinner: NgxSpinnerService) {
    //Preguntar si admin o de acuerdo a eso  listar listado de celulas  
+   this.spinner.show();
     this.ListarCelulasMinisterio();
 
   }
@@ -59,6 +63,8 @@ export class ListcelulaComponent implements OnInit {
       .subscribe(resp => {
         this.celulas = resp;
         this.filterCelulas = this.celulas;
+        this.spinner.hide();
+        this.isLoading = false;
       },
         err => { console.error(err) }
       );

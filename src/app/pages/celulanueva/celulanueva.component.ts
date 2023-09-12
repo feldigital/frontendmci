@@ -71,7 +71,7 @@ export class CelulanuevaComponent implements OnInit {
         nombreAnfitrion: [''],
         direccion: [''],
         barrio: [''],
-        fecCelula: [''],
+        fecApertura: [new Date()],
         diaCelula: [''],
         horaCelula: [''],
         idRed: [''],
@@ -85,7 +85,9 @@ export class CelulanuevaComponent implements OnInit {
 
   create() {
     if (this.celulaForm.status == 'VALID') {
+      console.log(this.celulaForm.value);
       this.celulaServicio.create(this.celulaForm.value).subscribe(celula => {
+        console.log(celula);
         Swal.fire({
           icon: 'success',
           title: `Ok`,
@@ -94,6 +96,7 @@ export class CelulanuevaComponent implements OnInit {
         this.router.navigate(['/listcelula']);
       },
         err => {
+    
           Swal.fire({
             icon: 'error',
             title: 'Error...',

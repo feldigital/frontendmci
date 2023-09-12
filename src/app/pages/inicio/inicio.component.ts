@@ -1,29 +1,11 @@
 
-import { AfterViewInit, Component, Inject, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component,  Inject, Input, OnInit } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { MiembroI } from 'src/app/models/miembro.model';
 import { MiembroService } from 'src/app/servicios/miembro.service';
-/*import { AngularD3TreeLibService } from 'angular-d3-tree';
 
-const dataTreeSimple = {
-  "result": [
-    { "id": "1", "description": "Platform 1" },
-
-    { "id": "2", "description": "lv 2", "parent": "1" },
-    { "id": "3", "description": "lv 3", "parent": "1" },
-    { "id": "4", "description": "lv 4", "parent": "1" },
-
-    { "id": "5", "description": "lv 5", "parent": "2" },
-    { "id": "6", "description": "lv 6", "parent": "2" },
-
-    { "id": "7", "descripition": "lv 7", "parent": "3" },
-    { "id": "8", "description": "lv 8", "parent": "3" },
-
-    { "id": "9", "description": "lv 9", "parent": "4" },
-    { "id": "10", "description": "lv 10", "parent": "4" }
-  ]
-};*/
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-inicio',
@@ -32,6 +14,7 @@ const dataTreeSimple = {
 })
 
 export class InicioComponent implements OnInit { //AfterViewInit
+
  // data: any[];
   lider: any;
   ministerio12!: any;
@@ -40,15 +23,12 @@ export class InicioComponent implements OnInit { //AfterViewInit
   liderAct: any;
   chartDonnus: any;
   @Input() idChart = '1';
-  @Input() idChartO = '2';
-
+  @Input() idChartO = '2';  
 
 
   constructor(private miembroService: MiembroService,
-    @Inject(DOCUMENT) private document: Document
-    //,private treeService: AngularD3TreeLibService
-    ) {
-    //this.data = dataTreeSimple.result;
+    @Inject(DOCUMENT) private document: Document ) {      
+        
   }
 
   selectedNode: any;
@@ -57,20 +37,22 @@ export class InicioComponent implements OnInit { //AfterViewInit
   nodeSelected(node: any) {
     this.selectedNode = node;
   }
+  
   ngOnInit(): void {
+
     Chart.register(...registerables);
     this.logueado = false;
     this.liderAct = null;
     this.buscarlideract();
     this.cargarMinisterio12();
     this.cargarMinisterio144();
-
   }
 
   // ngAfterViewInit(): void {
   // this.chartInit12();
-  //this.chartInit144();
-  // }
+  //this.chartInit144();// }
+
+
   chartInit12() {
     const el: any = this.document.getElementById(this.idChart);
     const ctx = el.getContext('2d');

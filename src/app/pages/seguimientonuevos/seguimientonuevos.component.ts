@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NuevoI } from 'src/app/models/nuevo.model';
 import { NuevoService } from 'src/app/servicios/nuevo.service';
+import { NgxSpinnerService } from "ngx-spinner";
+import { MiembroI } from 'src/app/models/miembro.model';
 
 
 @Component({
@@ -12,6 +14,7 @@ import { NuevoService } from 'src/app/servicios/nuevo.service';
 export class SeguimientonuevosComponent implements OnInit {
   nuevos!: any;
   filterNuevos: NuevoI[] | any;
+  isLoading: boolean = true;
   nombreActual = sessionStorage.getItem("nombsistema");
   _listFilter!: string;
   get listFilter(): string {
@@ -25,9 +28,11 @@ export class SeguimientonuevosComponent implements OnInit {
   constructor(
     private nuevoService: NuevoService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute,
+    private spinner: NgxSpinnerService) {
     //Preguntar si admin o de acuerdo a eso  listar listado de nuevo  
     this.ListarNuevosMinisterio();
+    this.spinner.show();
 
   }
 
@@ -39,7 +44,7 @@ export class SeguimientonuevosComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    
 
   }
 
@@ -61,6 +66,8 @@ export class SeguimientonuevosComponent implements OnInit {
       .subscribe(resp => {
         this.nuevos = resp;
         this.filterNuevos = this.nuevos;
+        this.spinner.hide();
+        this.isLoading = false;
       },
         err => { console.error(err) }
       );
@@ -68,6 +75,9 @@ export class SeguimientonuevosComponent implements OnInit {
 
   delete(nuevo: NuevoI): void { }
 
+  agregarimg(item: MiembroI): void {
+    this.router.navigate(['/detalle', item.idMiembro]);
+  }
 
 }
 

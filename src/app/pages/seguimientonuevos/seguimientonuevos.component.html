@@ -17,6 +17,12 @@
                     Ingresar un nuevo
                 </button>
             </div>
+            <div class="col">
+                <label>Convencciones de Tipo de invitado</label>
+                <label>(N= Nuevo)
+                     - (R=Rescatado)
+                </label>
+            </div>
         </div>
         <div *ngIf="nuevos?.length == 0" class="alert alert-info">
             No hay nuevos registrados de tu ministerio en la base de datos!
@@ -25,6 +31,7 @@
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Fecha Reunión </th>
                     <th>Nombre del invitado </th>
                     <th>Tipo de invitado </th>
                     <th>Celular </th>
@@ -39,12 +46,22 @@
             <tbody>
                 <tr *ngFor="let item of filterNuevos ; let i= index"
                     [ngStyle]="{'background-color': item.idMiembro.estado =='Activo' ? 'white' : 'orange' }">
-                    <td>{{i+1}}</td>
+                    <td>
+                        <img (click)="agregarimg(item.idMiembro)" *ngIf="item.idMiembro.imgPerfil"
+                        src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{item.idMiembro.imgPerfil}}"
+                        alt="{{item.imgPerfil}}" class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
+          
+                      <img (click)="agregarimg(item.idMiembro)" *ngIf="!item.idMiembro.imgPerfil"
+                        src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" alt="Sin foto"
+                        class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
+          
+                    </td>
+                    <td>{{ item.fechaReunion | date: 'dd/MM/YYYY' }}</td>
                     <td>{{ item.idMiembro.nomCompleto| uppercase }}</td>
-                    <td class="text-center" *ngIf="item.nuevo===false">Rescatado
+                    <td class="text-center" *ngIf="item.nuevo===false">R
                         <i class="fa fa-check" [ngStyle]="{'color':'orange'}"></i>
                     </td>
-                    <td class="text-center" *ngIf="item.nuevo===true">Nuevo
+                    <td class="text-center" *ngIf="item.nuevo===true">N
                         <i class="fa fa-check" [ngStyle]="{'color':'green'}"></i>
                     </td>
                     <td>{{ item.idMiembro.celular }}</td>
@@ -79,3 +96,10 @@
         </table>
     </div>
 </div>
+
+<div *ngIf="isLoading"> 
+    <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff897" type = "ball-clip-rotate-multiple" 
+    [fullScreen] = "true"><p style="color: rgb(226, 130, 34)" > Cargando... </p></ngx-spinner>    
+  </div> 
+
+  <!-- type = "ball-climbing-dot" -->

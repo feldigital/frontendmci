@@ -4,6 +4,7 @@ import { MiembroI } from 'src/app/models/miembro.model';
 import Swal from 'sweetalert2';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalService } from 'src/app/servicios//modal.service';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-ministerio',
@@ -16,6 +17,7 @@ export class MinisterioComponent implements OnInit {
   //clienteSeleccionado: MiembroI = new MiembroI;
   edad!: number;
   filterMiembros: MiembroI[] | any;
+  isLoading: boolean = true;
   nombreActual = sessionStorage.getItem("nombsistema");
   _listFilter!: string;
   get listFilter(): string {
@@ -30,9 +32,11 @@ export class MinisterioComponent implements OnInit {
     public modalService: ModalService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private spinner: NgxSpinnerService
   ) {
       //Preguntar si admin o de acuerdo a eso  listar listado de miembros  
-    this.ListarMiembrosMinisterio();
+      this.spinner.show();
+      this.ListarMiembrosMinisterio();
     this.edad = 1;
 
   }
@@ -74,6 +78,8 @@ export class MinisterioComponent implements OnInit {
       .subscribe(resp => {
         this.miembros = resp;
         this.filterMiembros = this.miembros;
+        this.spinner.hide();
+        this.isLoading = false;
       },
         err => { console.error(err) }
       );

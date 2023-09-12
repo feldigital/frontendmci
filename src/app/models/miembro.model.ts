@@ -29,13 +29,17 @@ export class MiembroI {
   fechaUvida: Date;
   fechaCdestino: Date; 
   pwd: string;
+  usuarioCrea: string;
+  fecCreacion: Date;
+  usuarioMod: string;
+  fecModificacion: Date;
 
 
   constructor() {
     this.idMiembro = NaN;
     this.numDocumento = "";
     this.nomCompleto = "";
-    this.fecNacimiento = new Date();
+    this.fecNacimiento = new Date('');
     this.sexo = "";
     this.direccion = "";
     this.barrio = "";
@@ -45,8 +49,8 @@ export class MiembroI {
     this.estadoCivil = "";
     this.bautizado = false;
     this.lider = false
-    this.fechaIngreso = new Date();
-    this.fechaBautismo = new Date("1900-01-01");
+    this.fechaIngreso = new Date('');
+    this.fechaBautismo = new Date('');
     this.estado = "";
     this.codigoLider = "";
     this.liderInmediato=NaN;
@@ -55,9 +59,13 @@ export class MiembroI {
     this.imgPerfil = "";
     this.citaBiblica = "";
     this.textoBiblico = "";
-    this.fechaUvida = new Date("1900-01-01");
-    this.fechaCdestino = new Date("1900-01-01");   
+    this.fechaUvida = new Date('');
+    this.fechaCdestino = new Date('');   
     this.pwd= "";
+    this.usuarioCrea="";
+    this.fecCreacion = new Date('');
+    this.usuarioMod="";
+    this.fecModificacion = new Date('');
 
   }
 }
