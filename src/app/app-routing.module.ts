@@ -16,8 +16,13 @@ import { SeguimientonuevosComponent } from './pages/seguimientonuevos/seguimient
 import { GestionnuevoComponent } from './pages/gestionnuevo/gestionnuevo.component';
 import { GestionarofrendaComponent } from './pages/gestionarofrenda/gestionarofrenda.component';
 import { ReinicioComponent } from './pages/reinicio/reinicio.component';
+import { ConsolidaruvidaComponent } from './pages/consolidaruvida/consolidaruvida.component';
 //import { UserGuardGuard } from './guards/user-guard.guard';
 import { LoginGuard } from './guards/login.guard';
+import { GestionuvidaComponent } from './pages/gestionuvida/gestionuvida.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
+import { ConfiguracionesComponent } from './pages/configuraciones/configuraciones.component';
+import { AsistenciauvidaComponent } from './pages/asistenciauvida/asistenciauvida.component';
 
 
 
@@ -43,10 +48,13 @@ const routes: Routes = [
   { path: 'gestiono', component: GestionarofrendaComponent},// canActivate: [LoginGuard]},
   { path: 'celulareporte/:id', component: CelulareporteComponent},// canActivate: [LoginGuard]},
   { path: 'reinicio', component: ReinicioComponent},// canActivate: [LoginGuard]},  
+  { path: 'uvida', component: ConsolidaruvidaComponent},// canActivate: [LoginGuard]},  
+  { path: 'gestionuvida', component: GestionuvidaComponent},// canActivate: [LoginGuard]},  
+  { path: 'perfil/:id', component: PerfilComponent},// canActivate: [LoginGuard]},
+  { path: 'configuracion', component: ConfiguracionesComponent},// canActivate: [LoginGuard]},
+  { path: 'asistenciauvida/:id/:it', component: AsistenciauvidaComponent},// canActivate: [LoginGuard]},
   { path: '**', component: InicioComponent },
 ];
-
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

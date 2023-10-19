@@ -5,6 +5,11 @@ import Swal from 'sweetalert2';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalService } from 'src/app/servicios//modal.service';
 import { NgxSpinnerService } from "ngx-spinner";
+import { ConsolidarUvidaService } from 'src/app/servicios/consolidaruvida.service';
+import { ConsolidarUvidaI } from 'src/app/models/consolidaruvida.model';
+import { PostuladosService } from 'src/app/servicios/postulados.service';
+
+
 
 @Component({
   selector: 'app-ministerio',
@@ -14,11 +19,16 @@ import { NgxSpinnerService } from "ngx-spinner";
 export class MinisterioComponent implements OnInit {
 
   miembros!: any;
-  //clienteSeleccionado: MiembroI = new MiembroI;
+  discipulosPostulados!: any;
   edad!: number;
   filterMiembros: MiembroI[] | any;
   isLoading: boolean = true;
-  nombreActual = sessionStorage.getItem("nombsistema");
+  postuladoUvida: any;
+  listciclos: any;
+
+  nombreActual = localStorage.getItem("nombsistema");
+  
+
   _listFilter!: string;
   get listFilter(): string {
     return this._listFilter;
@@ -29,24 +39,29 @@ export class MinisterioComponent implements OnInit {
   }
 
   constructor(private miembroService: MiembroService,
+    // private fb: FormBuilder,
     public modalService: ModalService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private consolidaruvidaServicio: ConsolidarUvidaService,
+    private postuladoServicio: PostuladosService,
   ) {
-      //Preguntar si admin o de acuerdo a eso  listar listado de miembros  
-      this.spinner.show();
-      this.ListarMiembrosMinisterio();
+    //Preguntar si admin o de acuerdo a eso  listar listado de miembros  
+    this.spinner.show();
+    this.ListarMiembrosMinisterio();
+    this.cargarCiclos();
     this.edad = 1;
+    this.postuladoUvida = {};
 
   }
 
   performFilter(filterBy: string): MiembroI[] {
     if (filterBy === '' || filterBy.length < 3) return this.miembros
     filterBy = filterBy.toLocaleLowerCase();
-    return this.miembros.filter((miembro: MiembroI) => miembro.nomCompleto.toLocaleLowerCase().indexOf(filterBy) !== -1
-    || miembro.barrio.toLocaleLowerCase().indexOf(filterBy) !== -1);
-    // || miembro.toLocaleLowerCase().indexOf(filterBy) !== -1)
+    return this.miembros.filter((miembro: any) => miembro.nomCompleto.toLocaleLowerCase().indexOf(filterBy) !== -1
+      || miembro.barrio.toLocaleLowerCase().indexOf(filterBy) !== -1
+      || miembro.nombreLiderInmediato.toLocaleLowerCase().indexOf(filterBy) !== -1);
   }
 
 
@@ -61,28 +76,45 @@ export class MinisterioComponent implements OnInit {
     });
   }
 
-  ListarMiembros() {
-    this.miembroService.getMiembros()
-      .subscribe(resp => {
-        this.miembros = resp;
-        this.filterMiembros = this.miembros;
+  cargarCiclos() {
+    this.listciclos = null;
+    this.consolidaruvidaServicio.getCiclosActivos()
+      .subscribe((ciclos: ConsolidarUvidaI) => {
+        this.listciclos = ciclos;
+
       },
-        err => { console.error(err) }
+        (err: any) => { console.error(err) }
       );
   }
 
 
   ListarMiembrosMinisterio() {
-    let liderAct = sessionStorage.getItem("lidersistema");
-    this.miembroService.getMiembrosMinisterio(liderAct)
+    let liderAct = localStorage.getItem("lidersistema");
+    if (liderAct==='1202'){
+      this.miembroService.getMiembros()
       .subscribe(resp => {
         this.miembros = resp;
-        this.filterMiembros = this.miembros;
+        this.filterMiembros = this.miembros;     
         this.spinner.hide();
         this.isLoading = false;
       },
         err => { console.error(err) }
       );
+
+    }
+    else{
+      this.miembroService.getMiembrosMinisterio(liderAct)
+      .subscribe(resp => {
+        this.miembros = resp;
+        this.filterMiembros = this.miembros;     
+        this.spinner.hide();
+        this.isLoading = false;
+      },
+        err => { console.error(err) }
+      );
+
+    }
+   
   }
 
   delete(miembro: MiembroI): void {
@@ -93,12 +125,13 @@ export class MinisterioComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar!'
+      confirmButtonText: 'Si, eliminar!',
+      cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         console.log(miembro.idMiembro);
         this.miembroService.delete(miembro.idMiembro).subscribe(resp => {
-          this.ListarMiembros();
+          this.ListarMiembrosMinisterio();
           Swal.fire({
             icon: 'success',
             title: `Ok`,
@@ -134,9 +167,139 @@ export class MinisterioComponent implements OnInit {
     this.router.navigate(['/detalle', item.idMiembro]);
   }
 
-  pipeCumple(fn: Date){
-    var cumple=new Date(fn);
-    return cumple.toJSON().slice(0,10)
+  pipeCumple(fn: Date) {
+    var cumple = new Date(fn);
+    return cumple.toJSON().slice(0, 10)
 
   }
+
+  postular(miembro: MiembroI): void {   
+      Swal.fire({
+        icon: 'question',
+        html: `
+      <br>
+      ¿Confirma postular a <b> ${miembro.nomCompleto} </b> al ciclo de U. de la vida?
+      <br>      
+      <select id="selectCiclo" class="form-select"  >
+          <option value="-1">Seleccione el encuentro al que lo va a postular</option>
+          ${this.generarOpcionesSelect()}         
+      </select>                   
+      <br> `,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, postular!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let selectElement = document.getElementById('selectCiclo') as HTMLSelectElement;
+          const selectedValue = selectElement.value;
+          this.postuladoUvida.idUvida = null;
+          if (selectedValue !== '-1') {
+
+            this.obtonerSelect(selectedValue);
+
+            this.postuladoUvida.idMiembro = miembro.idMiembro;
+            this.postuladoUvida.usuarioIngreso = <string>localStorage.getItem("lidersistema");
+            this.postuladoUvida.fechaIngreso = new Date();
+            this.postuladoUvida.asistioEncuentro = false;
+            this.postuladoUvida.bautizadoEncuentro = false;
+            console.log(this.postuladoUvida);
+            //necesito saber si ese discipulo ya fue postulado a ese ciclo para no volverlo hacer
+            // if (!this.existePostulado(miembro.idMiembro, this.postuladoUvida.idUvida)) {
+
+            this.postuladoServicio.postular(this.postuladoUvida).subscribe(resp => {
+              Swal.fire({
+                icon: 'success',
+                title: `Ok`,
+                text: `Se ingreso el postulado ${miembro.nomCompleto} con éxito, para que asista al proximo ciclo .`,
+              });
+            },
+              err => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error...',
+                  text: 'No se pudo postular el discipulo a este ciclo de universidad de la vida!',
+                  // footer: err.error.Error
+                })
+              });
+          }
+          else {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Revisa...',
+              text: `No ha seleccionado el ciclo al que desea postular al discipulo!`,
+            })
+          }
+        }
+      });
+
+   /* }
+    else {
+      Swal.fire({
+        icon: 'warning',
+        title: `Denegado`,
+        text: `El discipiulo ${miembro.nomCompleto}  no pudo ser postulado, por que ya esta postulado! `,
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }*/
+  }
+
+
+  generarOpcionesSelect(): string {
+    let options = '';
+    if (this.listciclos == null) {
+      Swal.fire({
+        icon: 'info',
+        title: 'información ...',
+        text: 'No hay ciclos activos para postular !',
+
+      });
+    }
+    else {
+      this.listciclos.forEach((item: { idUvida: any; cicloUvida: any; }) => {
+        options += `<option [ngValue]=${item.idUvida}>${item.cicloUvida}</option>`;
+      });
+    }
+    return options;
+  }
+
+  obtonerSelect(item: string): any {
+    let i = 0;
+
+    while (i < this.listciclos.length && this.listciclos[i].cicloUvida !== item) {
+      i++;
+    }
+    if (i < this.listciclos.length) { this.postuladoUvida.idUvida = this.listciclos[i].idUvida; }
+
+  }
+
+  existePostulado(id: number): boolean {
+    let existe = false;
+    this.postuladoServicio.existePostulado().subscribe(resp => {
+      let i = 0;
+      this.discipulosPostulados = resp;
+      while (i < this.discipulosPostulados.length && this.discipulosPostulados[i].idMiembro === id) {
+        i++;
+      }
+      if (i < this.discipulosPostulados.length) {
+        existe = true;
+      }
+
+    },
+      err => {
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al buscar ...',
+          text: 'No se pudo hacer la busqueda de postulados!',
+          // footer: err.error.Error
+
+        })
+      });
+
+    return existe;
+  }
+
+
 }

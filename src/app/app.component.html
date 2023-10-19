@@ -1,33 +1,81 @@
 <mat-toolbar class="mat-elevation-z8">
   <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
     <mat-icon *ngIf="!sidenav.opened" [ngStyle]="{'color': 'grey'}"> menu </mat-icon>
-    <mat-icon *ngIf="sidenav.opened" [ngStyle]="{'color': 'grey'}" > close </mat-icon>
+    <mat-icon *ngIf="sidenav.opened" [ngStyle]="{'color': 'grey'}"> close </mat-icon>
   </button>
 
   <div class="container-fluid">
 
     <a class="navbar-brand" href="#">
       <img src="assets/logo.png" alt="" width="130">
-    </a>
+    </a>   
   </div>
-  <button *ngIf="logueado" class="btn btn-sm px-6 fs-6" type="button" (click)="cerrar()" >   
-    <i class="fa fa-sign-in" aria-hidden="true"></i>Cerrar sesión
-</button>
-<button *ngIf="!logueado" class="btn btn-sm  px-6 fs-6" type="button" (click)="abrir()" > 
-  <i class="fa fa-sign-in" aria-hidden="true"></i>Iniciar sesión
-</button>
 
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu"> 
+
+    <mat-icon *ngIf="lider?.sexo=='M'" [ngStyle]="{'color':'#00C695'}" >account_circle</mat-icon>
+    <mat-icon *ngIf="lider?.sexo=='F'" [ngStyle]="{'color':'#FF3EB3'}" >account_circle</mat-icon>
+  </button>
+
+  <button *ngIf="logueado" class="btn btn-sm px-6 fs-6" type="button" [matMenuTriggerFor]="menu">
+  {{ nombreUsuario() | titlecase }}   </button>
+  <button *ngIf="!logueado" class="btn btn-sm  px-6 fs-6" type="button" [matMenuTriggerFor]="menu" >
+    Iniciar sesión
+  </button>
+
+
+ 
+  <mat-menu #menu="matMenu">
+    <button  *ngIf="!logueado"  (click)="abrir()" mat-menu-item>
+      <mat-icon>arrow_back</mat-icon>
+      <span>Iniciar sesión</span>
+    </button>
+    <button *ngIf="logueado" [routerLink]="['/perfil', lider.idMiembro]" mat-menu-item>
+      <mat-icon>how_to_reg</mat-icon>
+      <span>Mis datos</span>
+    </button>
+    
+    <button *ngIf="logueado" mat-menu-item routerLink="/reporte" >
+      <mat-icon>insert_chart_outlined</mat-icon>
+      <span>Reportes</span>
+    </button>
+
+    <button *ngIf="logueado" mat-menu-item routerLink="/configuracion" >
+      <mat-icon>settings</mat-icon>
+      <span>Configuraciones</span>
+    </button>
+<!-- 
+    <button *ngIf="logueado" mat-menu-item >
+      <mat-icon>fingerprint</mat-icon>
+      <span>Cambiar contraseña</span>
+    </button>
+  -->
+
+    <button  *ngIf="logueado" (click)="cerrar()"  mat-menu-item>
+      <mat-icon>arrow_forward</mat-icon>
+      <span>Cerrar Sesión</span>
+    </button>
+  </mat-menu>
+
+<!--
+ 
+  <img  class="imagen" src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" 
+  [alt]="lider.nomCompleto" [matMenuTriggerFor]="menu"
+    #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">
   
+  -->
+
 
 </mat-toolbar>
 
 <mat-sidenav-container>
   <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
-
+    <!-- src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{lider.imgPerfil}}"-->
     <img *ngIf="lider?.imgPerfil" class="avatar mat-elevation-z8"
-      src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{lider.imgPerfil}}" />
+      src="http://localhost:8080/api/uploads/img/{{lider.imgPerfil}}" />
 
-    <img *ngIf="!lider?.imgPerfil" class="avatar mat-elevation-z8" src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" />
+    <img *ngIf="!lider?.imgPerfil" class="avatar mat-elevation-z8"
+      src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" />
 
     <div *ngIf="!logueado">
       <h6 class="name">Nombre del lider </h6>
@@ -40,46 +88,53 @@
 
     <mat-divider></mat-divider>
 
-    <div *ngIf="logueado">
+      <div *ngIf="logueado">
       <button mat-button class="menu-button" routerLink="/inicio">
         <mat-icon>home</mat-icon>
         <span>Inicio</span>
       </button>
-      <button mat-button class="menu-button" [routerLink]="['/miembro', lider.idMiembro]"> 
-        <mat-icon>person</mat-icon>
-        <span>Mis datos</span>
-      </button>
-      <button mat-button class="menu-button" routerLink="/listcelula">
-        <mat-icon>group_add</mat-icon>
-        <span>Celulas</span>
-      </button>
-
-      <button mat-button class="menu-button" routerLink="/ministerio">
-        <mat-icon> bubble_chart</mat-icon>
-        <span>Discipulos</span>
-      </button>
+    
       <mat-divider></mat-divider>
 
       <button mat-button class="menu-button" routerLink="/nuevo">
         <mat-icon>supervisor_account</mat-icon>
         <span>Nuevo</span>
       </button>
-    
+
       <button mat-button class="menu-button" routerLink="/seguimiento">
         <mat-icon>list</mat-icon>
-        <span>Gestion ganar</span>
+        <span>Gestión ganar</span>
       </button>
       <mat-divider></mat-divider>
-      <button  *ngIf="lider.numDocumento==='800195397'" mat-button class="menu-button" routerLink="/gestiono">
+
+      <button *ngIf="lider.numDocumento==='800195397'" mat-button class="menu-button" routerLink="/uvida">
+        <mat-icon>list</mat-icon>
+        <span>U. vida</span>
+      </button>
+
+      <button mat-button class="menu-button" routerLink="/gestionuvida">
+        <mat-icon>list</mat-icon>
+        <span>Postulados</span>
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <button mat-button class="menu-button" routerLink="/ministerio">
+        <mat-icon> bubble_chart</mat-icon>
+        <span>Discipulos</span>
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <button mat-button class="menu-button" routerLink="/listcelula">
+        <mat-icon>group_add</mat-icon>
+        <span>Celulas</span>
+      </button>
+      <!--*ngIf="lider.numDocumento==='800195397'"-->
+      <button mat-button class="menu-button" routerLink="/gestiono">
         <mat-icon>done_all</mat-icon>
         <span>Gestion enviar</span>
       </button>
-
-      <button  mat-button class="menu-button" routerLink="/reporte">
-        <mat-icon> insert_chart_outlined</mat-icon>
-        <span>Reportes</span>
-      </button>
-     
     </div>
   </mat-sidenav>
   <mat-sidenav-content>

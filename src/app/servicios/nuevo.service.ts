@@ -10,7 +10,7 @@ import { NuevoI } from '../models/nuevo.model';
 export class NuevoService {
   
   //private urlEndPoint: string = 'http://localhost:8080/api/ganados';
-  private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/ganados';
+   private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/ganados';
   
  constructor(private http: HttpClient, private router: Router) { }
 

@@ -1,0 +1,137 @@
+<div class="container mt-4">
+    <form [formGroup]="uvidaForm" (ngSubmit)="create()" class="w-100 d-block">
+        <div class="row">
+
+            <div class="col-sm">
+                <div class="mb-3">
+                    Nombre del lider del ciclo
+
+                    <ng-autocomplete [data]="lideres" formControlName="idMiembroCoordinador" [searchKeyword]="keyword"
+                        placeholder="Digite aquí" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
+                        (selected)="onItemSelected($event)">
+                    </ng-autocomplete>
+                    <ng-template #itemTemplate let-item> <a [innerHTML]="item.nomCompleto"></a> </ng-template>
+
+                    <ng-template #notFoundTemplate let-notFound>
+                        <div [innerHTML]="notFound"></div>
+                    </ng-template>
+
+                    <!--         <select class="form-select" formControlName="idMiembroCoordinador" placeholder="Coordinador del ciclo" required> 
+                        <option selected value="">Elige el lider de la celula</option>
+                        <option *ngFor="let item of lideres" [ngValue]="item.idMiembro"
+                            [selected]="parametro == item.idMiembro">{{item.nomCompleto | uppercase }}</option>
+                    </select>
+                -->
+
+                </div>
+
+                Fecha del encuentro
+                <div class="input-group mb-2">
+                    <input type="date" formControlName="fechaEncuentro" class="form-control border-end-0"
+                        placeholder="Fecha del encuentro">
+                    <span class="input-group-text bg-transparent">
+                    </span>
+                </div>
+                <hr >
+
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="cicloUvida" placeholder="Nombre del ciclo"
+                        class="form-control border-end-0" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-user"></i>
+                    </span>
+                </div>
+
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="citaRemha" class="form-control border-end-0"
+                        placeholder="Cita rhema" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="textoRemha" class="form-control border-end-0"
+                        placeholder="Texto biblico rhema" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-street-view" aria-hidden="true"></i>
+                    </span>
+                </div>
+
+                <div class="input-group mb-2">
+                    <select class="form-select" formControlName="idRed" placeholder="Red" required>
+                        <option selected value="">Elige la red...</option>
+                        <option *ngFor="let itemt of red " [ngValue]="itemt.idRed">{{itemt.nomRed}}</option>
+                    </select>
+                </div>
+                
+               
+                <div class="input-group mb-2">
+                    <mat-slide-toggle  formControlName="estado">Estado del cliclo!</mat-slide-toggle>                   
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-outline-primary w-100"><i class="far fa-save"></i> {{this.nombrebtn}}</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm">
+                <!-- <img src="./assets/celula.jpg" alt="Bienvenidos" class="img-thumbnail rounded">-->
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+<div class="alert alert-info my-4" *ngIf="listciclos?.length == 0">
+    No hay ciclos de universidad de la vida para mostrar!
+</div>
+<div *ngIf="listciclos?.length > 0">
+    <table class="table table-striped table-hover table-sm">
+        <thead>
+            <tr >
+                <th>Item</th>
+                <th>Fecha</th>
+                <th>Nombre del ciclo</th>
+                <th>Nombre del lider del ciclo </th>
+                <th>Cita biblica</th>
+                <th>Red</th>
+                <th>Postulados</th>
+                <th>Gestion</th>
+                 <th>Editar</th>
+                <th>Eliminar</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let itemt of listciclos let i= index" 
+            [ngStyle]="{'color': itemt.estado ? 'black' : 'red' }">
+
+                <td>{{i+1}}</td>
+                <td>{{itemt.fechaEncuentro | date: 'dd/MM/YYYY'}}</td>
+                <td>{{itemt.cicloUvida }}</td>
+                <td>{{itemt.nombreCoordinador}}</td>
+                <td>{{itemt.citaRemha}}</td>
+                <td>{{itemt.nombreRed}}</td>   
+                <td class="text-center">{{itemt.postulados.length}}</td> 
+                <td class="text-center"> <button 
+                    class="btn btn-info btn-sm"  *ngIf="itemt.postulados.length>0"
+                        type="button" (click)="asistencia(itemt)" >
+                        Asistencia </button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-light btn-sm" (click)="mostrarDatos(itemt)">
+                      <i style="color: cornflowerblue; " class="far fa-edit"></i> </button>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-light btn-sm" (click)="eliminarCiclo(itemt)">
+                      <i style="color: rgb(255, 49, 83); " class="far fa-trash-alt"></i> </button>
+                  </td>        
+
+
+            </tr>
+        </tbody>
+    </table>
+</div>

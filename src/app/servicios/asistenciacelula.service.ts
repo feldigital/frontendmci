@@ -9,8 +9,8 @@ import { AsistenciaCelula } from '../models/asistencia.model';
 @Injectable()
 export class AsistenciaCelulaService {
   
-   //private urlEndPoint: string = 'http://localhost:8080/api/detalle_asistencia_celula';
-   private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/detalle_asistencia_celula';
+  //private urlEndPoint: string = 'http://localhost:8080/api/detalle_asistencia_celula';
+  private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/detalle_asistencia_celula';
 
 
   constructor(private http: HttpClient, private router: Router) { }

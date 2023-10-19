@@ -34,16 +34,17 @@ export class CelulaService {
     );;
   }
 
+  
+    getCelulas(): Observable<any> {
+      return this.http.get(this.urlEndPoint).pipe(
+        catchError(e => {
+          return throwError(e);
+        })
+      );
+    }
+   
 
-  getCelulas(): Observable<any> {
-    return this.http.get(this.urlEndPoint).pipe(
-      catchError(e => {
-        return throwError(e);
-      })
-    );
-  }
-
-  getCelulasMinisterio(id: any): Observable<any>  {
+  getCelulasMinisterio(id: any): Observable<any> {
     return this.http.get(this.urlEndPoint + `/ministerio/${id}`).pipe(
       catchError(e => {
         return throwError(e);
@@ -51,7 +52,7 @@ export class CelulaService {
     );
   }
 
-  getCelulasMinisterioReporte(id: any): Observable<any>  {
+  getCelulasMinisterioReporte(id: any): Observable<any> {
     return this.http.get(this.urlEndPoint + `/reporteministerio/${id}`).pipe(
       catchError(e => {
         return throwError(e);
@@ -60,7 +61,7 @@ export class CelulaService {
   }
 
   public create(registro: CelulaI) {
-    const headers = { 'Content-Type': 'application/json' };   
+    const headers = { 'Content-Type': 'application/json' };
     return this.http.post<CelulaI>(this.urlEndPoint, JSON.stringify(registro), { headers }).pipe(
       catchError(e => {
         return throwError(e);
@@ -69,7 +70,7 @@ export class CelulaService {
   }
 
 
-  getCelula(id: any): Observable<CelulaI> {
+  getCelulaId(id: any): Observable<CelulaI> {
     return this.http.get<CelulaI>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
@@ -81,7 +82,7 @@ export class CelulaService {
       }));
   }
 
-  getCelulaDiscipulos(id: any): Observable<any> {   
+  getCelulaDiscipulos(id: any): Observable<any> {
     return this.http.get<MiembroCelula[]>(this.urlEndPoint + `/discipulos/${id}`).pipe(
       catchError(e => {
         return throwError(e);
@@ -129,5 +130,5 @@ export class CelulaService {
     return this.http.get<MiembroI[]>(`${this.urlEndPoint}/filtrar-miembros/${term}`);
   }
 
-  
+
 }

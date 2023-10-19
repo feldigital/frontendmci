@@ -1,28 +1,22 @@
 <div class="card border-primary mb-3">
-  <div class="card-header"> Una clave de la multiplicación es formar discipulos con el carácter de Cristo.</div>
+  <div class="card-header"> Una clave de la multiplicación, es formar discipulos con el carácter de Cristo.</div>
   <div class="card-body ">
-    <h6 class="card-title">Ministerio de {{nombreActual}}.</h6>
-    <div class="row my-2 text-left">
-      <div class="row my-2 text-left">
+    <h6 class="card-title">Ministerio de {{nombreActual}}.   <i class="fa fa-users" aria-hidden="true" [ngStyle]="{'color':'green'}"></i>  {{
+      miembros?.length }} </h6>    
+    <div class="row my-2 text-left">     
         <div class="col-sm">
           <div class="input-group mb-2">
-            <input type="text" name="listFilter" class="form-control border-end-0"
-              placeholder="Buscar por nombre, barrio, documento" [(ngModel)]="listFilter">
             <span class="input-group-text bg-transparent">
               <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-            
-            <button  class="btn btn-rounded btn-primary" type="button" routerLink="/miembro">
-              Crear Discipulo
+            <input type="text" name="listFilter" class="form-control border-start-0"
+              placeholder="Buscar por nombre o barrio o lider" [(ngModel)]="listFilter">
+            <button class="btn card-header" type="button" routerLink="/miembro">
+              Nuevo discípulo
             </button>
           </div>
-        </div>
-        <div class="col text-left">
-          <h5 class="card-title"> <i class="fa fa-users" aria-hidden="true" [ngStyle]="{'color':'green'}"></i>  {{
-            miembros?.length }}</h5>
-        </div>
+        </div>    
       </div>
-    </div>
     <div *ngIf="miembros?.length == 0" class="alert alert-info mb-3">
       No hay registros en la base de datos!
     </div>
@@ -30,11 +24,13 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>Nombre Completo </th>
-          <th>Cumpleaños</th>
+          <th>U. vida</th>         
+          <th>Nombre discipulo </th>
+          <th> Cumple</th>
           <th>Edad</th>
           <th>Celular</th>
-          <th>Direccion</th>
+          <th>Direccion</th> 
+          <th>Nombre lider inm </th>        
           <th class="text-center">Celula</th>
           <th class="text-center">Editar</th>
           <th class="text-center">Eliminar</th>
@@ -44,25 +40,29 @@
         <tr *ngFor="let item of filterMiembros let i= index"
           [ngStyle]="{'color': item.estado =='Activo' ? 'black' : 'red' }">
           <td>
-            <img (click)="agregarimg(item)" *ngIf="item?.imgPerfil"
-              src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{item.imgPerfil}}"
-              alt="{{item.imgPerfil}}" class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
+            <!--src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{item.imgPerfil}}"-->           
+           
+            <img (click)="agregarimg(item)" *ngIf="item?.imgPerfil"            
+              src="http://localhost:8080/api/uploads/img/{{item.imgPerfil}}"
+              alt="{{item.imgPerfil}}" class="img-thumbnail rounded" style="width:36px; cursor: pointer;">
 
             <img (click)="agregarimg(item)" *ngIf="!item?.imgPerfil"
               src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" alt="Sin foto"
               class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
 
           </td>
-          <td>{{ item.nomCompleto| uppercase }}</td>
+          <td>
+            <button *ngIf="!item.lider && (item.estado==='Activo')"  type="button" class="btn btn-success btn-sm" (click)='postular(item)'>
+               Postular </button>
+          </td>
+          
+          <td>{{ item.nomCompleto| titlecase }}</td>
           <td> {{ pipeCumple(item.fecNacimiento) | date: 'dd MMM' }}</td>
           <td>{{CalcularEdad(item)}} </td>
           <td>{{ item.celular }}</td>
           <td>{{ item.direccion }} {{ item.barrio }} </td>
-          <td>
-            <!-- <i class="far fa-star" [ngStyle]="{'color': item.uvida? 'orange' : 'wheite'}"></i>
-                <i class="far fa-star" [ngStyle]="{'color': item.bautizado? 'orange' : 'wheite'}"></i>
-                <i class="far fa-star" [ngStyle]="{'color': item.cdestino? 'orange' : 'wheite'}"></i>
-                <i class="far fa-star" [ngStyle]="{'color': item.lider? 'orange' : 'wheite'}"></i>-->
+          <td>{{ item.nombreLiderInmediato | titlecase }}</td>
+          <td>          
 
             <button *ngIf="item.lider && (item.estado==='Activo')" type="button" class="btn btn-success btn-sm"
               [routerLink]="['/celulanueva', item.idMiembro]">
@@ -87,3 +87,4 @@
   <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff897" type = "ball-clip-rotate-multiple" 
   [fullScreen] = "true"><p style="color: rgb(226, 130, 34)" > Cargando... </p></ngx-spinner>    
 </div>
+

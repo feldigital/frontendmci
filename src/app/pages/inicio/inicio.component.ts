@@ -1,10 +1,8 @@
-
-import { AfterViewInit, Component,  Inject, Input, OnInit } from '@angular/core';
+import { Component,  Inject, Input, OnInit } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { MiembroI } from 'src/app/models/miembro.model';
 import { MiembroService } from 'src/app/servicios/miembro.service';
-
 import * as d3 from 'd3';
 
 @Component({
@@ -28,7 +26,7 @@ export class InicioComponent implements OnInit { //AfterViewInit
 
   constructor(private miembroService: MiembroService,
     @Inject(DOCUMENT) private document: Document ) {      
-        
+      this.lider ={};
   }
 
   selectedNode: any;
@@ -92,19 +90,19 @@ export class InicioComponent implements OnInit { //AfterViewInit
 
 
   buscarlideract() {
-    if (sessionStorage.getItem("lidersistema")) {
-      this.liderAct = sessionStorage.getItem("lidersistema");
+    if (localStorage.getItem("lidersistema")) {
+      this.liderAct = localStorage.getItem("lidersistema");
       this.lider = null;
       this.miembroService.getMiembro(this.liderAct)
         .subscribe((resp: MiembroI) => {
-          this.lider = resp;
-          this.logueado = true;
+          this.lider = resp; 
+           this.logueado = true;
           (err: any) => { console.error(err) }
         });
     }
   }
   cargarMinisterio12() {
-    // console.log(this.liderAct);
+    
     this.miembroService.getMinisterio12(this.liderAct)
       .subscribe(resp => {
         this.ministerio12 = resp;

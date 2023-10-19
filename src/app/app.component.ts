@@ -6,6 +6,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MiembroService } from './servicios/miembro.service';
 import { MiembroI } from './models/miembro.model';
+import { MatMenuModule } from '@angular/material/menu';
 
 @UntilDestroy()
 @Component({
@@ -53,8 +54,8 @@ export class AppComponent {
   }
 
   buscarlideract() {
-    if (sessionStorage.getItem("lidersistema")) {
-      let liderAct = sessionStorage.getItem("lidersistema");
+    if (localStorage.getItem("lidersistema")) {
+      let liderAct = localStorage.getItem("lidersistema");
       this.lider = null;      
       this.miembroService.getMiembro(liderAct)
         .subscribe((resp: MiembroI) => {
@@ -69,13 +70,18 @@ export class AppComponent {
   cerrar() {
     //console.log("ya llegue");
     localStorage.clear();
-    sessionStorage.removeItem("lidersistema");
-    sessionStorage.removeItem("nombsistema");
+    localStorage.removeItem("lidersistema");
+    localStorage.removeItem("nombsistema");
     this.logueado = false;
     this.router.navigate(['/login']);
   }
   abrir() {
     this.router.navigate(['/login']);
+  }
+  nombreUsuario() :string{
+   let caracteres=  this.lider.nomCompleto.indexOf(' ')
+   if (caracteres>0) return this.lider.nomCompleto.substring(0,caracteres) 
+   else return this.lider.nomCompleto
   }
 
 }

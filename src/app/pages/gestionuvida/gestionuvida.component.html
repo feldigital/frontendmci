@@ -1,0 +1,143 @@
+<div class="alert alert-info my-4" *ngIf="listciclos?.length == 0">
+  No hay ciclos de universidad de la vida para mostrar!
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 text-center">
+      <h5>Ciclos activos de universidad de la vida</h5>
+    </div>
+    <div class="col-xs-4">
+      <div class="panel panel-default">
+        <div class="panel-content text-center">
+          <canvas #myChart class="chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<mat-divider style="margin: 1em 0"></mat-divider>
+
+<div *ngIf="listciclos?.length == 0" class="alert alert-info mb-3">
+  Aun no se han activados los ciclos de la universidad de la vida para este periodo!
+</div>
+<div class="container mt-2 row">
+
+  <div class="card" style="width: 18rem;" *ngFor="let ciclo of listciclos let i= index">
+    <img src="./assets/uvida{{i+1 }}.jpg" class="card-img-top" alt="encuentro">
+    <div class="card-body">
+      <h5 class="card-title text-center"> {{ciclo.cicloUvida }} </h5>
+      <p class="card-text">{{cadenaCorta (ciclo.textoRemha) }}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">{{ciclo.citaRemha }}</li>
+      <li class="list-group-item">Coordinador: {{ciclo.nombreCoordinador | titlecase }}</li>
+      <li class="list-group-item">Fecha del Ciclo: {{ciclo.fechaEncuentro | date: 'dd/MM/YYYY'}}</li>
+      <li class="list-group-item"><h6 class="card-header "> {{ciclo.nombreRed }}</h6> </li>
+      <li class="list-group-item">Nro. de Postulados: {{ciclo.postulados.length }}</li>
+    </ul>
+    <div class="card-body text-center">
+      <button type="button" class="btn btn-success btn-sm" (click)='mostrarPostulados(ciclo)'>
+        Ver postulado </button>
+    </div>
+
+  </div>
+
+  <div class="card-body" *ngIf="postuladoUvida?.length>0">  
+
+    <div class="row my-2 text-left">
+      <h6 class="card-title card-header">Relación de postulados al {{cicloActivo}} </h6>
+      
+          <div class="input-group mt-2">
+            <span class="input-group-text bg-transparent">
+              <i class="fa fa-search" aria-hidden="true"></i>
+          </span>
+              <input type="text" name="listFilter" class="form-control border-end-0"
+                  placeholder="Buscar por nombre postulado y/o nombre del lider" [(ngModel)]="listFilter">      
+          </div> 
+        </div>
+   <div class="row my-2">
+    <table class="table table-bordered table-striped mb-2">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre del postulado</th>
+          <th *ngIf="mostrar()">T1</th>
+          <th *ngIf="mostrar()">T2</th>
+          <th *ngIf="mostrar()">T3</th>
+          <th *ngIf="mostrar()">Nivelatorio</th>
+          <th>Encuentro</th>
+          <th>Bautizad@</th>
+          <th *ngIf="!mostrar()">T5</th>
+          <th *ngIf="!mostrar()">T6</th>
+          <th *ngIf="!mostrar()">T7</th>
+          <th *ngIf="!mostrar()">Nivelatorio</th>
+          <th *ngIf="!mostrar()">Graduad@</th>
+          <th>Nombre lider inmediato</th>
+          <th>Gestion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filterPostulados let i= index">
+          <td>{{ i+1 }}</td>
+          <td>{{ item.nomCompleto | titlecase }}</td>
+          <td *ngIf="mostrar()">
+            <i *ngIf="item.t1" class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.t1" class="fa fa-times-circle" [ngStyle]="{'color':'red'}"></i>
+          </td>
+          <td *ngIf="mostrar()">
+            <i *ngIf="item.t2" class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.t2" class="fa fa-times-circle" [ngStyle]="{'color':'red'}"></i>
+          </td>
+          <td *ngIf="mostrar()">
+            <i *ngIf="item.t3" class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.t3" class="fa fa-times-circle" [ngStyle]="{'color':'red'}"></i>
+          </td>
+          <td *ngIf="mostrar()">
+            <i *ngIf="item.t4" class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.t4" class="fa fa-times-circle" [ngStyle]="{'color':'red'}"></i>
+          </td>
+          <td class="text-center">
+            <i *ngIf="item.asistioEncuentro" class="fa fa-user-plus" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.asistioEncuentro" class="fa fa-user-times" [ngStyle]="{'color':'red'}"></i>    
+          </td>
+          <td class="text-center">
+            <i *ngIf="item.bautizadoEncuentro" class="fa fa-tint" [ngStyle]="{'color':'#65AAEB'}" aria-hidden="true"> si</i>
+          </td>
+          <td *ngIf="!mostrar()">
+            <i *ngIf="item.t5" class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.t5" class="fa fa-times-circle" [ngStyle]="{'color':'red'}"></i>
+          </td>
+          <td *ngIf="!mostrar()">
+            <i *ngIf="item.t6" class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.t6" class="fa fa-times-circle" [ngStyle]="{'color':'red'}"></i>
+          </td>
+          <td *ngIf="!mostrar()">
+            <i *ngIf="item.t7" class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.t7" class="fa fa-times-circle" [ngStyle]="{'color':'red'}"></i>
+          </td>
+          <td *ngIf="!mostrar()">
+            <i *ngIf="item.t8" class="fa fa-check-circle" [ngStyle]="{'color':'green'}"></i>
+            <i *ngIf="!item.t8" class="fa fa-times-circle" [ngStyle]="{'color':'red'}"></i>
+          </td>
+          <td *ngIf="!mostrar()" class="text-center">
+            <i *ngIf="item.graduado" class="fa fa-graduation-cap" aria-hidden="true" [ngStyle]="{'color':'#01C191'}"> Si</i>
+           </td>
+
+          <td>{{ item.nomCompletoLiderInmediato | titlecase }}</td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm" (click)='despostular(item)'>
+              Quitar </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div *ngIf="isLoading">
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff897" type="ball-clip-rotate-multiple"
+    [fullScreen]="true">
+    <p style="color: rgb(226, 130, 34)"> Cargando... </p>
+  </ngx-spinner>
+</div>

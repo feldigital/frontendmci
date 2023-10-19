@@ -35,7 +35,8 @@
         </div> 
         -->
         <ng-autocomplete [data]="lideres" formControlName="idMiembroQuienInvita" [searchKeyword]="keyword"
-          placeholder="Digite quien lo invito" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+          placeholder="Digite quien lo invito" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
+          >
         </ng-autocomplete>
         <ng-template #itemTemplate let-item> <a [innerHTML]="item.nomCompleto"></a> </ng-template>
 
@@ -189,3 +190,8 @@
 
   </form>
 </div>
+<!--
+<pre>
+  {{this.nuevoForm.value | json}}
+</pre>
+-->

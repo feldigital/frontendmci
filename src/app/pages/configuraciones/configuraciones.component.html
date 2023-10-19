@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <ul *ngIf="registro" class="list-group text-dark mb-3">
+                <li class="list-group-item active">{{registro.nomCompleto}}</li>
+                <li class="list-group-item">Nro. Documento: {{registro.numDocumento}}</li>
+
+
+            </ul>
+            <div class="input-group mb-3">
+                <div class="custom-file">
+                    <input (change)="seleccionarFoto($event)" type="file" class="custom-file-input"
+                        id="inputGroupFile04" aria-describedby="inputGroupFileAddon04">
+                    <label class="custom-file-label" for="inputGroupFile04">Seleccionar foto</label>
+                </div>
+                <div class="input-group-append">
+                    <button (click)="subirFoto()" [disabled]="!fotoSeleccionada" class="btn btn-outline-secondary"
+                        type="button" id="inputGroupFileAddon04">Subir</button>
+                </div>
+            </div>
+            <div *ngIf="progreso > 0" class="progress" style="height: 40px;">
+                <div class="progress-bar progress-bar-striped" role="progressbar" [ngStyle]="{width:progreso+'%'}"
+                    attr.aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
+                    {{progreso}}%
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <!--src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{registro.imgPerfil}}" -->
+            <img *ngIf="registro?.imgPerfil" src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{registro.imgPerfil}}"
+                alt="{{registro.imgPerfil}}" class="img-thumbnail rounded" height="200" width="200">
+
+            <img *ngIf="!registro?.imgPerfil" class="avatar mat-elevation-z8"
+                src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png"
+                class="img-thumbnail rounded" height="200" width="200" />
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="input-group mb-3">
+            <input type="text" formControlName="password" placeholder="Ingrese la contraseña actual"
+                class="form-control border-end-0">
+            <span class="input-group-text bg-transparent">
+            </span>
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" formControlName="password_new" placeholder="Ingrese la nueva contraseña"
+                class="form-control border-end-0">
+            <span class="input-group-text bg-transparent">
+            </span>
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" formControlName="password_new_rep" placeholder="Confirme la nueva contraseña"
+                class="form-control border-end-0">
+            <span class="input-group-text bg-transparent">
+            </span>
+        </div>
+
+    </div>
+
+</div>

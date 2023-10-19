@@ -12,7 +12,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 })
 export class ListcelulaComponent implements OnInit {
   celulas!: any;
-  nombreActual = sessionStorage.getItem("nombsistema");
+  nombreActual = localStorage.getItem("nombsistema");
   filterCelulas: CelulaI[] | any;
   isLoading: boolean = true;
   _listFilter!: string;
@@ -29,45 +29,49 @@ export class ListcelulaComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private spinner: NgxSpinnerService) {
-   //Preguntar si admin o de acuerdo a eso  listar listado de celulas  
+
    this.spinner.show();
     this.ListarCelulasMinisterio();
 
   }
 
-  performFilter(filterBy: string): CelulaI[] {
+  performFilter(filterBy: string): any[] {
     if (filterBy === '' || filterBy.length < 3) return this.celulas
     filterBy = filterBy.toLocaleLowerCase();
-    return this.celulas.filter((celula: CelulaI) => celula.idMiembroLider.nomCompleto.toLocaleLowerCase().indexOf(filterBy) !== -1
-    || celula.barrio.toLocaleLowerCase().indexOf(filterBy) !== -1);
-    // || celula.direccion.toLocaleLowerCase().indexOf(filterBy) !== -1)
+    return this.celulas.filter((celula: any) => celula.nombreLider.toLocaleLowerCase().indexOf(filterBy) !== -1
+    || celula.barrio.toLocaleLowerCase().indexOf(filterBy) !== -1
+    || celula.nombreLiderInmediato.toLocaleLowerCase().indexOf(filterBy) !== -1);
   }
 
   ngOnInit() {
     
   }
 
-  ListarCelulas() {
+  ListarCelulasMinisterio() {
+    let liderAct = localStorage.getItem("lidersistema");
+
+    if (liderAct==='1202'){
     this.celulaService.getCelulas()
       .subscribe(resp => {
-        this.celulas = resp;
-        this.filterCelulas = this.celulas;
-      },
-        err => { console.error(err) }
-      );
-  }
-
-  ListarCelulasMinisterio() {
-    let liderAct = sessionStorage.getItem("lidersistema");
-    this.celulaService.getCelulasMinisterio(liderAct)
-      .subscribe(resp => {
-        this.celulas = resp;
+        this.celulas = resp;   
         this.filterCelulas = this.celulas;
         this.spinner.hide();
         this.isLoading = false;
       },
         err => { console.error(err) }
       );
+    }
+else{ 
+  this.celulaService.getCelulasMinisterio(liderAct)
+  .subscribe(respm => {
+    this.celulas = respm;   
+    this.filterCelulas = this.celulas;
+    this.spinner.hide();
+    this.isLoading = false;
+  },
+    err => { console.error(err) }
+  );}
+
   }
 
 

@@ -1,11 +1,13 @@
 
-import { MiembroI } from './miembro.model';
-import { CelulaI } from './celula.model';
+//import { MiembroI } from './miembro.model';
+//import { CelulaI } from './celula.model';
 
 export class MiembroCelula {
   idCm: number=NaN;
-  idCelula: CelulaI =new CelulaI();
-  idMiembro: MiembroI =new MiembroI();
+  //idCelula: CelulaI =new CelulaI();
+  //idMiembro: MiembroI =new MiembroI();
+  idMiembro: number=NaN;
+  idCelula: number =NaN;
   fechaIngreso: Date;
   estado: boolean;
 

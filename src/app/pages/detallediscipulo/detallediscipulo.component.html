@@ -37,9 +37,14 @@
           </div>
         </div>
       </div>
-      <div class="col-sm">
-        <img *ngIf="registro?.imgPerfil" src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{registro.imgPerfil}}"
+      <div class="col-sm">       
+        <!--src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{registro.imgPerfil}}" -->
+        <img *ngIf="registro?.imgPerfil"  src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{registro.imgPerfil}}"
           alt="{{registro.imgPerfil}}" class="img-thumbnail rounded" height="200" width="200">
+          
+          <img *ngIf="!registro?.imgPerfil" class="avatar mat-elevation-z8"
+          src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png"   class="img-thumbnail rounded" height="200" width="200"/>
+    
       </div>
     </div>
 
@@ -66,9 +71,9 @@
       <tbody>
 
         <tr *ngFor="let item of hitorialnuevo let i= index"
-          [ngStyle]="{'background-color': item.idMiembro.estado =='Activo' ? 'white' : 'red' }">
+          [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'red' }">
           <td>{{item.fechaReunion | date: 'dd-MM-YYYY'}}</td>
-          <td>{{item.idMiembroQuienInvita.nomCompleto}}</td>
+          <td>{{item.nombroQuienInvita}}</td>
           <td class="text-center" *ngIf="item.nuevo===true">Nuevo</td>
           <td class="text-center" *ngIf="item.nuevo===false">Rescatado</td>
           <td class="text-center">
@@ -87,8 +92,4 @@
       </tbody>
     </table>
   </div>
-</div>
-
-<div class="modal-footer">
-  <button (click)="cerrarModal()" type="button" class="btn btn-secondary" data-dismiss="modal">cerrar</button>
 </div>

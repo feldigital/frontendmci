@@ -11,7 +11,7 @@ import { ReunionI } from '../models/reunion.model';
 export class MiembroService {
   
   //private urlEndPoint: string = 'http://localhost:8080/api/miembros';
-   private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/miembros';
+  private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/miembros';
   
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -47,13 +47,24 @@ export class MiembroService {
   }
 
 /* este es para el backen actal
-  getMiembrosLideres(): Observable<any> {
+  getMiembros(): Observable<any> {
     return this.http.get(this.urlEndPoint + '/lideres').pipe(
       catchError(e => {
         return throwError(e);
       })
     );
   }*/
+
+  //id: any
+  
+  getMiembrosPostulados(): Observable<any> {
+    return this.http.get(`${this.urlEndPoint}/postulados`).pipe(
+      catchError(e => {
+        return throwError(e);
+      })
+    );
+  }
+
 
   getMiembrosLideres(id: any): Observable<any> {
     return this.http.get(`${this.urlEndPoint}/lideres/${id}`).pipe(
@@ -129,6 +140,7 @@ export class MiembroService {
 
   public update(registro: MiembroI) {
     const headers = { 'Content-Type': 'application/json' };
+    console.log(JSON.stringify(registro));
     return this.http.put<MiembroI>(this.urlEndPoint, JSON.stringify(registro), { headers }).pipe(
       catchError(e => {
         if (e.status == 400) {

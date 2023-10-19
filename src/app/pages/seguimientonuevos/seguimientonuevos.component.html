@@ -5,11 +5,11 @@
         <div class="row my-2 text-left">
             <div class="col">
                 <div class="input-group">
-                    <input type="text" name="listFilter" class="form-control border-end-0"
-                        placeholder="Filtrar por nombre del nuevo" [(ngModel)]="listFilter">
                     <span class="input-group-text bg-transparent">
                         <i class="fa fa-search" aria-hidden="true"></i>
                     </span>
+                    <input type="text" name="listFilter" class="form-control border-end-0"
+                        placeholder="Filtrar por nombre del nuevo" [(ngModel)]="listFilter">                   
                 </div>
             </div>
             <div class="col">
@@ -31,42 +31,51 @@
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>U. vida</th>
                     <th>Fecha Reunión </th>
                     <th>Nombre del invitado </th>
                     <th>Tipo de invitado </th>
-                    <th>Celular </th>
-                    <th>Dirección </th>
-                    <th>Invitad@ por </th>
-                    <th>Seguimiento</th>
-                    <th>Dispocisión</th>
+                    <th>Celular </th>                    
+                    <th>Invitad@ por </th>  
+                    <th>Detalles </th>               
+                    <th>Seguimiento</th>                   
+                    <th>Disposición</th>
                     <th>Gestionar</th>
                     <th>Editar</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let item of filterNuevos ; let i= index"
-                    [ngStyle]="{'background-color': item.idMiembro.estado =='Activo' ? 'white' : 'orange' }">
+                    [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'orange' }">
                     <td>
-                        <img (click)="agregarimg(item.idMiembro)" *ngIf="item.idMiembro.imgPerfil"
-                        src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{item.idMiembro.imgPerfil}}"
+                        <img (click)="agregarimg(item.idMiembro)" *ngIf="item.imgPerfil"
+                        src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{item.imgPerfil}}"
                         alt="{{item.imgPerfil}}" class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
           
-                      <img (click)="agregarimg(item.idMiembro)" *ngIf="!item.idMiembro.imgPerfil"
+                      <img (click)="agregarimg(item.idMiembro)" *ngIf="!item.imgPerfil"
                         src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" alt="Sin foto"
                         class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
           
                     </td>
+                    <td>
+                        <button *ngIf="(item.estado==='Activo')" type="button" 
+                        class="btn btn-info btn-sm"  (click)='postular(item)'>
+                            Postular</button>
+                    </td>
                     <td>{{ item.fechaReunion | date: 'dd/MM/YYYY' }}</td>
-                    <td>{{ item.idMiembro.nomCompleto| uppercase }}</td>
+                    <td>{{ item.nombreInvitado| titlecase }}</td>
                     <td class="text-center" *ngIf="item.nuevo===false">R
                         <i class="fa fa-check" [ngStyle]="{'color':'orange'}"></i>
                     </td>
                     <td class="text-center" *ngIf="item.nuevo===true">N
                         <i class="fa fa-check" [ngStyle]="{'color':'green'}"></i>
                     </td>
-                    <td>{{ item.idMiembro.celular }}</td>
-                    <td>{{ item.idMiembro.direccion }}</td>
-                    <td>{{ item.idMiembroQuienInvita.nomCompleto }}</td>
+                    <td>{{ item.celular }}</td>                    
+                    <td> {{ item.nombroQuienInvita | titlecase}}</td>
+                    <td><button type="button" class="btn btn-warning btn-sm"
+                        (click)='vermas(item)'>
+                        Ver </button></td>
+                   
                     <td>
                         <i  class="text-left" *ngIf="item.fonollamada" class="fa fa-check-circle" [ngStyle]="{'color': item.disposicion==='No gestionado'? 'orange':'green'}"></i>
                         <i  class="text-center" *ngIf="!item.fonollamada" class="fa fa-times-circle" [ngStyle]="{'color': item.disposicion==='No gestionado'? 'orange':'red'}"></i>
@@ -81,14 +90,14 @@
                         {{ item.disposicion }}
                     </td>
                     <td>
-                        <button *ngIf="(item.idMiembro.estado==='Activo')" type="button" 
+                        <button *ngIf="(item.estado==='Activo')" type="button" 
                         class="btn btn-info btn-sm"
                             [routerLink]="['/gestionn', item.idGanados]">
                             Gestionar</button>
                     </td>
                     <td>
                         <button type="button" class="btn btn-success btn-sm"
-                            [routerLink]="['/miembro', item.idMiembro.idMiembro]">
+                            [routerLink]="['/miembro', item.idMiembro]">
                             Editar </button>
                     </td>
                 </tr>

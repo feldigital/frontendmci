@@ -28,7 +28,7 @@
         <div class="form-outline w-100">
           <select class="form-select" formControlName="tipoDoc" placeholder="tipo de documento" required>
             <option selected value="">Seleccionar tipo de documento </option>
-            <option *ngFor="let itemt of tipos" [ngValue]="itemt.tipo">{{itemt.nombreTipo}}</option>
+          <option *ngFor="let itemt of tipos" [ngValue]="itemt.tipo">{{itemt.nombreTipo}}</option>
           </select>
         </div>
 
@@ -210,97 +210,180 @@
         <button type="submit" class="btn btn-outline-primary w-100"><i class="far fa-save"></i>
           {{this.nombrebtn}}</button>
       </div>
-      <div class="col-6">
+    <!--  <div class="col-6">
         <button type="button" class="btn btn-outline-primary w-100 ml-2" (click)="cancelar()"><i class="fas fa-ban"></i>
           Cancelar </button>
       </div>
+      -->
     </div>
 
-
-<div>
-  <mat-tab-group>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-        First
-      </ng-template>
-      Contentenido de mis discipulos
-    </mat-tab>
-  
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-        Second
-      </ng-template>
-      Contenido de mis celulas
-    </mat-tab>
-  
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-        Third
-      </ng-template>
-  
-      Contentenido de mi historial
-    </mat-tab>
-  </mat-tab-group>
-</div>
-
-
-    <div class="card-header">Relacion de discipulos </div>
-    <div *ngIf="ministerio12?.length == 0" class="alert alert-info mb-3">
-      No hay discipul@s asociados en la base de datos!
-    </div>
 
     <div>
+      <mat-tab-group>
+       <!-- <mat-tab>
+          <ng-template mat-tab-label>
+            <i class="fa fa-history" aria-hidden="true" [ngStyle]="{'color':'red'}"></i>
+            Historial
+          </ng-template>    
+          Contentenido de mi historial
+        </mat-tab>
+        -->
+        <mat-tab>
+          <ng-template mat-tab-label>           
+            <i class="fa fa-users" aria-hidden="true" [ngStyle]="{'color':'green'}"> </i>
+             Mis Discipulos
+          </ng-template>
+          
+          <div *ngIf="ministerio12?.length == 0" class="alert alert-info mb-3">
+            No hay discipul@s asociados en la base de datos!
+            </div>       
 
+          <table class="table table-bordered table-striped" *ngIf="ministerio12?.length>0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre Completo </th>
+                <th>Cumple</th>
+                <th>Edad</th>
+                <th>Celular</th>
+                <th>Dirección</th>
+                <th class="text-center">Datos ministeriales</th>
+                <th class="text-center">Gestión</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of ministerio12 let i= index"
+                [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'red' }">
+                <td>{{i+1}}</td>
+                <td> <i *ngIf="item.lider" class="fa fa-user-plus" [ngStyle]="{'color':'green'}"></i>
+                  <i *ngIf="!item.lider" class="fa fa-user" [ngStyle]="{'color':'orange'}"></i>
+                  {{ item.nomCompleto | uppercase }}
+                </td>
+                <td>{{ item.fecNacimiento | date: 'MMM dd'}}</td>
+                <td>{{CalcularEdad(item)}} </td>
+                <td>{{ item.celular }}</td>
+                <td>{{ item.direccion }} {{ item.barrio }}</td>
+                <td class="text-center">
+                  <i *ngIf="item.uvida" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+                  <i *ngIf="!item.uvida" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+                  <i *ngIf="item.bautizado" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+                  <i *ngIf="!item.bautizado" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+                  <i *ngIf="item.cdestino" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+                  <i *ngIf="!item.cdestino" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-info btn-sm" (click)='refrescar(item)'>
+                    Editar </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>    
+    </mat-tab>
+    <mat-tab>
+
+      <ng-template mat-tab-label>
+        <i class="fa fa-cogs" aria-hidden="true" [ngStyle]="{'color':'orange'}"> </i>
+        Mis Celulas
+      </ng-template>
+      <div *ngIf="filterCelulas?.length == 0" class="alert alert-info mb-3">
+        No hay celulas asociadas a este discipulo en la base de datos!
     </div>
+    <div class="card-header" *ngIf="filterCelulas?.length>0"> Historial de Celulas </div>
 
-    <table class="table table-bordered table-striped" *ngIf="ministerio12?.length>0">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Nombre Completo </th>
-          <th>Cumple</th>
-          <th>Edad</th>
-          <th>Celular</th>
-          <th>Dirección</th>
-          <th class="text-center">Datos ministeriales</th>
-          <th class="text-center">Gestión</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of ministerio12 let i= index"
-          [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'red' }">
-          <td>{{i+1}}</td>
-          <td> <i *ngIf="item.lider" class="fa fa-user-plus" [ngStyle]="{'color':'green'}"></i>
-            <i *ngIf="!item.lider" class="fa fa-user" [ngStyle]="{'color':'orange'}"></i>
-            {{ item.nomCompleto | uppercase }}
+    <table class="table table-bordered table-striped" *ngIf="filterCelulas?.length>0">
+        <thead>
+          <tr>    
+            <th>Apertura </th>      
+            <th>Anfitrion </th>
+            <th>Direccion de la celula</th>
+            <th>Barrio</th>
+            <th>Dia</th>
+            <th>Hora</th>
+            <th>Red</th>
+            <th>editar</th>
+            <th>Temas semanales</th>           
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filterCelulas ; let i= index"
+            [ngStyle]="{'background-color': item.estado =='Activa' ? 'white' : 'orange' }">
+          
+            <td>{{ item.fecApertura | date: 'dd-MM-YYYY'}}</td>
+            <td>{{ item.nombreAnfitrion| uppercase }}</td>
+            <td>{{ item.direccion }}</td>
+            <td>{{ item.barrio }}</td>
+            <td>{{ item.diaCelula }}</td>
+            <td>{{ item.horaCelula }}</td>
+            <td>{{ item.idRed.nomRed }}</td>  
+            <td>
+              <button type="button" class="btn btn-light" [routerLink]="['/celula', item.idCelula]">
+                <i style="color: cornflowerblue; " class="far fa-edit"></i> </button>
+            </td>
+            <td>
+            <button  type="button" class="btn btn-info btn-sm"
+            [routerLink]="['/temascelula', item.idCelula]">          
+            Ver</button> 
           </td>
-          <td>{{ item.fecNacimiento | date: 'MMM dd'}}</td>
-          <td>{{CalcularEdad(item)}} </td>
-          <td>{{ item.celular }}</td>
-          <td>{{ item.direccion }} {{ item.barrio }}</td>
-          <td class="text-center">
-            <i *ngIf="item.uvida" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
-            <i *ngIf="!item.uvida" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
-            <i *ngIf="item.bautizado" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
-            <i *ngIf="!item.bautizado" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
-            <i *ngIf="item.cdestino" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
-            <i *ngIf="!item.cdestino" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
-          </td>
-          <td>
-            <button type="button" class="btn btn-info btn-sm" (click)='refrescar(item)'>
-              Editar </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </form>
+          </tr>
+        </tbody>
+      </table>     
+    </mat-tab>
+
+    
+    </mat-tab-group>
 </div>
 
 <!--
-<pre>
-  {{this.nuevoForm.value | json}}
-</pre>
+<div class="card-header">Relacion de discipulos </div>
+<div *ngIf="ministerio12?.length == 0" class="alert alert-info mb-3">
+  No hay discipul@s asociados en la base de datos!
+</div>
+
+<div>
+
+</div>
+
+<table class="table table-bordered table-striped" *ngIf="ministerio12?.length>0">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nombre Completo </th>
+      <th>Cumple</th>
+      <th>Edad</th>
+      <th>Celular</th>
+      <th>Dirección</th>
+      <th class="text-center">Datos ministeriales</th>
+      <th class="text-center">Gestión</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of ministerio12 let i= index"
+      [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'red' }">
+      <td>{{i+1}}</td>
+      <td> <i *ngIf="item.lider" class="fa fa-user-plus" [ngStyle]="{'color':'green'}"></i>
+        <i *ngIf="!item.lider" class="fa fa-user" [ngStyle]="{'color':'orange'}"></i>
+        {{ item.nomCompleto | uppercase }}
+      </td>
+      <td>{{ item.fecNacimiento | date: 'MMM dd'}}</td>
+      <td>{{CalcularEdad(item)}} </td>
+      <td>{{ item.celular }}</td>
+      <td>{{ item.direccion }} {{ item.barrio }}</td>
+      <td class="text-center">
+        <i *ngIf="item.uvida" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+        <i *ngIf="!item.uvida" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+        <i *ngIf="item.bautizado" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+        <i *ngIf="!item.bautizado" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+        <i *ngIf="item.cdestino" class="fa fa-check-circle" [ngStyle]="{'color': 'green'}"></i>
+        <i *ngIf="!item.cdestino" class="fa fa-question-circle" [ngStyle]="{'color':'orange'}"></i>
+      </td>
+      <td>
+        <button type="button" class="btn btn-info btn-sm" (click)='refrescar(item)'>
+          Editar </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 -->
+</form>
+</div>
+

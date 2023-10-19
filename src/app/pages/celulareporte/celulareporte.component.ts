@@ -10,6 +10,9 @@ import { MedioI } from 'src/app/models/medio.model';
 import { ReporteCelula } from 'src/app/models/reportecelula.model';
 import { AsistenciaCelula } from 'src/app/models/asistencia.model';
 import { AsistenciaCelulaService } from 'src/app/servicios/asistenciacelula.service';
+import { MiembroI } from 'src/app/models/miembro.model';
+import { MiembroCelulaService } from 'src/app/servicios/miembrocelula.service';
+import { MiembroService } from 'src/app/servicios/miembro.service';
 
 
 
@@ -22,8 +25,10 @@ import { AsistenciaCelulaService } from 'src/app/servicios/asistenciacelula.serv
 export class CelulareporteComponent implements OnInit {
   celula: CelulaI = new CelulaI();
   parametro: any;
+  miembrocelula: MiembroCelula = new MiembroCelula();
   medios!: any;
   discipuloscelula: any;
+  discipuloscelulafaltantes: any;
   reportecreado: ReporteCelula = new ReporteCelula();
   reportederegreso: any;
   listtema: any;
@@ -37,17 +42,19 @@ export class CelulareporteComponent implements OnInit {
     private reportecelulaSevicio: ReporteCelulaService,
     private asistenciacelulaSevicio: AsistenciaCelulaService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private celulamiembrosServicio: MiembroCelulaService,
+    private miembroService: MiembroService
   ) {
     this.crearFormulario();
   }
 
   ngOnInit() {
-
     this.parametro = this.activatedRoute.snapshot.params.id;
-    this.celulaServicio.getCelula(this.parametro)
-      .subscribe((celula: CelulaI) => {
+    this.celulaServicio.getCelulaId(this.parametro)
+      .subscribe((celula: any) => {
         this.celula = celula;
+        console.log(this.celula);
         this.cargarMedio();
         this.cargarTemas();
         this.cargarDiscipulos();
@@ -101,6 +108,7 @@ export class CelulareporteComponent implements OnInit {
       .subscribe((disc: MiembroCelula) => {
         this.discipuloscelula = disc;
         this.Agregarasistecheck();
+        this.discipulosfaltantes();
       },
         (err: any) => { console.error(err) }
       );
@@ -108,8 +116,8 @@ export class CelulareporteComponent implements OnInit {
 
   cargarTemas() {
     this.listtema = null;
-    this.reportecelulaSevicio.getReporteCelula(this.celula.idCelula)
-      .subscribe((tema: ReporteCelula) => {
+    this.reportecelulaSevicio.getTemasIdCelula(this.celula.idCelula)
+      .subscribe((tema: any) => {
         this.listtema = tema;
       },
         (err: any) => { console.error(err) }
@@ -128,7 +136,7 @@ export class CelulareporteComponent implements OnInit {
       this.reportecreado.fechaCelula = this.reportecelulaForm.get('fechaCelula')?.value;
       this.reportecreado.temaCelula = this.reportecelulaForm.get('temaCelula')?.value;
       this.reportecreado.idMedioCelula = this.reportecelulaForm.get('idMedioCelula')?.value;
-      this.reportecreado.usuarioIng = <string>sessionStorage.getItem("lidersistema");
+      this.reportecreado.usuarioIng = <string>localStorage.getItem("lidersistema");
       this.reportecreado.fecUsuario = new Date();
 
       let contadorasistente = 0;
@@ -146,19 +154,21 @@ export class CelulareporteComponent implements OnInit {
           if (this.reportecelulaForm.get('asistecheck')?.value[i] == true) {
             this.asistente.idDac = NaN;
             this.asistente.idRealizacionCelula = this.reportederegreso.reportecelula.idRealizacionCelula;
-            this.asistente.idMiembroDiscipulo = this.discipuloscelula[i].idMiembro;
+            this.asistente.idMiembroDiscipulo = this.discipuloscelula[i].idMiembro.idMiembro;
             this.asistenciacelulaSevicio.create(this.asistente).subscribe(resp => {
             });
           }
         }
+        this.router.navigate(['/listcelula']);  
+        //this.cargarTemas();
         Swal.fire({
           icon: 'success',
           title: `Ok`,
           text: `El reporte de la celula de la semana fue creado correctamente`,
           showConfirmButton: false,
           timer: 1500
-        });
-        this.cargarTemas();
+        });       
+        
       });
     } else {
       Swal.fire({
@@ -191,16 +201,80 @@ export class CelulareporteComponent implements OnInit {
         },
 
           err => {
-            /* Swal.fire({
-               icon: 'success',
-               title: `Ok`,
-               text: err.mensaje,
-             });*/
+            Swal.fire({
+              icon: 'error',
+              title: `Error`,
+              text: `Se ha producido un error, al tratar de eliminar el registro de la base de datos`,
+            });
 
           });
       }
     });
 
   }
+
+  discipulosfaltantes() {
+    this.discipuloscelulafaltantes = null;
+    this.miembroService.getMinisterio12(this.celula.idMiembroLider)
+      .subscribe(resp => {
+        this.discipuloscelulafaltantes = resp;        
+        this.discipuloscelula.forEach((falta: any) => {
+          this.discipuloscelulafaltantes = this.discipuloscelulafaltantes.filter((cli: any) => cli.idMiembro !== falta.idMiembro.idMiembro);
+        });     
+      },
+        err => { console.error(err) }
+      );
+
+
+  }
+
+  agregarDiscipuloCelula(disc: MiembroI) {
+
+    if (!this.existeDiscipulo(disc.idMiembro)) {
+      this.miembrocelula.estado = true;
+      this.miembrocelula.idCelula = this.celula.idCelula;
+      this.miembrocelula.idMiembro = disc.idMiembro;
+      this.celulamiembrosServicio.create(this.miembrocelula).subscribe(json => {
+        this.discipuloscelulafaltantes = this.discipuloscelulafaltantes.filter((cli: MiembroI) => cli !== disc);
+        this.cargarDiscipulos();
+        Swal.fire({
+          icon: 'success',
+          title: `Ok`,
+          text: `El discipiulo ${disc.nomCompleto} fue agregado correctamente`,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      });
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: `Denegado`,
+        text: `El discipiulo ${disc.nomCompleto}  no pudo ser agregado, por que ya existe! `,
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+
+  }
+
+  existeDiscipulo(id: number): boolean {
+    let existe = false;
+    this.discipuloscelula.forEach((item: MiembroCelula) => {
+      if (id === item.idMiembro) {
+        existe = true;
+      }
+    });
+    return existe;
+  }
+
+  verAsistente(tem: any) {
+    Swal.fire({
+      icon: 'info',
+      title: `Información`,
+      text: `Proximamente podras ver quienes te asistieron......`,
+    });
+
+  }
+
 
 }

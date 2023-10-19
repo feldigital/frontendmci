@@ -50,7 +50,7 @@ export class ReinicioComponent implements OnInit {
                     }
                     else
                     {
-                    if (this.lider.email === "") {  
+                    if (this.lider.email === "" ||this.lider.email==null) {  
                       Swal.fire({
                         title: '!Warning',
                         text: `El usuario no tiene buzón de correo electronico para restablecer la contraseña!`,

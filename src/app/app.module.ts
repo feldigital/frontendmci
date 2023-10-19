@@ -14,7 +14,6 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { InicioComponent } from './pages/inicio/inicio.component';
 import { HelpComponent } from './pages/help/help.component';
 import { MiembroComponent } from './pages/miembro/miembro.component';
-import { TemascelulaComponent } from './pages/celulareporte/temascelula/temascelula.component';
 import { MinisterioComponent } from './pages/ministerio/ministerio.component';
 import { ListcelulaComponent } from './pages/listcelula/listcelula.component';
 import { CelulaComponent } from './pages/celula/celula.component';
@@ -23,16 +22,18 @@ import { ListasistenteComponent } from './pages/listasistente/listasistente.comp
 import { DetallediscipuloComponent } from './pages/detallediscipulo/detallediscipulo.component';
 import { NovedadcelulaComponent } from './pages/novedadcelula/novedadcelula.component';
 import { CelulareporteComponent } from './pages/celulareporte/celulareporte.component';
-import { AsistenciaComponent } from './pages/celulareporte/asistencia/asistencia.component';
 import { NuevoComponent } from './pages/nuevo/nuevo.component';
+import { ConsolidaruvidaComponent } from './pages/consolidaruvida/consolidaruvida.component';
 
 import { MiembroService } from './servicios/miembro.service';
 import { CelulaService } from './servicios/celula.service';
 import { MiembroCelulaService } from './servicios/miembrocelula.service';
 import { ReporteCelulaService } from './servicios/reportecelula.service';
 import { AsistenciaCelulaService } from './servicios/asistenciacelula.service';
+import { ConsolidarUvidaService } from './servicios/consolidaruvida.service';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
+import {MatMenuModule} from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -47,7 +48,14 @@ import { GestionarofrendaComponent } from './pages/gestionarofrenda/gestionarofr
 import { ReinicioComponent } from './pages/reinicio/reinicio.component';
 import { ArbolComponent } from './pages/arbol/arbol.component';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
-import {MatTabsModule} from  '@angular/material/tabs' ;
+import {MatTabsModule} from  '@angular/material/tabs';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { GestionuvidaComponent } from './pages/gestionuvida/gestionuvida.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
+import { ConfiguracionesComponent } from './pages/configuraciones/configuraciones.component';
+import { AsistenciauvidaComponent } from './pages/asistenciauvida/asistenciauvida.component';
+import { TemascelulaComponent } from './pages/temascelula/temascelula.component';
+
 
 //import { JwtInterceptorInterceptor } from './jwt-interceptor.interceptor';
 
@@ -63,7 +71,6 @@ registerLocaleData(localePY, 'es');
     InicioComponent,
     HelpComponent,
     MiembroComponent,
-    TemascelulaComponent,
     MinisterioComponent,
     ListcelulaComponent,
     CelulaComponent,
@@ -72,7 +79,6 @@ registerLocaleData(localePY, 'es');
     DetallediscipuloComponent,
     NovedadcelulaComponent,
     CelulareporteComponent,
-    AsistenciaComponent,
     NuevoComponent,
     LoginComponent,
     ReporteComponent,
@@ -81,13 +87,22 @@ registerLocaleData(localePY, 'es');
     GestionarofrendaComponent,
     ReinicioComponent,
     ArbolComponent,
+    ConsolidaruvidaComponent,
+    GestionuvidaComponent,
+    PerfilComponent,
+    ConfiguracionesComponent,
+    AsistenciauvidaComponent,
+    TemascelulaComponent,
    
   ],
   imports: [
+
+   
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
+    MatMenuModule,
     MatSidenavModule,
     MatButtonModule,
     HttpClientModule,
@@ -99,6 +114,7 @@ registerLocaleData(localePY, 'es');
     AutocompleteLibModule,
     MatFormFieldModule,
     NgxSpinnerModule,
+    MatSlideToggleModule,  
 
   ],
 
@@ -109,6 +125,7 @@ registerLocaleData(localePY, 'es');
     ReporteCelulaService,
     NuevoService,
     AsistenciaCelulaService,
+    ConsolidarUvidaService,
     //JwtInterceptorInterceptor,
     { provide: LOCALE_ID, useValue: 'es' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'es' },

@@ -1,0 +1,72 @@
+
+<div>
+  <form [formGroup]="asistenciaUvidaForm" (ngSubmit)="actualizarAsistencia()">
+
+    <div class="card" style="width: 18rem;" >
+      <img src="./assets/uvida1.jpg" class="card-img-top" alt="encuentro">       
+      <div class="card-body">
+        <h5 class="card-title text-center"> {{cicloAct?.cicloUvida }} </h5>
+        <p class="card-text">{{cadenaCorta (cicloAct?.textoRemha) }}</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">{{cicloAct?.citaRemha }}</li>
+        <li class="list-group-item">Coordinador: {{cicloAct?.nombreCoordinador | titlecase }}</li>
+        <li class="list-group-item">Fecha del Ciclo: {{cicloAct?.fechaEncuentro | date: 'dd/MM/YYYY'}}</li>          
+        <li class="list-group-item">Red: {{cicloAct?.nombreRed }}</li>
+        <li class="list-group-item">Nro. de Postulados: {{cicloAct?.postulados.length }}</li>
+      </ul>      
+    </div>
+
+  <div class="table-container" >    
+    <div class="row my-2 text-left">
+      <h6 class="card-title card-header ">Relación de postulados al {{cicloAct?.cicloUvida }} </h6>
+          <div class="input-group mt-2">
+            <span class="input-group-text bg-transparent">
+              <i class="fa fa-search" aria-hidden="true"></i>
+          </span>
+              <input type="text" name="listFilter" class="form-control border-end-0"
+                  placeholder="Buscar por nombre postulado" [(ngModel)]="listFilter">              
+          </div>  
+        </div>     
+  <table class="table table-bordered table-striped" *ngIf="postuladoUvida?.length>0"> <!--table table-bordered table-striped-->
+      <thead>
+      <tr>
+        <th>#</th>          
+        <th>Nombre del postulado</th>     
+        <th>T1</th> 
+        <th>T2</th> 
+        <th>T3</th>     
+        <th>Nivelatorio</th>         
+        <th>Encuentro</th> 
+        <th>Bautizado</th> 
+        <th>T5</th> 
+        <th>T6</th> 
+        <th>T7</th>     
+        <th>Nivelatorio</th>  
+        <th>Grado</th>    
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of filterPostulados let i= index">
+        <td>{{ i+1 }}</td>          
+        <td>{{ item.nomCompleto | titlecase }}</td>  
+        <td *ngFor="let asistencia of asistencias let i= index"> 
+          <input type="checkbox" [formControlName]="item.idPostulado+'_'+asistencia" [value]="item.asistencia"> 
+        </td>                 
+      </tr>      
+      </tbody>
+    </table>
+   
+       
+    </div>
+    <div class="col-4">
+      <button (click)="actualizarAsistencia()" class="btn btn-outline-primary w-100"><i class="fa-regular fa-pen-to-square"></i>
+        Actualizar asistencia</button>
+    </div>
+</form>
+</div>
+<!--
+<pre>
+  {{this.asistenciaUvidaForm.value | json}}
+</pre>
+-->

@@ -34,11 +34,11 @@ export class DetallediscipuloComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.parametro = this.activatedRoute.snapshot.params.id;
-    console.log(this.parametro);
+    this.parametro = this.activatedRoute.snapshot.params.id;   
     this.miembroService.getMiembro(this.parametro)
-      .subscribe((registro: MiembroI) => {
-        this.registro = registro;   
+      .subscribe((resp: any) => {
+        this.registro = resp;  
+        console.log (resp);
         this.cargarHistorial();    
       });
 
@@ -52,7 +52,6 @@ export class DetallediscipuloComponent implements OnInit {
   seleccionarFoto(event: any) {
     this.fotoSeleccionada = event.target.files[0];
     this.progreso = 0;
-    console.log(this.fotoSeleccionada);
     if (this.fotoSeleccionada.type.indexOf('image') < 0) {
       Swal.fire({
         icon: 'error',
@@ -93,31 +92,43 @@ export class DetallediscipuloComponent implements OnInit {
   }
 
   
-  eliminarHistorial(historial: NuevoI) {
-    this.nuevoService.delete(historial.idGanados).subscribe(json => {
+  eliminarHistorial(item: any) {
+
+    Swal.fire({
+      title: 'Confirma?',
+      text:  `Quitar el registros de seguimeinto de nuevos a ${this.registro.nomCompleto} en la base de datos!`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, quitar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+    this.nuevoService.delete(item.idGanados).subscribe(json => {
       this.cargarHistorial();
       Swal.fire({
         icon: 'success',
         title: `Ok`,
-        text: `El historial de seguimiento al nuevo ${historial.idMiembro.nomCompleto} fue quitado correctamente`,
+        text: `El historial de seguimiento al nuevo ${this.registro.nomCompleto} fue quitado correctamente`,
         showConfirmButton: false,
         timer: 1500
       })
     });
-  }
+
+}
+});
+}
  
   cargarHistorial() {
     this.hitorialnuevo = null;
     this.nuevoService.getHistorialNuevo(this.registro.idMiembro)
-      .subscribe((resp: NuevoI) => {
+      .subscribe((resp: any) => {
         this.hitorialnuevo = resp;
       },
         (err: any) => { console.error(err) }
       );
-  }
-
-
-  cerrarModal() {  
   }
 
 }

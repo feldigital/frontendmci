@@ -84,11 +84,12 @@
                     No hay discipul@s asignados para la celula. Debe agregar al menos uno!
                 </div>
                 <div *ngIf="discipuloscelula?.length > 0">
+                    <h6 class="card-header">Discípulos en tu celula</h6>
                     <table class="table table-striped table-hover table-sm">
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Nombre Completo </th>
+                                <th>Nombre del discípulo </th>
                                 <th>Cumpleaños</th>
                                 <th>Celular</th>
                                 <th>Quitar</th>
@@ -98,7 +99,7 @@
 
                             <tr *ngFor="let item of discipuloscelula let i= index"
                                 [ngStyle]="{'background-color': item.idMiembro.estado =='Activo' ? 'white' : 'red' }">
-                                <td>{{i+1}}</td>
+                                <td>{{i+1}}</td>                                 
                                 <td>{{item.idMiembro.nomCompleto | titlecase}}</td>
                                 <td>{{item.idMiembro.fecNacimiento | date:"MMM-dd"}}</td>
                                 <td>{{item.idMiembro.celular}}</td>
@@ -126,28 +127,30 @@
 
 
 <div class="col">
-    <h5 class="text-primary">Lista de discipulos de tu ministerio</h5>
-    <div class="input-group mb-2">
-        <input type="text" name="listFilter" class="form-control border-end-0"
-            placeholder="Buscar por nombres y apellidos" [(ngModel)]="listFilter">
+    <h6 class="card-header">Lista de discípulos de tu ministerio</h6>
+    <div class="input-group mt-2">
         <span class="input-group-text bg-transparent">
             <i class="fa fa-search" aria-hidden="true"></i>
         </span>
+        <input type="text mt-2" name="listFilter" class="form-control border-end-0"
+            placeholder="Buscar por nombres y apellidos" [(ngModel)]="listFilter">
+       
     </div>
 </div>
-<div *ngIf="miembros?.length == 0" class="alert alert-info mb-3">
+<div *ngIf="miembros?.length == 0" class="alert alert-info mb-2">
     No hay discipul@s registrados a para agregar a tu celula en la base de datos!
 </div>
-<div class="container mt-4">
+<div class="container mt-2">
 
     <table class="table table-bordered table-striped" *ngIf="miembros?.length>0">
         <thead>
             <tr>
                 <th>#</th>
-                <th>Nombre Completo </th>
+                <th>Nombre del discípulo </th>
                 <th>Edad</th>
                 <th>Celular</th>
-                <th>Direccion</th>
+                <th>Dirección</th>
+                <th>Nombre del lider</th>
                 <th>Agregar</th>
             </tr>
         </thead>
@@ -161,17 +164,17 @@
                     <img *ngIf="!item?.imgPerfil" src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" alt="Sin foto"
                         class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
 
-                </td>
+                </td>                
                 <td>{{ item.nomCompleto| uppercase }}</td>
                 <td>{{CalcularEdad(item)}} </td>
                 <td>{{ item.celular }}</td>
                 <td>{{ item.direccion }}</td>
+                <td>{{ item.nombreLiderInmediato| uppercase }}</td>
                 <td>
                     <button *ngIf="item.estado==='Activo'" type="button" class="btn btn-info"
                         (click)="agregarDiscipuloCelula(item)">
                         Agregar a Celula </button>
                 </td>
-
             </tr>
         </tbody>
     </table>

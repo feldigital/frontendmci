@@ -5,7 +5,8 @@ import { MiembroService } from 'src/app/servicios/miembro.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { from } from 'rxjs';
+import { CelulaService } from 'src/app/servicios/celula.service';
+import { CelulaI } from 'src/app/models/celula.model';
 
 
 
@@ -13,7 +14,6 @@ import { from } from 'rxjs';
 @Component({
   selector: 'app-miembro',
   templateUrl: './miembro.component.html'
-
 })
 export class MiembroComponent implements OnInit {
   registro: any;
@@ -23,7 +23,7 @@ export class MiembroComponent implements OnInit {
   nuevoForm!: FormGroup;
   nombrebtn!: string
   edad!: number;
-  //liderAct: any;
+  filterCelulas!: any;
   ministerio12!: any;
   keyword = 'nomCompleto';  
 
@@ -32,19 +32,19 @@ export class MiembroComponent implements OnInit {
     private miembroService: MiembroService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private celulaServicio: CelulaService
   ) {
 
     this.cargarTipos();
     this.crearFormulario();
     this.cargarMembresia();
-    this.nombrebtn = "Guardar";
+    this.nombrebtn = "Crear";
   }
 
 
   ngOnInit() {
-
     this.parametro = this.activatedRoute.snapshot.params.id;
-    this.cargardatos();
+     this.cargardatos();
     this.activatedRoute.params.subscribe(
       (params: Params) => {
         this.parametro = params.parametro;
@@ -52,18 +52,13 @@ export class MiembroComponent implements OnInit {
     );
   }
 
-  cargardatos() {
-    //if (!this.parametro) {
-    //  this.liderAct = sessionStorage.getItem("lidersistema");
-    //  this.parametro = this.liderAct;
-    //}
+  cargardatos() {   
     this.miembroService.getMiembro(this.parametro)
-      .subscribe((registro: MiembroI) => {
-        this.registro = registro;
-        console.log(registro);
-        console.log(registro.liderInmediato);
+      .subscribe((resp: MiembroI) => {
+        this.registro = resp;        
         this.mostrarDatos();
         this.cargarMinisterio12();
+        this.cargarMisCelulas();
       });
   }
 
@@ -73,22 +68,12 @@ export class MiembroComponent implements OnInit {
 
   }
 
-  /*cargarMembresia() {
-    this.lideres = null;
-    this.miembroService.getMiembrosLideres()
-      .subscribe((resp: MiembroI) => {
-        this.lideres = resp;
-      },
-        (err: any) => { console.error(err) }
-      );
-  }*/
-
   cargarMembresia() {
     this.lideres = null;
-    let liderAct = sessionStorage.getItem("lidersistema");
+    let liderAct = localStorage.getItem("lidersistema");
     this.miembroService.getMiembrosLideres(liderAct)
       .subscribe((resp: MiembroI) => {
-        this.lideres = resp;
+        this.lideres = resp;          
       },
         (err: any) => { console.error(err) }
       );
@@ -138,9 +123,9 @@ export class MiembroComponent implements OnInit {
         citaBiblica: [''],
         textoBiblico: [''],
         pwd: [''],
-        usuarioCrea: [sessionStorage.getItem("lidersistema")],
+        usuarioCrea: [localStorage.getItem("lidersistema")],
         fecCreacion: [new Date()],
-        usuarioMod: [sessionStorage.getItem("lidersistema")],
+        usuarioMod: [localStorage.getItem("lidersistema")],
         fecModificacion: [new Date()],
       });
   }
@@ -156,7 +141,7 @@ export class MiembroComponent implements OnInit {
     this.nuevoForm.setValue({
 
       idMiembro: this.registro.idMiembro,
-      tipoDoc: this.registro.tipoDoc.tipo,
+      tipoDoc: this.registro.tipoDoc,
       numDocumento: this.registro.numDocumento,
       nomCompleto: this.registro.nomCompleto,
       fecNacimiento: fn.toJSON().slice(0, 10),
@@ -172,7 +157,7 @@ export class MiembroComponent implements OnInit {
       lider: this.registro.lider,
       fechaIngreso: fl.toJSON().slice(0, 10),
       estado: this.registro.estado,
-      codigoLider: this.registro.codigoLider,
+      codigoLider: '',
       liderInmediato: this.registro.liderInmediato,
       uvida: this.registro.uvida,
       cdestino: this.registro.cdestino,
@@ -212,13 +197,13 @@ export class MiembroComponent implements OnInit {
         );
       } else {
 
-        this.nuevoForm.value.usuarioMod = sessionStorage.getItem("lidersistema");
+        this.nuevoForm.value.usuarioMod = localStorage.getItem("lidersistema");
         this.nuevoForm.value.fecModificacion= new Date();  
-        this.miembroService.update(this.nuevoForm.value).subscribe(json => {
+        this.miembroService.create(this.nuevoForm.value).subscribe(json => {
           Swal.fire({
             icon: 'success',
             title: `Ok`,
-            text: `El miembro ${this.nuevoForm.value.nomCompleto} ha sido actualizado correctameente`,
+            text: `El miembro ${this.nuevoForm.value.nomCompleto} ha sido actualizado correctamente`,
           });
           this.router.navigate(['/ministerio']);
         },
@@ -249,7 +234,6 @@ export class MiembroComponent implements OnInit {
     this.miembroService.getMiembrosDocumento(documento)
       .subscribe((resp: MiembroI) => {
         this.registro = resp;
-        // console.log(this.registro[0].nomCompleto);
         this.registro = this.registro[0];
         this.mostrarDatos();
         Swal.fire({
@@ -262,10 +246,7 @@ export class MiembroComponent implements OnInit {
       );
   }
 
-
-
   /* FUNCIONES DE VALIDACIÓN DEL FORMULARIO */
-
   get nombreNovalido() {
     return this.nuevoForm.get('nomCompleto')?.invalid && this.nuevoForm.get('nomCompleto')?.touched
   }
@@ -283,9 +264,21 @@ export class MiembroComponent implements OnInit {
   cargarMinisterio12() {
     this.miembroService.getMinisterio12(this.registro.idMiembro)
       .subscribe(resp => {
-        this.ministerio12 = resp;
+        this.ministerio12 = resp;  
       },
         err => { console.error(err) }
+      );
+  }
+
+
+  
+  cargarMisCelulas(){   
+    this.filterCelulas = null; 
+    this.celulaServicio.getCelulaLider(this.registro.idMiembro)
+      .subscribe((resp: CelulaI) => {
+        this.filterCelulas = resp;
+      },
+        (err: any) => { console.error(err) }
       );
   }
 

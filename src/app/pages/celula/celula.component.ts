@@ -11,6 +11,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MiembroCelulaService } from 'src/app/servicios/miembrocelula.service';
 
 
+
 @Component({
   selector: 'app-celula',
   templateUrl: './celula.component.html',
@@ -60,13 +61,13 @@ export class CelulaComponent implements OnInit {
 
   ngOnInit(): void {
     this.parametro = this.activatedRoute.snapshot.params.id;
-    this.celulaServicio.getCelula(this.parametro)
+    this.celulaServicio.getCelulaId(this.parametro)
       .subscribe((celula: CelulaI) => {
         this.celula = celula;
-        this.cargarMembresia();        
+        this.cargarLideres();        
         this.mostrarDatos();
         this.cargarDiscipulos();
-        this.parametrolider=celula.idMiembroLider.idMiembro;
+        this.parametrolider=celula.idMiembroLider;
       });
 
     this.activatedRoute.params.subscribe(
@@ -110,7 +111,7 @@ export class CelulaComponent implements OnInit {
         horaCelula: [''],
         idRed: [''],
         estado: [''],
-        usuario: [<string>sessionStorage.getItem("lidersistema")],
+        usuario: [<string>localStorage.getItem("lidersistema")],
         fecUsuario: [new Date()],        
         gcompleto: ['false'],
       });
@@ -123,14 +124,14 @@ export class CelulaComponent implements OnInit {
 
     this.celulaForm.setValue({
       idCelula: this.celula.idCelula,
-      idMiembroLider: this.celula.idMiembroLider.idMiembro,
+      idMiembroLider: this.celula.idMiembroLider,
       nombreAnfitrion: this.celula.nombreAnfitrion,
       direccion: this.celula.direccion,
       barrio: this.celula.barrio,
       fecApertura: fecha.toJSON().slice(0, 10),
       diaCelula: this.celula.diaCelula,
       horaCelula: this.celula.horaCelula,
-      idRed: this.celula.idRed.idRed,
+      idRed: this.celula.idRed,
       estado: this.celula.estado,
       usuario: this.celula.usuario,
       fecUsuario: this.celula.fecUsuario,
@@ -166,19 +167,9 @@ export class CelulaComponent implements OnInit {
 
   }
 
-  ListarMiembros() {
-    this.miembroService.getMiembros()
-      .subscribe(resp => {
-        this.miembros = resp;
-        this.filterMiembros = this.miembros;      
-      },
-        err => { console.error(err) }
-      );
-  }
-
-
+  
   ListarMiembrosMinisterio() {
-    let liderAct = sessionStorage.getItem("lidersistema");
+    let liderAct = localStorage.getItem("lidersistema");
     this.miembroService.getMiembrosMinisterio(liderAct)
       .subscribe(resp => {
         this.miembros = resp;
@@ -206,7 +197,8 @@ export class CelulaComponent implements OnInit {
       Swal.fire({
         icon: 'success',
         title: `Ok`,
-        text: `El discipiulo ${discelula.idMiembro.nomCompleto} fue quitado de la celula correctamente`,
+        //text: `El discipiulo ${discelula.idMiembro} fue quitado de la celula correctamente`,
+        text: `El discipiulo fue quitado de la celula correctamente`,
         showConfirmButton: false,
         timer: 1500
       })      
@@ -214,12 +206,12 @@ export class CelulaComponent implements OnInit {
   }
 
   agregarDiscipuloCelula(disc: MiembroI) {
-    //if(this.celula.idMiembroLider.idMiembro===disc.liderInmediato.idMiembro){
-    if(this.celula.idMiembroLider.idMiembro===disc.liderInmediato){
+  //===disc.liderInmediato
+    if(this.celula.idMiembroLider){
     if (!this.existeDiscipulo(disc.idMiembro)) {
       this.miembrocelula.estado = true;
-      this.miembrocelula.idCelula = this.celula;
-      this.miembrocelula.idMiembro = disc;
+      this.miembrocelula.idCelula = this.celula.idCelula;
+      this.miembrocelula.idMiembro = disc.idMiembro;
       this.celulamiembrosServicio.create(this.miembrocelula).subscribe(json => {
       this.cargarDiscipulos();  
         Swal.fire({
@@ -243,7 +235,7 @@ export class CelulaComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: "!Alerta",
-      text: `${this.celula.idMiembroLider.nomCompleto} no es lider inmediato del discipulo  ${disc.nomCompleto} que intenta agregar a esta celula.! `,
+      text: `${this.celula.idMiembroLider} no es lider inmediato del discipulo  ${disc.nomCompleto} que intenta agregar a esta celula.! `,
       footer: 'Cambiele el lider inmediato y vuelva a intentarlo'
     });
   }
@@ -252,31 +244,20 @@ export class CelulaComponent implements OnInit {
   existeDiscipulo(id: number): boolean {
     let existe = false;
     this.discipuloscelula.forEach((item: MiembroCelula) => {
-      if (id === item.idMiembro.idMiembro) {
+      if (id === item.idMiembro) {
         existe = true;
       }
     });
     return existe;
   }
 
-   
- /* cargarMembresia() {
+ 
+  cargarLideres() {
     this.lideres = null;
-    let liderAct = sessionStorage.getItem("lidersistema");
-    this.miembroService.getMiembrosLideres()
-      .subscribe((resp: MiembroI) => {
-        this.lideres = resp;
-      },
-        (err: any) => { console.error(err) }
-      );
-  }*/
-
-  cargarMembresia() {
-    this.lideres = null;
-    let liderAct = sessionStorage.getItem("lidersistema");
+    let liderAct = localStorage.getItem("lidersistema");
     this.miembroService.getMiembrosLideres(liderAct)
       .subscribe((resp: MiembroI) => {
-        this.lideres = resp;
+        this.lideres = resp; 
       },
         (err: any) => { console.error(err) }
       );

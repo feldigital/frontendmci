@@ -165,10 +165,11 @@ export class ReporteComponent implements OnInit {
   }
   // llena datos para exportar lo referente a los temas de celula
   cargarTemas() {
-    let liderAct = sessionStorage.getItem("lidersistema");
+    let liderAct = localStorage.getItem("lidersistema");
     this.datareporte = null;
-    this.reportecelulaSevicio.getReporteTemasCelula(liderAct)
-      .subscribe((resp: ReporteCelula) => {
+    if (liderAct==='1202'){
+    this.reportecelulaSevicio.getTemas()
+      .subscribe((resp ) => {
         this.datareporte = resp;
         this.spinner.hide();
         this.isLoading = false;
@@ -176,11 +177,23 @@ export class ReporteComponent implements OnInit {
       },
         (err: any) => { console.error(err) }
       );
+    }else{
+      this.reportecelulaSevicio.getTemasMinisterio(liderAct)
+      .subscribe((resp ) => {
+        this.datareporte = resp;
+        this.spinner.hide();
+        this.isLoading = false;
+        this.exportExcel("Temas");
+      },
+        (err: any) => { console.error(err) }
+      );
+
+    }
   }
 
   // llena datos para exportar lo referente a los miembros del ministerio
   ListarMiembrosMinisterio() {
-    let liderAct = sessionStorage.getItem("lidersistema");
+    let liderAct = localStorage.getItem("lidersistema");
     this.datareporte = null;
     this.miembroService.getReporteMinisterio(liderAct)
       .subscribe(resp => {
@@ -195,9 +208,10 @@ export class ReporteComponent implements OnInit {
 
   // llena datos para exportar lo referente a las celulas del ministerio
   ListarCelulasMinisterio() {
-    let liderAct = sessionStorage.getItem("lidersistema");
+    let liderAct = localStorage.getItem("lidersistema");
     this.datareporte = null;
-    this.celulaService.getCelulasMinisterioReporte(liderAct)
+    if (liderAct==='1202'){
+    this.celulaService. getCelulas()
       .subscribe(resp => {
         this.datareporte = resp;
         this.spinner.hide();
@@ -206,11 +220,23 @@ export class ReporteComponent implements OnInit {
       },
         err => { console.error(err) }
       );
+    }
+    else{
+      this.celulaService.getCelulasMinisterioReporte(liderAct)
+      .subscribe(resp => {
+        this.datareporte = resp;
+        this.spinner.hide();
+        this.isLoading = false;
+        this.exportExcel("Celulas");
+      },
+        err => { console.error(err) }
+      );
+    }
   }
 
   // llena datos para exportar lo referente a los nuevos del ministerio
   ListarNuevosMinisterio() {
-    let liderAct = sessionStorage.getItem("lidersistema");
+    let liderAct = localStorage.getItem("lidersistema");
     this.datareporte = null;
     this.nuevoService.getReportelNuevo(liderAct)
       .subscribe(resp => {

@@ -9,13 +9,34 @@ import { AsistenciaCelula } from '../models/asistencia.model';
 
 @Injectable()
 export class ReporteCelulaService {
+  
   //private urlEndPoint: string = 'http://localhost:8080/api/asistencia_celula';
-  private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/asistencia_celula';
+   private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/asistencia_celula';
   
   constructor(private http: HttpClient, private router: Router) { }
 
-  getReporteCelula(id: any): Observable<ReporteCelula> {
-    return this.http.get<ReporteCelula>(`${this.urlEndPoint}/${id}`).pipe(
+  getTemasIdCelula(id: any): Observable<ReporteCelula> {
+    return this.http.get<ReporteCelula>(`${this.urlEndPoint}/celula/${id}`).pipe(
+      catchError(e => {
+        if (e.status != 401 && e.error.mensaje) {
+          this.router.navigate(['/celula']);
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      }));
+  }
+  getReporteIdRealizacion(id: any): Observable<ReporteCelula> {
+    return this.http.get<ReporteCelula>(`${this.urlEndPoint}/tema/${id}`).pipe(
+      catchError(e => {
+        if (e.status != 401 && e.error.mensaje) {
+          this.router.navigate(['/celula']);
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      }));
+  }
+  getTemas(): Observable<any> {
+    return this.http.get(this.urlEndPoint).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
           this.router.navigate(['/celula']);
@@ -25,18 +46,7 @@ export class ReporteCelulaService {
       }));
   }
 
-  getReporteOfrendaCelula(id: any): Observable<ReporteCelula> {
-    return this.http.get<ReporteCelula>(`${this.urlEndPoint}/${id}`).pipe(
-      catchError(e => {
-        if (e.status != 401 && e.error.mensaje) {
-          this.router.navigate(['/celula']);
-          console.error(e.error.mensaje);
-        }
-        return throwError(e);
-      }));
-  }
-
-  getReporteTemasCelula(id: any): Observable<any> {
+  getTemasMinisterio(id: any): Observable<any> {
     return this.http.get(`${this.urlEndPoint}/ministerio/${id}`).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
@@ -46,20 +56,10 @@ export class ReporteCelulaService {
         return throwError(e);
       }));
   }
-
-  getOfrendaCelula(): Observable<ReporteCelula> {
-    return this.http.get<ReporteCelula>(`${this.urlEndPoint}/todas`).pipe(
-      catchError(e => {
-        if (e.status != 401 && e.error.mensaje) {
-          this.router.navigate(['/celula']);
-          console.error(e.error.mensaje);
-        }
-        return throwError(e);
-      }));
-  }
-
+  
+   
   public create(registro: ReporteCelula) {
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json' };  
     return this.http.post<ReporteCelula>(this.urlEndPoint, JSON.stringify(registro), { headers }).pipe(
       catchError(e => {
         return throwError(e);

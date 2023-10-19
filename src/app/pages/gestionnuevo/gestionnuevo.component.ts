@@ -12,31 +12,29 @@ import Swal from 'sweetalert2';
   styleUrls: ['./gestionnuevo.component.scss']
 })
 export class GestionnuevoComponent implements OnInit {
+  registro: any;
   nuevo: NuevoI = new NuevoI();
   parametro: any;
   gestionNuevoForm!: FormGroup;
- 
+
 
   constructor(
     private fb: FormBuilder,
     private nuevoService: NuevoService,
     private router: Router,
     private activatedRoute: ActivatedRoute
-    
+
   ) {
     this.crearFormulario();
-   
   }
 
   ngOnInit() {
-   
+
     this.parametro = this.activatedRoute.snapshot.params.id;
-    console.log(this.parametro);
     this.nuevoService.getNuevos(this.parametro)
-      .subscribe((resp: NuevoI) => {
-        this.nuevo = resp;
-        this.mostrarDatos();
-              //this.gestionNuevoForm.controls['idMiembro'].setValue(this.nuevo.idMiembro);
+      .subscribe((resp: any) => {
+        this.registro = resp;    
+        this.mostrarDatos();     
       });
     this.activatedRoute.params.subscribe(
       (params: Params) => {
@@ -59,24 +57,29 @@ export class GestionnuevoComponent implements OnInit {
         observaciones: [''],
         disposicion: ['No gestionado', [Validators.required]],
       });
-    
+
   }
   mostrarDatos() {
     this.gestionNuevoForm.patchValue({
-      fonollamada: this.nuevo.fonollamada,     
-      usuarioFonollamada: this.nuevo.usuarioFonollamada,
-      fecLlamada: this.nuevo.fecLlamada,
-      fonovisita: this.nuevo.fonovisita,
-      usuarioFonovisita: this.nuevo.usuarioFonovisita,
-      fecVisita: this.nuevo.fecVisita,
-      observaciones: this.nuevo.observaciones,
-      disposicion: this.nuevo.disposicion,
+      fonollamada: this.registro.fonollamada,
+      usuarioFonollamada: this.registro.usuarioFonollamada,
+      fecLlamada: this.registro.fecLlamada,
+      fonovisita: this.registro.fonovisita,
+      usuarioFonovisita: this.registro.usuarioFonovisita,
+      fecVisita: this.registro.fecVisita,
+      observaciones: this.registro.observaciones,
+      disposicion: this.registro.disposicion,
     })
   }
 
+
   reportar() {
     if (this.gestionNuevoForm.status == 'VALID') {
-
+      this.nuevo.idGanados = this.registro.idGanados;
+      this.nuevo.usuarioIng = this.registro.usuarioIng;
+      this.nuevo.nuevo = this.registro.nuevo;
+      this.nuevo.fechaReunion = this.registro.fechaReunion;
+      this.nuevo.motivoOracion = this.registro.motivoOracion,    
       this.nuevo.fonollamada = this.gestionNuevoForm.get('fonollamada')?.value;
       this.nuevo.usuarioFonollamada = this.gestionNuevoForm.get('usuarioFonollamada')?.value;
       this.nuevo.fecLlamada = this.gestionNuevoForm.get('fecLlamada')?.value;
@@ -85,13 +88,14 @@ export class GestionnuevoComponent implements OnInit {
       this.nuevo.fecVisita = this.gestionNuevoForm.get('fecVisita')?.value;
       this.nuevo.observaciones = this.gestionNuevoForm.get('observaciones')?.value;
       this.nuevo.disposicion = this.gestionNuevoForm.get('disposicion')?.value;
-      
-
+      this.nuevo.idMiembro = this.registro.idMiembro;
+      this.nuevo.idMiembroQuienInvita = this.registro.idMiembroQuienInvita;
+      this.nuevo.idReunion =this.registro.idReunion; 
       this.nuevoService.update(this.nuevo).subscribe(json => {
         Swal.fire({
           icon: 'success',
           title: `Ok`,
-          text: `El seguimiento al nuevo ${this.nuevo.idMiembro.nomCompleto} ha sido creado correctamente`,
+          text: `El seguimiento a ${this.registro.nombreInvitado} ha sido guardado correctamente!`,
         });
         this.router.navigate(['/seguimiento']);
       },
@@ -99,7 +103,7 @@ export class GestionnuevoComponent implements OnInit {
           Swal.fire({
             icon: 'error',
             title: 'Error...',
-            text: 'No se pudo realizar el seguimiento del nuevo en la base de datos!',
+            text: `No se pudo realizar el seguimiento a ${this.registro.nombreInvitado}  en la base de datos!`,
             footer: err.mensaje //JSON.stringify(err)
           });
         });
@@ -107,7 +111,7 @@ export class GestionnuevoComponent implements OnInit {
       Swal.fire({
         icon: 'warning',
         title: "!Alerta",
-        text: `Le faltan datos para ingresar el seguimiento del registro a nombre de ${this.nuevo.idMiembro.nomCompleto}`
+        text: `Le faltan datos para ingresar el seguimiento  a nombre de ${this.registro.nombreInvitado}`
       });
     }
   }

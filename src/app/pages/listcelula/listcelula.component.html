@@ -1,28 +1,22 @@
 <div class="card border-primary mb-3">
-  <div class="card-header">Una clave de la multiplicación es hacer una celula con amor.</div>
-  <div class="card-body">
-    <h6 class="card-title">Celulas ministerio {{nombreActual}}</h6>
-    <div class="row my-2 text-left">
-      <div class="row my-2 text-left">
+  <div class="card-header mb-3">Una clave de la multiplicación, es hacer una celula con amor.</div>
+
+    <h6 class="card-title">Celulas ministerio {{nombreActual}}  <i class="fa fa-cogs" aria-hidden="true" [ngStyle]="{'color':'orange'}"></i>
+      {{celulas?.length }}</h6>
+    <div class="row my-2 text-left">     
         <div class="col-sm">
           <div class="input-group mb-2">
-            <input type="text" name="listFilter" class="form-control border-end-0"
-              placeholder="Filtrar por nombre del lider, por barrio" [(ngModel)]="listFilter">
             <span class="input-group-text bg-transparent">
               <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-
+            <input type="text" name="listFilter" class="form-control border-end-0"
+              placeholder="Filtrar por nombre del lider, por barrio" [(ngModel)]="listFilter">
             <button class="btn btn-rounded btn btn-success" type="button" routerLink="/celulanueva">
               Crear celula nueva
             </button>
           </div>
-        </div>
-        <div class="col text-left">
-          <h5 class="card-title"> <i class="fa fa-cogs" aria-hidden="true" [ngStyle]="{'color':'orange'}"></i>
-            {{celulas?.length }}</h5>
-        </div>
-      </div>
-    </div>
+        </div> 
+     </div>
     <div *ngIf="celulas?.length == 0" class="alert alert-info">
       No hay celulas registradas de tu ministerio en la base de datos!
     </div>
@@ -30,14 +24,15 @@
       <thead>
         <tr>
           <th>Novedad</th>
-          <th>#</th>
-          <th>Nombre del lider de la celula</th>
+         
+          <th>Lider de la celula</th>
           <th>Anfitrion </th>
           <th>Direccion de la celula</th>
           <th>Barrio</th>
           <th>Dia</th>
           <th>Hora</th>
           <th>Red</th>
+          <th>Lider inmediato</th>
           <th>editar</th>
         </tr>
       </thead>
@@ -54,14 +49,15 @@
                <label *ngIf="(item.estado!='Activa')">{{ item.estado }} </label>
             </div>
           </td>
-          <td>{{i+1}}</td>
-          <td>{{ item.idMiembroLider.nomCompleto| uppercase }}</td>
-          <td>{{ item.nombreAnfitrion| uppercase }}</td>
+         
+          <td>{{ item.nombreLider| titlecase }}</td>
+          <td>{{ item.nombreAnfitrion| titlecase }}</td>
           <td>{{ item.direccion }}</td>
           <td>{{ item.barrio }}</td>
           <td>{{ item.diaCelula }}</td>
           <td>{{ item.horaCelula }}</td>
-          <td>{{ item.idRed.nomRed }}</td>
+          <td>{{ item.nombreRed }}</td>
+          <td>{{ item.nombreLiderInmediato| titlecase }}</td>
           <td>
             <button type="button" class="btn btn-light" [routerLink]="['/celula', item.idCelula]">
               <i style="color: cornflowerblue; " class="far fa-edit"></i> </button>
@@ -69,7 +65,7 @@
         </tr>
       </tbody>
     </table>
-  </div>
+
 </div>
 
 <div *ngIf="isLoading"> 

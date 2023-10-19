@@ -118,7 +118,7 @@ export class CelulanuevaComponent implements OnInit {
 
   /*cargarMembresia() {
     this.lideres = null;
-    //let liderAct = sessionStorage.getItem("lidersistema");
+    //let liderAct = localStorage.getItem("lidersistema");
     this.miembroService.getMiembrosLideres()
       .subscribe((resp: MiembroI) => {
         this.lideres = resp;
@@ -129,7 +129,7 @@ export class CelulanuevaComponent implements OnInit {
 
   cargarMembresia() {
     this.lideres = null;
-    let liderAct = sessionStorage.getItem("lidersistema");
+    let liderAct = localStorage.getItem("lidersistema");
     this.miembroService.getMiembrosLideres(liderAct)
       .subscribe((resp: MiembroI) => {
         this.lideres = resp;
