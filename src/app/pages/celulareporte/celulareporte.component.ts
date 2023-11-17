@@ -13,6 +13,8 @@ import { AsistenciaCelulaService } from 'src/app/servicios/asistenciacelula.serv
 import { MiembroI } from 'src/app/models/miembro.model';
 import { MiembroCelulaService } from 'src/app/servicios/miembrocelula.service';
 import { MiembroService } from 'src/app/servicios/miembro.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 
 
@@ -276,5 +278,16 @@ export class CelulareporteComponent implements OnInit {
 
   }
 
+  generatePDF(): void { 
+    const fileName = "MCI_Celulas"  + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+    const doc = new jsPDF({
+      orientation: 'l',
+      unit: 'mm',
+      format: [220, 340],
+      putOnlyUsedFonts: true
+    });  
+    autoTable(doc, { html: '#elementId' })       
+    doc.save(fileName)
+  }
 
 }

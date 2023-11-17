@@ -10,14 +10,37 @@
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">{{cicloAct?.citaRemha }}</li>
-        <li class="list-group-item">Coordinador: {{cicloAct?.nombreCoordinador | titlecase }}</li>
-        <li class="list-group-item">Fecha del Ciclo: {{cicloAct?.fechaEncuentro | date: 'dd/MM/YYYY'}}</li>          
-        <li class="list-group-item">Red: {{cicloAct?.nombreRed }}</li>
-        <li class="list-group-item">Nro. de Postulados: {{cicloAct?.postulados.length }}</li>
+        <li class="list-group-item text-center"> <button  type="button" class="btn card-header btn-sm " (click)="cerificadosBautismoPDF()"  >
+          <i class="fa fa-file-pdf" [ngStyle]="{'color':'#65AAEB'}"></i>
+              Generar certificados de bautismo 
+        </button></li>
+        <li class="list-group-item text-center"><button  type="button" class="btn card-header btn-sm"  (click)="cerificadoUvidaPDF()" >
+          <i class="fa fa-file-pdf" [ngStyle]="{'color':'#50D2AC'}"></i>
+          Generar certificados de Universidad de vida 
+    </button></li>    
+    <li class="list-group-item text-center"><button  type="button" class="btn card-header btn-sm"  [matMenuTriggerFor]="menuA">
+      <mat-icon [ngStyle]="{'color':'#FBBC05'}" >playlist_add_check</mat-icon>
+      Generar planilla de asistencia de U. vida 
+</button>
+<mat-menu #menuA="matMenu">             
+  <button  (click)="asistenciaUvidaPDF(cicloAct)" mat-menu-item>
+    <mat-icon [ngStyle]="{'color':'orange'}">group</mat-icon>
+    <span>Asistencia Pre-encuentro</span>
+  </button>
+  <button  (click)="asistenciaUvidaPDFPost(cicloAct)" mat-menu-item>
+    <mat-icon [ngStyle]="{'color':'#009A94'}">group_add</mat-icon>
+    <span>Asistencia Post-encuentro</span>
+  </button>    
+  <button  (click)="asistenciaUvidaPDFNoEncuentro(cicloAct)" mat-menu-item>
+    <mat-icon [ngStyle]="{'color':'red'}">group_add</mat-icon>
+    <span>No-encuentro con asistencias</span>
+  </button>  
+</mat-menu>
+</li>    
       </ul>      
     </div>
-
-  <div class="table-container" >    
+   
+  <div class="table-container"  #pdfContent>    
     <div class="row my-2 text-left">
       <h6 class="card-title card-header ">Relación de postulados al {{cicloAct?.cicloUvida }} </h6>
           <div class="input-group mt-2">
@@ -44,6 +67,7 @@
         <th>T7</th>     
         <th>Nivelatorio</th>  
         <th>Grado</th>    
+        <th>Gestión </th>    
       </tr>
     </thead>
     <tbody>
@@ -52,7 +76,31 @@
         <td>{{ item.nomCompleto | titlecase }}</td>  
         <td *ngFor="let asistencia of asistencias let i= index"> 
           <input type="checkbox" [formControlName]="item.idPostulado+'_'+asistencia" [value]="item.asistencia"> 
-        </td>                 
+        </td>   
+        <td> <button  type="button" class="btn btn-info btn-sm"  [matMenuTriggerFor]="menu">
+          Gestión </button>
+          <mat-menu #menu="matMenu">    
+            
+            <button   (click)='despostular(item)' mat-menu-item>
+              <mat-icon [ngStyle]="{'color':'Red'}">delete_outline</mat-icon>
+              <span>Quitar postulado</span>
+            </button>
+            <button   [routerLink]="['/miembro', item.idMiembro]" mat-menu-item>
+              <mat-icon [ngStyle]="{'color':'#009A94'}">edit</mat-icon>
+              <span>Editar postulado</span>
+            </button>
+
+            <button  *ngIf ="item.bautizadoEncuentro" (click)='exportarpdfindividualbautismo(item)' mat-menu-item>
+              <mat-icon [ngStyle]="{'color':'#009A94'}" >print</mat-icon>
+              <span>Certificado bautismo</span>
+            </button>
+            
+            <button *ngIf ="item.graduado"  (click)='exportarpdfindividualuvida(item)' mat-menu-item>
+              <mat-icon [ngStyle]="{'color':'#009A94'}" >school</mat-icon>
+              <span>Certificado U vida</span>
+            </button>        
+          </mat-menu>
+      </td>               
       </tr>      
       </tbody>
     </table>

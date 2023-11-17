@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm">
             <ul *ngIf="registro" class="list-group text-dark mb-3">
-                <li class="list-group-item active">{{registro.nomCompleto}}</li>
+                <li class="card-header">{{registro.nomCompleto}}</li>
                 <li class="list-group-item">Nro. Documento: {{registro.numDocumento}}</li>
 
 
@@ -36,6 +36,10 @@
 
         </div>
     </div>
+
+    <div class="input-group mb-2">
+        <mat-slide-toggle  formControlName="estado">Ver registros inactivos!</mat-slide-toggle>                   
+    </div>   
 
     <div class="row">
         <div class="input-group mb-3">

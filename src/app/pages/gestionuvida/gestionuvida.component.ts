@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ConsolidarUvidaI } from 'src/app/models/consolidaruvida.model';
 import { ConsolidarUvidaService } from 'src/app/servicios/consolidaruvida.service';
-import { MiembroService } from 'src/app/servicios/miembro.service';
 import Swal from 'sweetalert2';
 import { PostuladosService } from 'src/app/servicios/postulados.service';
 import { Chart, registerables } from 'chart.js';
+import jsPDF, { CellConfig } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 
 
@@ -20,15 +20,16 @@ export class GestionuvidaComponent implements OnInit, AfterViewInit {
   isLoading: boolean = true;
   listciclos: any;
   fechaCiclo!:Date;
+  fechaCicloEstado!:Date;
   fechaActual!: Date;
   datos:any;
   postuladoUvida: any;
   filterPostulados: [] | any;
   selectedCardIndex: number | null = null;
   cicloActivo!:String;
-
-
   
+  
+   
   _listFilter!: string;
   get listFilter(): string {
     return this._listFilter;
@@ -61,8 +62,10 @@ export class GestionuvidaComponent implements OnInit, AfterViewInit {
   ) {
     this.spinner.show();
     this.fechaActual = new Date() ;
+
   
   }
+ 
 
   performFilter(filterBy: string): any[] {
     if (filterBy === '' || filterBy.length < 3) return this.postuladoUvida
@@ -104,7 +107,6 @@ export class GestionuvidaComponent implements OnInit, AfterViewInit {
     this.consolidaruvidaServicio.getCiclosActivos()
       .subscribe((ciclos: ConsolidarUvidaI) => {
         this.listciclos = ciclos;
-        console.log(ciclos);
         this.datosGrafico();
         this.spinner.hide();
         this.isLoading = false;
@@ -125,7 +127,7 @@ export class GestionuvidaComponent implements OnInit, AfterViewInit {
         this.datos.push(postulado);
       }
     }
-    this.chartInit12()
+    this.chartInit12() 
          
   }
 
@@ -170,23 +172,48 @@ mostrar() : boolean {
 
 }
 
+estadosCiclo(item:any) : boolean {
+  this.fechaCicloEstado=new Date(item.fechaEncuentro);
+  if(this.fechaCicloEstado >= this.fechaActual)
+    return true;
+  else 
+  return false; 
+
+}
+
 mostrarPostulados(item: any): void { 
   this.postuladoUvida=item.postulados;  
   this.fechaCiclo=new Date(item.fechaEncuentro);
-  this.cicloActivo=item.cicloUvida;
+    this.cicloActivo=item.cicloUvida;
   this.fechaCiclo.setDate(this.fechaCiclo.getDate() + 5);
   this.postuladoUvida.sort((a: any, b:any) => a.nomCompleto.localeCompare(b.nomCompleto)); 
   this.filterPostulados=this.postuladoUvida;
+ 
 }
 
 cadenaCorta(cadena: String): String{
-  return  cadena.substring(0,100);
+  if (cadena)  return  cadena.substring(0,100); else return "";
 }
 
   ocultarPostulados(): void {
     this.postuladoUvida = [];   
   this.selectedCardIndex = null;
   }
+
+  // Función para generar el PDF desde un elemento HTML
+  generatePDF(): void { 
+    const fileName = "MCI_" + this.cicloActivo.replace(' ', '_') + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+    const doc = new jsPDF({
+      orientation: 'l',
+      unit: 'mm',
+      format: 'letter',
+      putOnlyUsedFonts: true
+    });  
+    autoTable(doc, { html: '#elementId' })       
+    doc.save(fileName)
+  }
+  
+  pagina(){}
 
 }
 

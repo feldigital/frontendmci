@@ -46,16 +46,6 @@ export class MiembroService {
     );
   }
 
-/* este es para el backen actal
-  getMiembros(): Observable<any> {
-    return this.http.get(this.urlEndPoint + '/lideres').pipe(
-      catchError(e => {
-        return throwError(e);
-      })
-    );
-  }*/
-
-  //id: any
   
   getMiembrosPostulados(): Observable<any> {
     return this.http.get(`${this.urlEndPoint}/postulados`).pipe(
@@ -140,7 +130,6 @@ export class MiembroService {
 
   public update(registro: MiembroI) {
     const headers = { 'Content-Type': 'application/json' };
-    console.log(JSON.stringify(registro));
     return this.http.put<MiembroI>(this.urlEndPoint, JSON.stringify(registro), { headers }).pipe(
       catchError(e => {
         if (e.status == 400) {

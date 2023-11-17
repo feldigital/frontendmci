@@ -1,0 +1,19 @@
+.card-header {
+    background-color: #5D8FA5; /* Cambia #ff0000 por el color que desees */
+    color: #fff; /* Cambia #fff por el color del texto que desees */
+    border-radius: 10px;
+  }
+  .positive-value {
+    background-color: #5da576; /* Cambia #ff0000 por el color que desees */
+    color: #fff; /* Cambia #fff por el color del texto que desees */
+    border-radius: 10px;
+  }
+  .negative-value {
+    background-color: hsl(0, 89%, 51%); /* Cambia #ff0000 por el color que desees */
+    color: #fff; /* Cambia #fff por el color del texto que desees */
+    border-radius: 10px;
+  }
+  
+  .icono-con-cursor {
+    cursor: pointer;
+  }

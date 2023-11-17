@@ -27,7 +27,7 @@
  
   <mat-menu #menu="matMenu">
     <button  *ngIf="!logueado"  (click)="abrir()" mat-menu-item>
-      <mat-icon>arrow_back</mat-icon>
+      <mat-icon [ngStyle]="{'color':'#FFB03D'}" >account_circle</mat-icon>
       <span>Iniciar sesión</span>
     </button>
     <button *ngIf="logueado" [routerLink]="['/perfil', lider.idMiembro]" mat-menu-item>
@@ -52,7 +52,7 @@
   -->
 
     <button  *ngIf="logueado" (click)="cerrar()"  mat-menu-item>
-      <mat-icon>arrow_forward</mat-icon>
+      <mat-icon [ngStyle]="{'color':'#FFB03D'}" >account_circle</mat-icon>
       <span>Cerrar Sesión</span>
     </button>
   </mat-menu>
@@ -113,27 +113,37 @@
       </button>
 
       <button mat-button class="menu-button" routerLink="/gestionuvida">
-        <mat-icon>list</mat-icon>
+        <mat-icon>send</mat-icon>
         <span>Postulados</span>
       </button>
 
       <mat-divider></mat-divider>
 
       <button mat-button class="menu-button" routerLink="/ministerio">
-        <mat-icon> bubble_chart</mat-icon>
+        <mat-icon>group_add</mat-icon>
         <span>Discipulos</span>
       </button>
 
       <mat-divider></mat-divider>
 
       <button mat-button class="menu-button" routerLink="/listcelula">
-        <mat-icon>group_add</mat-icon>
+        <mat-icon>share</mat-icon> 
         <span>Celulas</span>
       </button>
       <!--*ngIf="lider.numDocumento==='800195397'"-->
       <button mat-button class="menu-button" routerLink="/gestiono">
         <mat-icon>done_all</mat-icon>
         <span>Gestion enviar</span>
+      </button>
+      <mat-divider></mat-divider>
+
+      <button *ngIf="lider.numDocumento==='800195397'" mat-button class="menu-button" routerLink="/evento">
+        <mat-icon> bubble_chart</mat-icon>
+        <span>Eventos</span>
+      </button>
+      <button *ngIf="lider.numDocumento==='800195397'" mat-button class="menu-button" routerLink="/pagos">
+        <mat-icon> monetization_on</mat-icon>
+        <span>Pagos</span>
       </button>
     </div>
   </mat-sidenav>

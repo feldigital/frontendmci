@@ -5,23 +5,24 @@
             <div class="col-sm">
                 <div class="mb-3">
                     Nombre del lider del ciclo
-
+ <!--
                     <ng-autocomplete [data]="lideres" formControlName="idMiembroCoordinador" [searchKeyword]="keyword"
                         placeholder="Digite aquí" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
-                        (selected)="onItemSelected($event)">
+                        > 
                     </ng-autocomplete>
                     <ng-template #itemTemplate let-item> <a [innerHTML]="item.nomCompleto"></a> </ng-template>
 
                     <ng-template #notFoundTemplate let-notFound>
                         <div [innerHTML]="notFound"></div>
                     </ng-template>
-
-                    <!--         <select class="form-select" formControlName="idMiembroCoordinador" placeholder="Coordinador del ciclo" required> 
+                -->
+ 
+                           <select class="form-select" formControlName="idMiembroCoordinador" placeholder="Coordinador del ciclo" required> 
                         <option selected value="">Elige el lider de la celula</option>
                         <option *ngFor="let item of lideres" [ngValue]="item.idMiembro"
                             [selected]="parametro == item.idMiembro">{{item.nomCompleto | uppercase }}</option>
                     </select>
-                -->
+              
 
                 </div>
 
@@ -99,7 +100,8 @@
                 <th>Cita biblica</th>
                 <th>Red</th>
                 <th>Postulados</th>
-                <th>Gestion</th>
+                <th>Calificar</th>
+                <th>Listar</th>
                  <th>Editar</th>
                 <th>Eliminar</th>
 
@@ -116,18 +118,50 @@
                 <td>{{itemt.citaRemha}}</td>
                 <td>{{itemt.nombreRed}}</td>   
                 <td class="text-center">{{itemt.postulados.length}}</td> 
-                <td class="text-center"> <button 
-                    class="btn btn-info btn-sm"  *ngIf="itemt.postulados.length>0"
-                        type="button" (click)="asistencia(itemt)" >
-                        Asistencia </button>
+                <td class="text-center"> <button title="Calificar asistencia"
+                    class="btn btn-sm"  *ngIf="itemt.postulados.length>0"
+                        type="button" [routerLink]="['/asistenciauvida', itemt.idUvida]" >
+                        <mat-icon [ngStyle]="{'color':'#009A94'}" >playlist_add_check</mat-icon> </button>
                 </td>
+                
+              
                 <td>
-                    <button type="button" class="btn btn-light btn-sm" (click)="mostrarDatos(itemt)">
-                      <i style="color: cornflowerblue; " class="far fa-edit"></i> </button>
+                    <button *ngIf="itemt.postulados.length>0" title="Listar en PDF" type="button" class="btn btn-sm" [matMenuTriggerFor]="menu">
+                        <mat-icon [ngStyle]="{'color':'#009A94'}" >print</mat-icon></button>
+                        
+                        <mat-menu #menu="matMenu">             
+                            <button   (click)='listadoPostulados(itemt)' mat-menu-item>
+                              <mat-icon [ngStyle]="{'color':'orange'}">group</mat-icon>
+                              <span>Listado postulados</span>
+                            </button>
+                            <button  (click)='ListadoEncuentro(itemt)' mat-menu-item>
+                              <mat-icon [ngStyle]="{'color':'#009A94'}">group_add</mat-icon>
+                              <span>Listado encuentro</span>
+                            </button>
+                
+                            <button  (click)='ListadoBautismo(itemt)' mat-menu-item>
+                              <mat-icon [ngStyle]="{'color':'#2BB6D7'}" >opacity</mat-icon>
+                              <span>Listado bautismo</span>
+                            </button>
+                            
+                            <button (click)='ListadoGrado(itemt)' mat-menu-item>
+                              <mat-icon [ngStyle]="{'color':'black'}" >school</mat-icon>
+                              <span>Listado grado</span>
+                            </button>
+                            <button   (click)='listadoNoEncuentro(itemt)' mat-menu-item>
+                                <mat-icon [ngStyle]="{'color':'orange'}">group</mat-icon>
+                                <span>No asistieron a encuentro</span>
+                              </button>        
+                          </mat-menu>
+                  </td>
+                <td>       
+                    <button title="Actualizar el ciclo" type="button" class="btn btn-sm" (click)="mostrarDatos(itemt)">
+                        <mat-icon [ngStyle]="{'color':'#009A94'}">edit</mat-icon> </button>
                   </td>
                   <td>
-                    <button type="button" class="btn btn-light btn-sm" (click)="eliminarCiclo(itemt)">
-                      <i style="color: rgb(255, 49, 83); " class="far fa-trash-alt"></i> </button>
+                    <button title="Eliminar el ciclo" type="button" class="btn btn-sm" (click)="eliminarCiclo(itemt)">
+                        <mat-icon  [ngStyle]="{'color':'red'}" >delete_sweep</mat-icon>
+                     </button>
                   </td>        
 
 
@@ -135,3 +169,8 @@
         </tbody>
     </table>
 </div>
+<!--
+<pre>
+    {{this.uvidaForm.value | json}}
+</pre>
+-->

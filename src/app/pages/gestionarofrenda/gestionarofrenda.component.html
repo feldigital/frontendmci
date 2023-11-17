@@ -18,7 +18,7 @@
             No hay temas reportados a esta celula!
         </div>
         <div *ngIf="listtema?.length > 0">
-            <table class="table table-bordered table-striped table-sm">
+            <table class="table table-bordered table-striped table-sm" id="elementId">
                 <thead>
                     <tr>
                         <th>Semana</th>  
@@ -30,7 +30,8 @@
                         <th>Asist.</th>
                        <!-- <th>Ofrenda</th>-->
                         <th>Verificada</th>
-                        <th>Gestión</th>
+                        <th>Gestión  <a (click)="generatePDF()"  style  ="cursor: pointer; text-decoration: none; color: rgb(71, 60, 216);">
+                            <i class="fa fa-download" [ngStyle]="{'color':'green'}"></i></a></th>
 
                     </tr>
                 </thead>
@@ -43,7 +44,7 @@
                         <td>{{item.citaCelula | titlecase}}</td>
                         <td>{{item.nombreLiderInmediato | titlecase}}</td> 
                         <td class="text-center">
-                            <a (click)="verAsistente(item)" style="cursor: pointer; text-decoration: none; color: rgb(71, 60, 216);">{{item.nroAsistentes}}</a>
+                            <a (click)="verAsistente(item)" style="cursor: pointer; text-decoration: none; color: rgb(71, 60, 216);">{{item.nroAsistentes}} <i *ngIf="item.nroAsistentes>0" class="fa fa-eye" [ngStyle]="{'color':'orange'}"></i></a>
                         </td>
                         <!--<td class="text-end">{{item.ofrendaCelula | currency: '$':true: '1.0-2' }}</td> -->
                         <td class="text-center" *ngIf="item.verificada===true">

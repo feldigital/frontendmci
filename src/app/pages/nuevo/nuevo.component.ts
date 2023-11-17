@@ -9,6 +9,8 @@ import { TipoDocI } from 'src/app/models/tipodoc.model';
 import { MiembroService } from 'src/app/servicios/miembro.service';
 import { NuevoService } from 'src/app/servicios/nuevo.service';
 import Swal from 'sweetalert2';
+import { WhatsappService } from 'src/app/servicios/whatsapp.service';
+import { MensajeI } from 'src/app/models/mensaje.model';
 
 
 @Component({
@@ -28,31 +30,24 @@ export class NuevoComponent implements OnInit {
   existe: boolean;
   invitadoPor: MiembroI = new MiembroI();
   keyword = 'nomCompleto';
-
+  mensajeWhat: MensajeI = new MensajeI();
 
   constructor(private fb: FormBuilder,
     private miembroService: MiembroService,
     private nuevoService: NuevoService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute,
+    private whatsappService: WhatsappService
+  ) {
     this.cargarTipos();
     this.cargarReuniones();
     this.cargarMembresia();
     this.crearFormulario();
     this.registro = null;
     this.existe = false;
-    
-     
-
-
-    
   }
-
-
-
   ngOnInit() {
     //this.nuevoForm.get('nuevo')?.disable();
-
   }
 
   cargarTipos() {
@@ -103,20 +98,20 @@ export class NuevoComponent implements OnInit {
         estadoCivil: [''],
         liderInmediato: [''],
         idReunion: ['', [Validators.required]],
-        fechaReunion: ['', [Validators.required]],
+        fechaReunion: [new Date().toISOString().split('T')[0], [Validators.required]],
         idMiembroQuienInvita: ['', [Validators.required]],
         nuevo: ['true'],
         motivoOracion: [''],
         // disposicion: [''],
 
       });
-        }
+  }
 
   mostrarDatos() {
     //var fn = new Date(this.registro.fecNacimiento);
     this.nuevoForm.patchValue({
       idMiembro: this.registro.idMiembro,
-      tipoDoc: this.registro.tipoDoc.tipo,
+      tipoDoc: this.registro.tipoDoc,
       numDocumento: this.registro.numDocumento,
       nomCompleto: this.registro.nomCompleto,
       //fecNacimiento: fn.toJSON().slice(0, 10),
@@ -134,6 +129,7 @@ export class NuevoComponent implements OnInit {
 
   create(): void {
     if (this.nuevoForm.status == 'VALID') {
+     
       this.miembroNuevo.tipoDoc = this.nuevoForm.get('tipoDoc')?.value;
       this.miembroNuevo.numDocumento = this.nuevoForm.get('numDocumento')?.value;
       this.miembroNuevo.nomCompleto = this.nuevoForm.get('nomCompleto')?.value;
@@ -148,9 +144,9 @@ export class NuevoComponent implements OnInit {
       this.miembroNuevo.fecCreacion = new Date();
       this.miembroNuevo.usuarioMod = <string>localStorage.getItem("lidersistema");
       this.miembroNuevo.fecModificacion = new Date();
-    
-      this.invitadoPor = this.nuevoForm.get('idMiembroQuienInvita')?.value;   
-      let idquiennnvita= this.invitadoPor.idMiembro;
+
+      this.invitadoPor = this.nuevoForm.get('idMiembroQuienInvita')?.value;
+      let idquiennnvita = this.invitadoPor.idMiembro;
       if (idquiennnvita === undefined) {
         Swal.fire({
           icon: 'warning',
@@ -181,14 +177,27 @@ export class NuevoComponent implements OnInit {
           this.miembroNuevo.fecCreacion = this.registro.fecCreacion;
           this.miembroNuevo.usuarioCrea = this.registro.usuarioCrea;
           this.miembroService.update(this.miembroNuevo).subscribe((resp: any) => {
-              this.llenarNuevo(resp.Miembros.idMiembro);
+             
+            this.mensajeWhat.phone = "57" + resp.Miembros?.celular.replace(' ', '');
+            this.mensajeWhat.message = "¡" + resp.Miembros?.nomCompleto.toUpperCase() + "! la iglesia 💒 MCI te da la bienvenida, y se alegra que estes nuevamente en casa te bendicimos y anhelamos que DIOS hable a tu vida en esta reunión, tenemos un DIOS poderoso estaremos orando por (" + this.nuevoForm.get('motivoOracion')?.value + ")";
+            this.enviarWhatsApp(this.mensajeWhat);
+            
+            this.llenarNuevo(resp.Miembros.idMiembro); 
+
           }
           );
         }
         else {
-           this.miembroService.create(this.miembroNuevo).subscribe((resp: any) => {
-               this.llenarNuevo(resp.Miembros.idMiembro);
+          this.miembroService.create(this.miembroNuevo).subscribe((resp: any) => {          
+            
+            this.mensajeWhat.phone = "57" + resp.Miembros?.celular.replace(' ', '');
+            this.mensajeWhat.message = "¡" + resp.Miembros?.nomCompleto.toUpperCase() + "! la iglesia 💒 MCI te da la bienvenida, te bendicimos y anhelamos que DIOS hable a tu vida en esta reunión, tenemos un DIOS poderoso estaremos orando por (" + this.nuevoForm.get('motivoOracion')?.value + ")";
+            this.enviarWhatsApp(this.mensajeWhat);
+
+            this.llenarNuevo(resp.Miembros.idMiembro);
+
           }
+
           );
         }
       }
@@ -242,7 +251,7 @@ export class NuevoComponent implements OnInit {
     this.ganadoNuevo.motivoOracion = this.nuevoForm.get('motivoOracion')?.value;
     this.ganadoNuevo.idMiembroQuienInvita = this.invitadoPor.idMiembro;
     this.ganadoNuevo.disposicion = "No gestionado"
-    this.ganadoNuevo.usuarioIng = <string>localStorage.getItem("lidersistema");    
+    this.ganadoNuevo.usuarioIng = <string>localStorage.getItem("lidersistema");
     this.nuevoService.create(this.ganadoNuevo).subscribe((nue: any) => {
       Swal.fire({
         icon: 'success',
@@ -271,11 +280,19 @@ export class NuevoComponent implements OnInit {
         });
       });
 
-
   }
 
   get nombreNovalido() {
     return this.nuevoForm.get('nomCompleto')?.invalid && this.nuevoForm.get('nomCompleto')?.touched
+  }
+  
+  private async enviarWhatsApp(body: MensajeI) {
+    console.log(body);
+    if (body.phone.length === 12) {
+      this.whatsappService.enviarMensaje(body).subscribe((resp: any) => {
+      });
+      (err: any) => { console.error(err); };
+    }
   }
 
 }

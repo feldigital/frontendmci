@@ -1,0 +1,11 @@
+.icono-hover {
+    transition: color 0.3s; /* Agregar transición de color suave */
+  }
+  
+  .icono-hover:hover {
+    color: #25D366; /* Cambiar el color al pasar el mouse sobre el ícono */
+  }
+  
+  .icono-con-cursor {
+    cursor: pointer;
+  }

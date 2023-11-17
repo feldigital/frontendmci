@@ -4,6 +4,8 @@ import { CelulaI } from 'src/app/models/celula.model';
 //import Swal from 'sweetalert2';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from "ngx-spinner";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-listcelula',
@@ -78,6 +80,17 @@ else{
 
   delete(celula: CelulaI): void { }
 
-  
+   // Función para generar el PDF desde un elemento HTML
+ generatePDF(): void { 
+  const fileName = "MCI_Celulas"  + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+  const doc = new jsPDF({
+    orientation: 'l',
+    unit: 'mm',
+    format: [220, 340],
+    putOnlyUsedFonts: true
+  });  
+  autoTable(doc, { html: '#elementId' })       
+  doc.save(fileName)
+}
 
 }

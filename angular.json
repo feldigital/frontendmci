@@ -20,6 +20,8 @@
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
+        
+
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
@@ -29,6 +31,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
+          
+              "poll": 1000,        
+
             "assets": [
               "src/favicon.png",
               "src/assets"
@@ -37,7 +42,10 @@
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
-            "scripts": []
+
+            "scripts": [ 
+              
+            ]
           },
           "configurations": {
             "production": {

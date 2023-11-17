@@ -1,5 +1,5 @@
 <div class="card border-primary mb-3">
-    <div class="card-header">Una clave de la multiplicación es cuidar al nuevo con amor.</div>
+    <div class="card-header">Una clave de la multiplicación, es cuidar al nuevo con amor.</div>
     <div class="card-body ">
         <h6 class="card-title">Nuevos del ministerio de {{nombreActual}} </h6>
         <div class="row my-2 text-left">
@@ -18,6 +18,11 @@
                 </button>
             </div>
             <div class="col">
+                <button class="btn btn-rounded btn btn-success" type="button" (click)="generatePDF()">
+                    <i class="fa fa-download" ></i> Generar PDF
+                </button>
+            </div>
+            <div class="col">
                 <label>Convencciones de Tipo de invitado</label>
                 <label>(N= Nuevo)
                      - (R=Rescatado)
@@ -27,7 +32,7 @@
         <div *ngIf="nuevos?.length == 0" class="alert alert-info">
             No hay nuevos registrados de tu ministerio en la base de datos!
         </div>
-        <table class="table table-bordered table-striped" *ngIf="nuevos?.length>0">
+        <table class="table table-bordered table-striped" *ngIf="nuevos?.length>0" id="elementId">
             <thead>
                 <tr>
                     <th>#</th>

@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
                             localStorage.setItem("lidersistema", miembro);
                             localStorage.setItem("nombsistema", this.lider.nomCompleto);
                             this.tokenService.setToken(miembro);        
-                            window.location.assign('http://54.163.179.39/');                                         
+                            window.location.assign('www.mcisantamarta.com/');                                         
 
                         } else {
                             //console.log(" existe el usuario pero no son igauales los adtos de la contraseña")

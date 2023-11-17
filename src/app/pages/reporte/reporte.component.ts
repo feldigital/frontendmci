@@ -7,6 +7,8 @@ import { NuevoService } from 'src/app/servicios/nuevo.service';
 import { ReporteCelulaService } from 'src/app/servicios/reportecelula.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import Swal from 'sweetalert2';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-reporte',
@@ -30,8 +32,9 @@ export class ReporteComponent implements OnInit {
     private celulaService: CelulaService,
     private nuevoService: NuevoService,
     private fb: FormBuilder,
-    private spinner: NgxSpinnerService) { }
-
+    private spinner: NgxSpinnerService) {  
+     
+    }
   ngOnInit(): void {
     this.crearFormulario();
 

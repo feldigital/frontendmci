@@ -31,6 +31,8 @@ import { MiembroCelulaService } from './servicios/miembrocelula.service';
 import { ReporteCelulaService } from './servicios/reportecelula.service';
 import { AsistenciaCelulaService } from './servicios/asistenciacelula.service';
 import { ConsolidarUvidaService } from './servicios/consolidaruvida.service';
+import { PagoService } from './servicios/pago.service';
+//import { WhatsappService } from 'src/app/servicios/whatsapp.service';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatMenuModule} from '@angular/material/menu';
@@ -55,6 +57,11 @@ import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ConfiguracionesComponent } from './pages/configuraciones/configuraciones.component';
 import { AsistenciauvidaComponent } from './pages/asistenciauvida/asistenciauvida.component';
 import { TemascelulaComponent } from './pages/temascelula/temascelula.component';
+import { EventoComponent } from './pages/evento/evento.component';
+import { EventoService } from './servicios/evento.service';
+import { PagosComponent } from './pages/pagos/PagosComponent';
+import { CurrencyPipe } from '@angular/common';
+import { BuscadorComponent } from './pages/buscador/buscador.component';
 
 
 //import { JwtInterceptorInterceptor } from './jwt-interceptor.interceptor';
@@ -93,6 +100,9 @@ registerLocaleData(localePY, 'es');
     ConfiguracionesComponent,
     AsistenciauvidaComponent,
     TemascelulaComponent,
+    EventoComponent,
+    PagosComponent,
+    BuscadorComponent,
    
   ],
   imports: [
@@ -126,6 +136,10 @@ registerLocaleData(localePY, 'es');
     NuevoService,
     AsistenciaCelulaService,
     ConsolidarUvidaService,
+    EventoService,
+    PagoService,
+    CurrencyPipe,
+    //WhatsappService,
     //JwtInterceptorInterceptor,
     { provide: LOCALE_ID, useValue: 'es' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'es' },

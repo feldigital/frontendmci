@@ -14,13 +14,18 @@
             <button class="btn btn-rounded btn btn-success" type="button" routerLink="/celulanueva">
               Crear celula nueva
             </button>
+
+            <button class="btn btn-rounded btn btn-success" type="button" (click)="generatePDF()" >             
+             <i class="fa fa-download" [ngStyle]="{'color':'green'}"></i> Generar PDF
+             <!--style  ="cursor: pointer; text-decoration: none; color: rgb(71, 60, 216);"-->
+            </button>
           </div>
         </div> 
      </div>
     <div *ngIf="celulas?.length == 0" class="alert alert-info">
       No hay celulas registradas de tu ministerio en la base de datos!
     </div>
-    <table class="table table-bordered table-striped" *ngIf="celulas?.length>0">
+    <table class="table table-bordered table-striped" *ngIf="celulas?.length>0" id="elementId">
       <thead>
         <tr>
           <th>Novedad</th>

@@ -75,6 +75,9 @@
             <div class="modal-footer" >
               <button (click)="reportar()" type="button" class="btn btn-success" data-dismiss="modal">Reportar
                 Celula</button>
+
+                <button (click)="generatePDF()" type="button" class="btn btn-success" data-dismiss="modal">
+                  <i class="fa fa-download" ></i> Generar PDF</button>
             </div>
 
           </form>
@@ -106,7 +109,7 @@
          
           <div *ngIf="discipuloscelulafaltantes?.length > 0">
             <h6 class="card-header">Discipulos que aun nos haz agregado a celula!</h6>
-            <table class="table table-striped table-hover table-sm">
+            <table class="table table-striped table-hover table-sm" id="elementId">
               <thead>
                 <tr>
                   <th>Nro. </th>

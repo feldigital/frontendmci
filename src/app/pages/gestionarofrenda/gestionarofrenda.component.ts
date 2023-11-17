@@ -5,6 +5,8 @@ import { ReporteCelula } from 'src/app/models/reportecelula.model';
 import { ReporteCelulaService } from 'src/app/servicios/reportecelula.service';
 import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
+import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-gestionarofrenda',
@@ -112,6 +114,20 @@ export class GestionarofrendaComponent implements OnInit {
       title: `Información`,
       text: `Proximamente podras ver quienes te asistieron......`,          
     });
-
 }
+
+ // Función para generar el PDF desde un elemento HTML
+ generatePDF(): void { 
+  const fileName = "MCI_Reporte_tema"  + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+  const doc = new jsPDF({
+    orientation: 'l',
+    unit: 'mm',
+    format: [220, 340],
+    putOnlyUsedFonts: true
+  });  
+  autoTable(doc, { html: '#elementId' })       
+  doc.save(fileName)
+}
+
+
 }

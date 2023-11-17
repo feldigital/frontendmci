@@ -1,0 +1,46 @@
+<div class="card border-primary mb-3">
+    <div class="card-body ">
+
+        <div class="row my-2 text-left">
+            <div class="col-sm">
+                <div class="input-group mb-2">
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" name="listFilter" class="form-control border-start-0"
+                        placeholder="Buscar por nombre" [(ngModel)]="listFilter">
+                </div>
+            </div>
+        </div>
+        <div *ngIf="miembros?.length == 0" class="alert alert-info mb-3">
+            No hay registros en la base de datos!
+        </div>
+        <table class="table table-bordered table-striped" *ngIf="miembros?.length>0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Documento</th>
+                    <th>Nombre discipulo </th>
+                    <th>Celular</th>                   
+                    <th>Nombre lider inm </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filterMiembros let i= index"
+                    [ngStyle]="{'color': item.estado =='Activo' ? 'black' : 'red' }">
+                    <td ><mat-icon  class="icono-con-cursor icono-hover" [routerLink]="['/pagos', item.numDocumento]" [ngStyle]="{'color':'orange'}">touch_app</mat-icon> </td>
+                    <td>{{ item.numDocumento }}</td>
+                    <td>	{{ item.nomCompleto| titlecase }}</td>
+                    <td>{{ item.celular }}</td>                    
+                    <td>{{ item.nombreLiderInmediato | titlecase }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div *ngIf="isLoading">
+    <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff897" type="ball-clip-rotate-multiple"
+        [fullScreen]="true">
+        <p style="color: rgb(226, 130, 34)"> Cargando... </p>
+    </ngx-spinner>
+</div>

@@ -1,0 +1,110 @@
+<div class="container mt-4">
+  <form [formGroup]="pagoForm"  class="w-100 d-block">
+    <div class="row">
+      <div class="col-sm">
+        <div class="input-group mb-2 mt-2" *ngIf="eventoSeleccionado >=0">
+          <h6 class="card-header w-100">Valor del Evento: $ {{eventoSeleccionado}} </h6>
+        </div>
+        <div class="form-outline w-100">
+          <select class="form-select" formControlName="idEvento" placeholder="Eventos" (ngModelChange)="valor($event)">
+            <option selected value="">Seleccionar evento</option>
+            <option *ngFor="let itemt of listEventos" [ngValue]="itemt">{{itemt.nomEvento}}</option>
+          </select>
+        </div>
+        <div class="input-group mb-2 mt-2">
+          <input type="text" #box (blur)='BuscarDocumento(box.value)' formControlName="numDocumento"
+            class="form-control border-end-0" placeholder="Digete el numero del documento">
+          <span class="input-group-text bg-transparent">
+            <i [routerLink]="['/buscador']" class="fa fa-search icono-con-cursor" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div class="input-group mb-2">
+          <input type="text" formControlName="valorPago" class="form-control border-end-0" autocomplete="on"
+            placeholder="Digite el valor del pago" required>
+        </div>
+        <div class="input-group mb-2">
+          <input type="date" formControlName="fechaPago" class="form-control border-end-0" placeholder="Fecha del pago">        
+          <div *ngIf="pagoForm.controls.fechaPago.invalid" class="alert alert-danger">
+            <div *ngIf="pagoForm.controls.fechaPago.errors?.required">Por favor seleccione la fecha del pago
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-2">
+          <select class="form-select" formControlName="medioPago" placeholder="Medios de pago">
+            <option value="">Seleccionar medio de pago</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Datafono">Datafono</option>
+            <option value="Transferencia">Transferencia</option>
+            <option value="Bono">Bono</option>
+          </select>
+        </div>
+        <div class="input-group mb-2 mt-2">
+          <input type="text" formControlName="obsPago" class="form-control border-end-0"
+            placeholder="Ingrese alguna observación si es necesario">
+        </div>
+        <div class="input-group mb-2 mt-2">
+          <button type="button" class="btn btn-outline-primary w-100" (click)="create()"><i class="far fa-save"></i> Crear Pago</button>
+        </div>     
+  
+
+      </div>
+      <div class="col-sm">
+        <div class="form-outline w-100">
+          <div class="input-group mb-2 mt-2" *ngIf="discipuloSeleccionado">
+            <h6 class="card-header w-100">{{registro?.nomCompleto}} </h6>
+          </div>          
+          <div class="alert alert-info my-4" *ngIf="listPagos?.length == 0 && discipuloSeleccionado">
+            No hay pagos asociados de este discipulo a este evento!
+        </div>
+        <div *ngIf="listPagos?.length > 0">
+            <table class="table table-bordered table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>        
+                        <th>Medio </th>               
+                        <th>Valor Pagado</th>                        
+                        <th colspan="2">Gestión </th>           
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of listPagos let i= index">
+                        <td>{{item.fechaPago | date: 'dd/MM/YYYY'}}</td>  
+                        <td>{{item.medioPago }}</td>                                        
+                        <td>{{ item.valorPago | currency:'$':'symbol':'1.0-2' }}</td>                      
+                        <td class="text-center"><mat-icon  class="icono-con-cursor"  [ngStyle]="{'color':'#009A94'}"   [matMenuTriggerFor]="menu">print</mat-icon>
+                        
+                          <mat-menu #menu="matMenu">             
+                            <button  (click)='imprimirRecibo(item)' mat-menu-item>                        
+                              <mat-icon [ngStyle]="{'color':'orange'}">remove_red_eye</mat-icon>
+                              <span>Ver recibo</span>
+                            </button>
+                            <button  (click)='descargarReciboPDF(item)' mat-menu-item>                             
+                              <mat-icon [ngStyle]="{'color':'#009A94'}">save_alt</mat-icon>
+                              <span>Descargar recibo</span>
+                            </button>    
+                             
+                          </mat-menu>
+                        </td> 
+                        <td class="text-center"><mat-icon class="icono-con-cursor" (click)='borrarPago(item)' [ngStyle]="{'color':'red'}" >delete_sweep</mat-icon>    
+                        </td>   
+                    </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td class ="card-header" colspan="2"><b>Consolidado de pagos:</b></td>
+                    <td><b>{{ getTotalValorPagado() | currency:'$':'symbol':'1.0-2'  }}</b></td>                    
+                  </tr>
+                  <tr>
+                  <td class ="card-header" colspan="2"><b>Saldo pendiente:</b></td>
+                  <td [ngClass]="getCssClass(getSaldoEvento())" ><b> {{ getSaldoEvento() | currency:'$':'symbol':'1.0-2'  }}</b> </td>
+                 
+                  </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

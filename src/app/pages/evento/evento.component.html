@@ -1,0 +1,106 @@
+<div class="container mt-4">
+    <form [formGroup]="eventoForm" (ngSubmit)="create()" class="w-100 d-block">
+        <div class="row">
+            <div class="col-sm">                   
+
+                <div class="input-group mb-2">
+                    <input type="text" formControlName="nomEvento" placeholder="Nombre del evento"
+                        class="form-control border-end-0" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-user"></i>
+                    </span>
+                </div>
+
+                <div class="input-group mb-2">
+                    <input type="number" formControlName="valorEvento" class="form-control border-end-0"
+                        placeholder="Valor del evento" required>
+                    <span class="input-group-text bg-transparent">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    </span>
+                </div>       
+                Fecha del evento
+                <div class="input-group mb-2">
+                    <input type="date" formControlName="fechaEvento" class="form-control border-end-0"
+                        placeholder="Fecha del evento">
+                    <span class="input-group-text bg-transparent">
+                    </span>
+                </div>
+                   
+               
+                <div class="input-group mb-2">
+                    <mat-slide-toggle  formControlName="estado">Estado del evento!</mat-slide-toggle>                   
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-outline-primary w-100"><i class="far fa-save"></i> {{this.nombrebtn}}</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm">
+                <!-- <img src="./assets/celula.jpg" alt="Bienvenidos" class="img-thumbnail rounded">-->
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+<div class="alert alert-info my-4" *ngIf="listEventos?.length == 0">
+    No hay eventos para mostrar!
+</div>
+<div *ngIf="listEventos?.length > 0">
+    <table class="table table-striped table-hover table-sm">
+        <thead>
+            <tr >
+                <th>Item</th>
+                <th>Nombre del evento</th>
+                <th>Valor del evento</th>
+                <th>Fecha del evento</th>
+                <th>Estado del evento</th>
+                <th>Reportes</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let itemt of listEventos let i= index" 
+            [ngStyle]="{'color': itemt.estado ? 'black' : 'red' }">
+
+                <td>{{i+1}}</td>                
+                <td>{{itemt.nomEvento }}</td>
+                <td>{{itemt.valorEvento  | currency:'$':'symbol':'1.0-2' }}</td>
+                <td>{{itemt.fechaEvento | date: 'dd/MM/YYYY'}}</td>  
+                <td *ngIf="itemt.estado"> Activo</td>       
+                <td *ngIf="!itemt.estado">Inactivo</td>        
+                 <td>
+                    <button title="Listar pagos en PDF del evento" type="button" class="btn btn-sm" [matMenuTriggerFor]="menu" >
+                        <mat-icon [ngStyle]="{'color':'#009A94'}" >print</mat-icon></button>  
+                        <mat-menu #menu="matMenu">             
+                            <button   (click)="pagosEvento(itemt)" mat-menu-item>
+                                <mat-icon [ngStyle]="{'color':'orange'}">list</mat-icon>                              
+                              <span>$ Pagos detallado</span>
+                            </button>
+                            <button  (click)='pagosEventoCruzado(itemt)' mat-menu-item>
+                                <mat-icon [ngStyle]="{'color':'#009A94'}">view_stream</mat-icon>
+                               <span>$ Pagos consolidado</span>
+                            </button>
+                 
+                          </mat-menu>                     
+                  </td>
+                <td>       
+                    <button title="Actualizar el evento" type="button" class="btn btn-sm" (click)="mostrarDatos(itemt)">
+                        <mat-icon [ngStyle]="{'color':'#009A94'}">edit</mat-icon> </button>
+                  </td>
+                  <td>
+                    <button title="Eliminar el evento" type="button" class="btn btn-sm" (click)="eliminarEvento(itemt)">
+                        <mat-icon  [ngStyle]="{'color':'red'}" >delete_sweep</mat-icon>
+                     </button>
+                  </td>  
+            </tr>
+        </tbody>
+    </table>
+</div>
+

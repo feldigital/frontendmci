@@ -23,6 +23,9 @@ import { GestionuvidaComponent } from './pages/gestionuvida/gestionuvida.compone
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ConfiguracionesComponent } from './pages/configuraciones/configuraciones.component';
 import { AsistenciauvidaComponent } from './pages/asistenciauvida/asistenciauvida.component';
+import { EventoComponent } from './pages/evento/evento.component';
+import { PagosComponent } from './pages/pagos/PagosComponent';
+import { BuscadorComponent } from './pages/buscador/buscador.component';
 
 
 
@@ -52,7 +55,11 @@ const routes: Routes = [
   { path: 'gestionuvida', component: GestionuvidaComponent},// canActivate: [LoginGuard]},  
   { path: 'perfil/:id', component: PerfilComponent},// canActivate: [LoginGuard]},
   { path: 'configuracion', component: ConfiguracionesComponent},// canActivate: [LoginGuard]},
-  { path: 'asistenciauvida/:id/:it', component: AsistenciauvidaComponent},// canActivate: [LoginGuard]},
+  { path: 'asistenciauvida/:id', component: AsistenciauvidaComponent},// canActivate: [LoginGuard]},
+  { path: 'evento', component: EventoComponent},// canActivate: [LoginGuard]},
+  { path: 'pagos', component: PagosComponent},// canActivate: [LoginGuard]},
+  { path: 'pagos/:id', component: PagosComponent},// canActivate: [LoginGuard]},
+  { path: 'buscador', component: BuscadorComponent},// canActivate: [LoginGuard]},
   { path: '**', component: InicioComponent },
 ];
 

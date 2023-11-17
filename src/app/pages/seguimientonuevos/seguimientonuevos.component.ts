@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 import { ConsolidarUvidaService } from 'src/app/servicios/consolidaruvida.service';
 import { ConsolidarUvidaI } from 'src/app/models/consolidaruvida.model';
 import { PostuladosService } from 'src/app/servicios/postulados.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 
 @Component({
@@ -21,6 +23,8 @@ export class SeguimientonuevosComponent implements OnInit {
   isLoading: boolean = true;
   postuladoUvida: any;
   listciclos: any;
+  fechaActual!: Date;
+  fechaCiclo!:Date;
 
   nombreActual = localStorage.getItem("nombsistema");
   _listFilter!: string;
@@ -43,7 +47,7 @@ export class SeguimientonuevosComponent implements OnInit {
     this.ListarNuevosMinisterio();
     this.spinner.show();
     this.cargarCiclos();
-    
+    this.fechaActual = new Date() ;
     this.postuladoUvida = {};  
 
   }
@@ -179,7 +183,9 @@ export class SeguimientonuevosComponent implements OnInit {
       });
     }
     else {
-      this.listciclos.forEach((item: { idUvida: any; cicloUvida: any; }) => {
+      this.listciclos.forEach((item: { idUvida: any; cicloUvida: any; fechaEncuentro: any; }) => {
+        this.fechaCiclo=new Date(item.fechaEncuentro);
+        if(this.fechaCiclo >= this.fechaActual)
         options += `<option [ngValue]=${item.idUvida}>${item.cicloUvida}</option>`;
       });
     }
@@ -223,6 +229,18 @@ vermas(miembro: any): void{
   })
 }
 
+
+generatePDF(): void { 
+  const fileName = "MCI_Discipulos"  + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+  const doc = new jsPDF({
+    orientation: 'l',
+    unit: 'mm',
+    format: [220, 340],
+    putOnlyUsedFonts: true
+  });  
+  autoTable(doc, { html: '#elementId' })       
+  doc.save(fileName)
+}
 
 
 }
