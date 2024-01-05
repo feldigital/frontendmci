@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NuevoI } from 'src/app/models/nuevo.model';
 import { NuevoService } from 'src/app/servicios/nuevo.service';
 import { NgxSpinnerService } from "ngx-spinner";
-import { MiembroI } from 'src/app/models/miembro.model';
 import Swal from 'sweetalert2';
 import { ConsolidarUvidaService } from 'src/app/servicios/consolidaruvida.service';
 import { ConsolidarUvidaI } from 'src/app/models/consolidaruvida.model';
 import { PostuladosService } from 'src/app/servicios/postulados.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -27,6 +27,8 @@ export class SeguimientonuevosComponent implements OnInit {
   fechaCiclo!:Date;
 
   nombreActual = localStorage.getItem("nombsistema");
+  urlrecurso = environment.urlRecursos;
+
   _listFilter!: string;
   get listFilter(): string {
     return this._listFilter;
@@ -55,7 +57,8 @@ export class SeguimientonuevosComponent implements OnInit {
   performFilter(filterBy: string): any[] {
     if (filterBy === '' || filterBy.length < 3) return this.nuevos
     filterBy = filterBy.toLocaleLowerCase();
-    return this.nuevos.filter((nuevo: any) => nuevo.nombreInvitado.toLocaleLowerCase().indexOf(filterBy) !== -1);
+    return this.nuevos.filter((nuevo: any) => nuevo.nombreInvitado.toLocaleLowerCase().indexOf(filterBy) !== -1 
+    || nuevo.nombroQuienInvita.toLocaleLowerCase().indexOf(filterBy) !== -1);
     //|| celula.barrio.toLocaleLowerCase().indexOf(filterBy) !== -1 || celula.direccion.toLocaleLowerCase().indexOf(filterBy) !== -1)
   }
 
@@ -95,8 +98,7 @@ export class SeguimientonuevosComponent implements OnInit {
     else{
       this.nuevoService.getNuevosMinisterio(liderAct)
       .subscribe(resp => {
-        this.nuevos = resp;
-        console.log(resp);
+        this.nuevos = resp;        
         this.filterNuevos = this.nuevos;
         this.spinner.hide();
         this.isLoading = false;
@@ -242,6 +244,293 @@ generatePDF(): void {
   doc.save(fileName)
 }
 
+public reporteTGestion(): void {
+  //const fileName = "MCI_Encuentro" + ciclolistar.cicloUvida.replace(' ', '_') + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+  const doc = new jsPDF({
+    orientation: 'l',
+    unit: 'mm',
+    format: [220, 340],
+    putOnlyUsedFonts: true
+  });  
+  let paginaActual = 1;    
+  autoTable(doc, {
+    head: [['Nro','Fecha', 'Reunion', 'Nombre del nuevo', 'Tipo', 'Celular',  'Llamada', 'Visita.','Disposición', 'Invitado por', 'Lider inmediato']],
+    body: this.datosTGestion(),
+    startY: 33,
+    //theme: 'striped',
+    theme: 'grid',
+    willDrawPage: function (data) {
+      doc.addImage('/assets/vertical.jpg', 'JPEG', 0, 5, 15, 60);
+      doc.addImage('/assets/logo.jpg', 'JPEG', 290, 5, 20, 20);
+      let titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Relación del ganar iglesia MCI-Santa Marta') / 2);
+      doc.text('Relación del ganar iglesia MCI-Santa Marta', titleXPos, 15);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Ministerio " + localStorage.getItem("nombsistema")) / 2);
+      doc.text("Ministerio " + localStorage.getItem("nombsistema"), titleXPos, 22);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Listado de nuevos") / 2);
+      doc.text("Listado de nuevos", titleXPos, 29);
+      
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(26, 189, 156);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Listado de nuevos iglesia MCI-Santa MArta') / 2);
+      doc.line(titleXPos - 10, 32, (titleXPos + doc.getTextWidth('Listado de nuevos iglesia MCI-Santa MArta')) + 10, 32);
+    },
+    didDrawPage: function (data) {
+      // Agrega el número de página en la parte superior derecha de cada página
+      doc.setFontSize(10);
+      doc.text('Página ' + paginaActual, 185, doc.internal.pageSize.height - 10);
+      doc.text('Calle 15 # 20-17 Barrio Jardin, Tel: 4239150 ', 12, doc.internal.pageSize.height - 12);
+      doc.text('Cel: 3157033591, Email: santamarta@mci12.com', 12, doc.internal.pageSize.height - 7);
+      doc.setLineWidth(1.3);       
+      doc.setDrawColor(236,255,83); // draw red lines 
+      doc.line(10, doc.internal.pageSize.height - 20, 10,doc.internal.pageSize.height - 5 ); 
+      paginaActual++;  
+    }          
+  }); 
+  var pdfDataUri = doc.output('datauri');
+  var newWindow = window.open();
+  if (newWindow) {
+    newWindow.document.write('<iframe src="' + pdfDataUri + '" width="100%" height="100%"></iframe>');
+  } else {
+    // Manejar el caso en el que window.open() devuelve nulo
+    console.error('No se pudo abrir una nueva ventana.');
+  }
+  // doc.save(fileName);
+
+}
+
+private datosTGestion() {
+  const data = [];
+  let contador = 1;
+  for (let i = 0; i < this.filterNuevos.length; i++) {   
+    const rowData = [
+      contador.toString(),
+      this.filterNuevos[i].fechaReunion.toString(),
+      this.filterNuevos[i].reunion.toString(),
+      this.primerasmayusculas(this.filterNuevos[i].nombreInvitado),
+      this.isnuevo(this.filterNuevos[i].nuevo),
+      this.filterNuevos[i].celular.toString(),     
+      this.respuesta(this.filterNuevos[i].fonollamada),
+      this.respuesta(this.filterNuevos[i].fonovisita),
+      this.filterNuevos[i].disposicion.toString(),
+      this.primerasmayusculas(this.filterNuevos[i].nombroQuienInvita),    
+      this.filterNuevos[i].nombreLiderInmediato.toUpperCase(),
+      
+    ];
+    data.push(rowData);
+    contador++;
+    
+  }
+  //data.push(this.calcularTotalesRow());
+     return data;
+}
+
+public reporteSGestion(): void {
+  //const fileName = "MCI_Encuentro" + ciclolistar.cicloUvida.replace(' ', '_') + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+  const doc = new jsPDF({
+    orientation: 'l',
+    unit: 'mm',
+    format: [220, 340],
+    putOnlyUsedFonts: true
+  });  
+  let paginaActual = 1;    
+  autoTable(doc, {
+    head: [['Nro','Fecha', 'Reunion', 'Nombre del nuevo', 'Tipo', 'Celular',  'Llamada', 'Visita.','Disposición', 'Invitado por', 'Lider inmediato']],
+    body: this.datosSGestion(),
+    startY: 33,
+    //theme: 'striped',
+    theme: 'grid',
+    willDrawPage: function (data) {
+      doc.addImage('/assets/vertical.jpg', 'JPEG', 0, 5, 15, 60);
+      doc.addImage('/assets/logo.jpg', 'JPEG', 290, 5, 20, 20);
+      let titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Relación del ganar iglesia MCI-Santa Marta') / 2);
+      doc.text('Relación del ganar iglesia MCI-Santa Marta', titleXPos, 15);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Ministerio " + localStorage.getItem("nombsistema")) / 2);
+      doc.text("Ministerio " + localStorage.getItem("nombsistema"), titleXPos, 22);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Listado de gestionados") / 2);
+      doc.text("Listado de gestionados", titleXPos, 29);
+      
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(26, 189, 156);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Listado de nuevos iglesia MCI-Santa MArta') / 2);
+      doc.line(titleXPos - 10, 32, (titleXPos + doc.getTextWidth('Listado de nuevos iglesia MCI-Santa MArta')) + 10, 32);
+    },
+    didDrawPage: function (data) {
+      // Agrega el número de página en la parte superior derecha de cada página
+      doc.setFontSize(10);
+      doc.text('Página ' + paginaActual, 185, doc.internal.pageSize.height - 10);
+      doc.text('Calle 15 # 20-17 Barrio Jardin, Tel: 4239150 ', 12, doc.internal.pageSize.height - 12);
+      doc.text('Cel: 3157033591, Email: santamarta@mci12.com', 12, doc.internal.pageSize.height - 7);
+      doc.setLineWidth(1.3);       
+      doc.setDrawColor(236,255,83); // draw red lines 
+      doc.line(10, doc.internal.pageSize.height - 20, 10,doc.internal.pageSize.height - 5 ); 
+      paginaActual++;  
+    }          
+  }); 
+  var pdfDataUri = doc.output('datauri');
+  var newWindow = window.open();
+  if (newWindow) {
+    newWindow.document.write('<iframe src="' + pdfDataUri + '" width="100%" height="100%"></iframe>');
+  } else {
+    // Manejar el caso en el que window.open() devuelve nulo
+    console.error('No se pudo abrir una nueva ventana.');
+  }
+  // doc.save(fileName);
+
+}
+
+private datosSGestion() {
+  const data = [];
+  let contador = 1;
+  for (let i = 0; i < this.filterNuevos.length; i++) {
+    if (this.filterNuevos[i].disposicion !="No gestionado") {
+    const rowData = [
+      contador.toString(),
+      this.filterNuevos[i].fechaReunion.toString(),
+      this.filterNuevos[i].reunion.toString(),
+      this.primerasmayusculas(this.filterNuevos[i].nombreInvitado),
+      this.isnuevo(this.filterNuevos[i].nuevo),
+      this.filterNuevos[i].celular.toString(),     
+      this.respuesta(this.filterNuevos[i].fonollamada),
+      this.respuesta(this.filterNuevos[i].fonovisita),
+      this.filterNuevos[i].disposicion.toString(),
+      this.primerasmayusculas(this.filterNuevos[i].nombroQuienInvita),    
+      this.filterNuevos[i].nombreLiderInmediato.toUpperCase(),
+      
+    ];
+    data.push(rowData);
+    contador++;
+    }
+  }
+  //data.push(this.calcularTotalesRow());
+     return data;
+}
+
+public reporteNGestion(): void {
+  //const fileName = "MCI_Encuentro" + ciclolistar.cicloUvida.replace(' ', '_') + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+  const doc = new jsPDF({
+    orientation: 'l',
+    unit: 'mm',
+    format: [220, 340],
+    putOnlyUsedFonts: true
+  });  
+  let paginaActual = 1;    
+  autoTable(doc, {
+    head: [['Nro','Fecha', 'Reunion', 'Nombre del nuevo', 'Tipo', 'Celular',  'Llamada', 'Visita.','Disposición', 'Invitado por', 'Lider inmediato']],
+    body: this.datosNGestion(),
+    startY: 33,
+    //theme: 'striped',
+    theme: 'grid',
+    willDrawPage: function (data) {
+      doc.addImage('/assets/vertical.jpg', 'JPEG', 0, 5, 15, 60);
+      doc.addImage('/assets/logo.jpg', 'JPEG', 290, 5, 20, 20);
+      let titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Relación del ganar iglesia MCI-Santa Marta') / 2);
+      doc.text('Relación del ganar iglesia MCI-Santa Marta', titleXPos, 15);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Ministerio " + localStorage.getItem("nombsistema")) / 2);
+      doc.text("Ministerio " + localStorage.getItem("nombsistema"), titleXPos, 22);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Listado de no gestionados") / 2);
+      doc.text("Listado de no gestionados", titleXPos, 29);
+      
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(26, 189, 156);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Listado de nuevos iglesia MCI-Santa MArta') / 2);
+      doc.line(titleXPos - 10, 32, (titleXPos + doc.getTextWidth('Listado de nuevos iglesia MCI-Santa MArta')) + 10, 32);
+    },
+    didDrawPage: function (data) {
+      // Agrega el número de página en la parte superior derecha de cada página
+      doc.setFontSize(10);
+      doc.text('Página ' + paginaActual, 185, doc.internal.pageSize.height - 10);
+      doc.text('Calle 15 # 20-17 Barrio Jardin, Tel: 4239150 ', 12, doc.internal.pageSize.height - 12);
+      doc.text('Cel: 3157033591, Email: santamarta@mci12.com', 12, doc.internal.pageSize.height - 7);
+      doc.setLineWidth(1.3);       
+      doc.setDrawColor(236,255,83); // draw red lines 
+      doc.line(10, doc.internal.pageSize.height - 20, 10,doc.internal.pageSize.height - 5 ); 
+      paginaActual++;  
+    }          
+  }); 
+  var pdfDataUri = doc.output('datauri');
+  var newWindow = window.open();
+  if (newWindow) {
+    newWindow.document.write('<iframe src="' + pdfDataUri + '" width="100%" height="100%"></iframe>');
+  } else {
+    // Manejar el caso en el que window.open() devuelve nulo
+    console.error('No se pudo abrir una nueva ventana.');
+  }
+  // doc.save(fileName);
+
+}
+
+private datosNGestion() {
+  const data = [];
+  let contador = 1;
+  for (let i = 0; i < this.filterNuevos.length; i++) {
+    if (this.filterNuevos[i].disposicion ==="No gestionado") {
+    const rowData = [
+      contador.toString(),
+      this.filterNuevos[i].fechaReunion.toString(),
+      this.filterNuevos[i].reunion.toString(),
+      this.primerasmayusculas(this.filterNuevos[i].nombreInvitado),
+      this.isnuevo(this.filterNuevos[i].nuevo),
+      this.filterNuevos[i].celular.toString(),     
+      this.respuesta(this.filterNuevos[i].fonollamada),
+      this.respuesta(this.filterNuevos[i].fonovisita),
+      this.filterNuevos[i].disposicion.toString(),
+      this.primerasmayusculas(this.filterNuevos[i].nombroQuienInvita),    
+      this.filterNuevos[i].nombreLiderInmediato.toUpperCase(),
+      
+    ];
+    data.push(rowData);
+    contador++;
+    }
+  }
+  //data.push(this.calcularTotalesRow());
+     return data;
+}
+
+private calcularTotalesRow() {
+  const consolidadoRow = [     
+    '',
+    'SUB - TOTALES :',
+    this.calcularTotal('t1'),
+    this.calcularTotal('t2'),
+    this.calcularTotal('t3'),
+    this.calcularTotal('t4'),
+    this.calcularTotal('asistioEncuentro'),
+    this.calcularTotal('bautizadoEncuentro'),
+    this.calcularTotal('t5'),
+    this.calcularTotal('t6'),
+    this.calcularTotal('t7'),
+    this.calcularTotal('t8'),
+    this.calcularTotal('graduado'),     
+  ];  
+  return consolidadoRow;
+}
+
+private calcularTotal(columna: string): string {
+  const total = this.postuladoUvida.reduce((accum: number, current: any) => {
+    return accum + (current[columna] ? 1 : 0);
+  }, 0);  
+  return total.toString();
+}
+
+public respuesta(verifica: boolean): string {
+  if (verifica) return "Si"
+  else return "No"
+}
+
+
+public isnuevo(verifica: boolean): string {
+  if (verifica) return "Nuevo"
+  else return "Rescatado"
+}
+
+
+public primerasmayusculas(str: string): string {
+  if (!str) {
+    return str;
+  }
+  str = str.toLowerCase();
+  return str.replace(/\b\w/g, (char) => char.toLocaleUpperCase());
+}
 
 }
 

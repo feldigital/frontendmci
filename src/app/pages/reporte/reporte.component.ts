@@ -146,9 +146,15 @@ export class ReporteComponent implements OnInit {
         break;
       case '10':
         // insert your code here
+        this.verReporte();
+        this.spinner.hide();
+        this.isLoading = false;
         break;
       case '11':
         // insert your code here
+        this.verReporte();
+        this.spinner.hide();
+        this.isLoading = false;
         break;
       case '12':
         // insert your code here   

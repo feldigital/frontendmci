@@ -28,7 +28,7 @@ export class NuevoComponent implements OnInit {
   tipos: any;
   nuevoForm!: FormGroup;
   existe: boolean;
-  invitadoPor: MiembroI = new MiembroI();
+  invitadoPor: any;;
   keyword = 'nomCompleto';
   mensajeWhat: MensajeI = new MensajeI();
 
@@ -155,10 +155,9 @@ export class NuevoComponent implements OnInit {
         });
       }
       else {
-
         // "si quien lo invita es un lider ese sera su lider osea idMiembro sino se le asigna el lider inmediato de quien lo invito"
         if (this.invitadoPor.lider) this.miembroNuevo.liderInmediato = this.invitadoPor.idMiembro;
-        else this.miembroNuevo.liderInmediato = this.invitadoPor.liderInmediato;
+        else this.miembroNuevo.liderInmediato = this.invitadoPor.idliderInmediato;       
         if (this.existe) {
           this.miembroNuevo.idMiembro = this.registro.idMiembro;
           this.miembroNuevo.imgPerfil = this.registro.imgPerfil;
@@ -176,12 +175,10 @@ export class NuevoComponent implements OnInit {
           this.miembroNuevo.fecNacimiento = this.registro.fecNacimiento;
           this.miembroNuevo.fecCreacion = this.registro.fecCreacion;
           this.miembroNuevo.usuarioCrea = this.registro.usuarioCrea;
-          this.miembroService.update(this.miembroNuevo).subscribe((resp: any) => {
-             
+          this.miembroService.update(this.miembroNuevo).subscribe((resp: any) => {             
             this.mensajeWhat.phone = "57" + resp.Miembros?.celular.replace(' ', '');
-            this.mensajeWhat.message = "¡" + resp.Miembros?.nomCompleto.toUpperCase() + "! la iglesia 💒 MCI te da la bienvenida, y se alegra que estes nuevamente en casa te bendicimos y anhelamos que DIOS hable a tu vida en esta reunión, tenemos un DIOS poderoso estaremos orando por (" + this.nuevoForm.get('motivoOracion')?.value + ")";
-            this.enviarWhatsApp(this.mensajeWhat);
-            
+            this.mensajeWhat.message = "*¡" + resp.Miembros?.nomCompleto.toUpperCase() + "!* la iglesia 💒 MCI te da la bienvenida, y se alegra que estes nuevamente en casa, te bendicimos y anhelamos que DIOS hable a tu vida en esta reunión, tenemos un DIOS poderoso estaremos orando por tu petición (" + this.nuevoForm.get('motivoOracion')?.value + ")";
+            this.enviarWhatsApp(this.mensajeWhat);            
             this.llenarNuevo(resp.Miembros.idMiembro); 
 
           }
@@ -191,7 +188,7 @@ export class NuevoComponent implements OnInit {
           this.miembroService.create(this.miembroNuevo).subscribe((resp: any) => {          
             
             this.mensajeWhat.phone = "57" + resp.Miembros?.celular.replace(' ', '');
-            this.mensajeWhat.message = "¡" + resp.Miembros?.nomCompleto.toUpperCase() + "! la iglesia 💒 MCI te da la bienvenida, te bendicimos y anhelamos que DIOS hable a tu vida en esta reunión, tenemos un DIOS poderoso estaremos orando por (" + this.nuevoForm.get('motivoOracion')?.value + ")";
+            this.mensajeWhat.message = "*¡" + resp.Miembros?.nomCompleto.toUpperCase() + "!* la iglesia 💒 MCI te da la bienvenida, te bendicimos y anhelamos que DIOS hable a tu vida en esta reunión, tenemos un DIOS poderoso estaremos orando por tu petición (" + this.nuevoForm.get('motivoOracion')?.value + ")";
             this.enviarWhatsApp(this.mensajeWhat);
 
             this.llenarNuevo(resp.Miembros.idMiembro);

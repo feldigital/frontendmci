@@ -10,6 +10,7 @@ import { ConsolidarUvidaI } from 'src/app/models/consolidaruvida.model';
 import { PostuladosService } from 'src/app/servicios/postulados.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -31,6 +32,7 @@ export class MinisterioComponent implements OnInit {
   fechaCiclo!:Date;
 
   nombreActual = localStorage.getItem("nombsistema");
+  urlrecurso = environment.urlRecursos;
   
 
   _listFilter!: string;
@@ -320,5 +322,270 @@ export class MinisterioComponent implements OnInit {
     doc.save(fileName)
   }
 
+  
+public reporteTMinisterio(): void {
+  //const fileName = "MCI_Encuentro" + ciclolistar.cicloUvida.replace(' ', '_') + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+  const doc = new jsPDF({
+    orientation: 'l',
+    unit: 'mm',
+    format: [220, 340],
+    putOnlyUsedFonts: true
+  });  
+  let paginaActual = 1;    
+  autoTable(doc, {
+   head: [['Nro','Nombre del discipulo','Celular', 'Edad','Estado Civil', 'Discipulo', 'Encuentro','Bautizado', 'C.destino',  'Lider inmediato']],
+   
+    body: this.datosTMinisterio(),
+    startY: 33,
+    //theme: 'striped',
+    theme: 'grid',
+    willDrawPage: function (data) {
+      doc.addImage('/assets/vertical.jpg', 'JPEG', 0, 5, 15, 60);
+      doc.addImage('/assets/logo.jpg', 'JPEG', 290, 5, 20, 20);
+      let titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Relación de miembros de la iglesia MCI-Santa Marta') / 2);
+      doc.text('Relación de miembros de la iglesia MCI-Santa Marta', titleXPos, 15);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Ministerio " + localStorage.getItem("nombsistema")) / 2);
+      doc.text("Ministerio " + localStorage.getItem("nombsistema"), titleXPos, 22);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("TODOS") / 2);
+      doc.text("TODOS", titleXPos, 29);
+      
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(26, 189, 156);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Relación de miembros de la iglesia MCI-Santa Marta') / 2);
+      doc.line(titleXPos - 10, 32, (titleXPos + doc.getTextWidth('Relación de miembros de la iglesia MCI-Santa Marta')) + 10, 32);
+    },
+    didDrawPage: function (data) {
+      // Agrega el número de página en la parte superior derecha de cada página
+      doc.setFontSize(10);
+      doc.text('Página ' + paginaActual, 185, doc.internal.pageSize.height - 10);
+      doc.text('Calle 15 # 20-17 Barrio Jardin, Tel: 4239150 ', 12, doc.internal.pageSize.height - 12);
+      doc.text('Cel: 3157033591, Email: santamarta@mci12.com', 12, doc.internal.pageSize.height - 7);
+      doc.setLineWidth(1.3);       
+      doc.setDrawColor(236,255,83); // draw red lines 
+      doc.line(10, doc.internal.pageSize.height - 20, 10,doc.internal.pageSize.height - 5 ); 
+      paginaActual++;  
+    }          
+  }); 
+  var pdfDataUri = doc.output('datauri');
+  var newWindow = window.open();
+  if (newWindow) {
+    newWindow.document.write('<iframe src="' + pdfDataUri + '" width="100%" height="100%"></iframe>');
+  } else {
+    // Manejar el caso en el que window.open() devuelve nulo
+    console.error('No se pudo abrir una nueva ventana.');
+  }
+  // doc.save(fileName);
+
+}
+
+private datosTMinisterio() {
+  const data = [];
+  let contador = 1;
+  for (let i = 0; i < this.filterMiembros.length; i++) {  
+    if(i<=200){
+    const rowData = [
+      contador.toString(),
+      this.primerasmayusculas(this.filterMiembros[i].nomCompleto),
+      this.filterMiembros[i].celular.toString(),      
+      this.CalcularEdad(this.filterMiembros[i]),        
+      this.filterMiembros[i].estadoCivil.toString(),     
+     this.islider(this.filterMiembros[i].lider),
+     this.respuesta(this.filterMiembros[i].uvida),
+     this.respuesta(this.filterMiembros[i].bautizado),
+     this.respuesta(this.filterMiembros[i].cdestino),
+     this.filterMiembros[i].nombreLiderInmediato.toUpperCase()       
+      
+    ];
+  
+    data.push(rowData);
+    contador++;
+    }  
+  }
+     return data;
+}
+
+ 
+public reporteLMinisterio(): void {
+  //const fileName = "MCI_Encuentro" + ciclolistar.cicloUvida.replace(' ', '_') + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+  const doc = new jsPDF({
+    orientation: 'l',
+    unit: 'mm',
+    format: [220, 340],
+    putOnlyUsedFonts: true
+  });  
+  let paginaActual = 1;    
+  autoTable(doc, {
+   head: [['Nro','Nombre del discipulo','Celular', 'Edad','Estado Civil', 'Discipulo', 'Encuentro','Bautizado', 'C.destino',  'Lider inmediato']],
+   
+    body: this.datosLMinisterio(),
+    startY: 33,
+    //theme: 'striped',
+    theme: 'grid',
+    willDrawPage: function (data) {
+      doc.addImage('/assets/vertical.jpg', 'JPEG', 0, 5, 15, 60);
+      doc.addImage('/assets/logo.jpg', 'JPEG', 290, 5, 20, 20);
+      let titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Relación de miembros de la iglesia MCI-Santa Marta') / 2);
+      doc.text('Relación de miembros de la iglesia MCI-Santa Marta', titleXPos, 15);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Ministerio " + localStorage.getItem("nombsistema")) / 2);
+      doc.text("Ministerio " + localStorage.getItem("nombsistema"), titleXPos, 22);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Listado de lideres") / 2);
+      doc.text("Listado de lideres", titleXPos, 29);
+      
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(26, 189, 156);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Relación de miembros de la iglesia MCI-Santa Marta') / 2);
+      doc.line(titleXPos - 10, 32, (titleXPos + doc.getTextWidth('Relación de miembros de la iglesia MCI-Santa Marta')) + 10, 32);
+    },
+    didDrawPage: function (data) {
+      // Agrega el número de página en la parte superior derecha de cada página
+      doc.setFontSize(10);
+      doc.text('Página ' + paginaActual, 185, doc.internal.pageSize.height - 10);
+      doc.text('Calle 15 # 20-17 Barrio Jardin, Tel: 4239150 ', 12, doc.internal.pageSize.height - 12);
+      doc.text('Cel: 3157033591, Email: santamarta@mci12.com', 12, doc.internal.pageSize.height - 7);
+      doc.setLineWidth(1.3);       
+      doc.setDrawColor(236,255,83); // draw red lines 
+      doc.line(10, doc.internal.pageSize.height - 20, 10,doc.internal.pageSize.height - 5 ); 
+      paginaActual++;  
+    }          
+  }); 
+  var pdfDataUri = doc.output('datauri');
+  var newWindow = window.open();
+  if (newWindow) {
+    newWindow.document.write('<iframe src="' + pdfDataUri + '" width="100%" height="100%"></iframe>');
+  } else {
+    // Manejar el caso en el que window.open() devuelve nulo
+    console.error('No se pudo abrir una nueva ventana.');
+  }
+  // doc.save(fileName);
+
+}
+
+private datosLMinisterio() {
+  const data = [];
+  let contador = 1;
+  for (let i = 0; i < this.filterMiembros.length; i++) {  
+    if(this.filterMiembros[i].lider){
+    const rowData = [
+      contador.toString(),
+      this.primerasmayusculas(this.filterMiembros[i].nomCompleto),
+      this.filterMiembros[i].celular.toString(),      
+      this.CalcularEdad(this.filterMiembros[i]),        
+      this.filterMiembros[i].estadoCivil.toString(),     
+     this.islider(this.filterMiembros[i].lider),
+     this.respuesta(this.filterMiembros[i].uvida),
+     this.respuesta(this.filterMiembros[i].bautizado),
+     this.respuesta(this.filterMiembros[i].cdestino),
+     this.filterMiembros[i].nombreLiderInmediato.toUpperCase()       
+      
+    ];
+  
+    data.push(rowData);
+    contador++;
+    }  
+  }
+     return data;
+}
+
+ 
+public reporteTiMinisterio(): void {
+  //const fileName = "MCI_Encuentro" + ciclolistar.cicloUvida.replace(' ', '_') + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
+  const doc = new jsPDF({
+    orientation: 'l',
+    unit: 'mm',
+    format: [220, 340],
+    putOnlyUsedFonts: true
+  });  
+  let paginaActual = 1;    
+  autoTable(doc, {
+   head: [['Nro','Nombre del discipulo','Celular', 'Edad','Estado Civil', 'Discipulo', 'Encuentro','Bautizado', 'C.destino',  'Lider inmediato']],
+   
+    body: this.datosTiMinisterio(),
+    startY: 33,
+    //theme: 'striped',
+    theme: 'grid',
+    willDrawPage: function (data) {
+      doc.addImage('/assets/vertical.jpg', 'JPEG', 0, 5, 15, 60);
+      doc.addImage('/assets/logo.jpg', 'JPEG', 290, 5, 20, 20);
+      let titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Relación de miembros de la iglesia MCI-Santa Marta') / 2);
+      doc.text('Relación de miembros de la iglesia MCI-Santa Marta', titleXPos, 15);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Ministerio " + localStorage.getItem("nombsistema")) / 2);
+      doc.text("Ministerio " + localStorage.getItem("nombsistema"), titleXPos, 22);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth("Listado de timoteos") / 2);
+      doc.text("Listado de timoteos", titleXPos, 29);
+      
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(26, 189, 156);
+      titleXPos = (doc.internal.pageSize.getWidth() / 2) - (doc.getTextWidth('Relación de miembros de la iglesia MCI-Santa Marta') / 2);
+      doc.line(titleXPos - 10, 32, (titleXPos + doc.getTextWidth('Relación de miembros de la iglesia MCI-Santa Marta')) + 10, 32);
+    },
+    didDrawPage: function (data) {
+      // Agrega el número de página en la parte superior derecha de cada página
+      doc.setFontSize(10);
+      doc.text('Página ' + paginaActual, 185, doc.internal.pageSize.height - 10);
+      doc.text('Calle 15 # 20-17 Barrio Jardin, Tel: 4239150 ', 12, doc.internal.pageSize.height - 12);
+      doc.text('Cel: 3157033591, Email: santamarta@mci12.com', 12, doc.internal.pageSize.height - 7);
+      doc.setLineWidth(1.3);       
+      doc.setDrawColor(236,255,83); // draw red lines 
+      doc.line(10, doc.internal.pageSize.height - 20, 10,doc.internal.pageSize.height - 5 ); 
+      paginaActual++;  
+    }          
+  }); 
+  var pdfDataUri = doc.output('datauri');
+  var newWindow = window.open();
+  if (newWindow) {
+    newWindow.document.write('<iframe src="' + pdfDataUri + '" width="100%" height="100%"></iframe>');
+  } else {
+    // Manejar el caso en el que window.open() devuelve nulo
+    console.error('No se pudo abrir una nueva ventana.');
+  }
+  // doc.save(fileName);
+
+}
+
+private datosTiMinisterio() {
+  const data = [];
+  let contador = 1;
+  for (let i = 0; i < this.filterMiembros.length; i++) {  
+    if(!this.filterMiembros[i].lider){
+    const rowData = [
+      contador.toString(),
+      this.primerasmayusculas(this.filterMiembros[i].nomCompleto),
+      this.filterMiembros[i].celular.toString(),      
+      this.CalcularEdad(this.filterMiembros[i]),        
+      this.filterMiembros[i].estadoCivil.toString(),     
+     this.islider(this.filterMiembros[i].lider),
+     this.respuesta(this.filterMiembros[i].uvida),
+     this.respuesta(this.filterMiembros[i].bautizado),
+     this.respuesta(this.filterMiembros[i].cdestino),
+     this.filterMiembros[i].nombreLiderInmediato.toUpperCase()       
+      
+    ];
+  
+    data.push(rowData);
+    contador++;
+    }  
+  }
+     return data;
+}
+public respuesta(verifica: boolean): string {
+  if (verifica) return "Si"
+  else return "No"
+ 
+}
+
+
+public islider(verifica: boolean): string {
+  if (verifica) return "Lider"
+  else return "Timoteo"
+}
+
+
+public primerasmayusculas(str: string): string {
+  if (!str) {
+    return str;
+  }
+  str = str.toLowerCase();
+  return str.replace(/\b\w/g, (char) => char.toLocaleUpperCase());
+}
 
 }

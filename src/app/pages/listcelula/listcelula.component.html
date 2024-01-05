@@ -15,13 +15,25 @@
               Crear celula nueva
             </button>
 
-            <button class="btn btn-rounded btn btn-success" type="button" (click)="generatePDF()" >             
-             <i class="fa fa-download" [ngStyle]="{'color':'green'}"></i> Generar PDF
-             <!--style  ="cursor: pointer; text-decoration: none; color: rgb(71, 60, 216);"-->
+            <button class="btn btn-rounded btn btn-success card-header" type="button"  [matMenuTriggerFor]="menuN" >             
+              <i class="fa fa-file-pdf" [ngStyle]="{'color':'#50D2AC'}"></i> Generar reporte PDF             
             </button>
+            <mat-menu #menuN="matMenu">   
+              <button  (click)="reporteCelulasActivas()" mat-menu-item>
+                <mat-icon [ngStyle]="{'color':'#009A94'}">group_add</mat-icon>
+                <span>Celulas Activas</span>
+              </button>    
+              <button  (click)="reporteCelulasInactivas()" mat-menu-item>
+                <mat-icon [ngStyle]="{'color':'red'}">group_add</mat-icon>
+                <span>Celulas inactivas</span>
+              </button>  
+            </mat-menu>
           </div>
         </div> 
      </div>
+     <div class="input-group mb-2">
+      <mat-slide-toggle  formControlName="estado" (change)="onChangeVista($event)" >Mostrar solo activas</mat-slide-toggle >                   
+  </div>
     <div *ngIf="celulas?.length == 0" class="alert alert-info">
       No hay celulas registradas de tu ministerio en la base de datos!
     </div>

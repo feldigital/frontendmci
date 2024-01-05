@@ -70,12 +70,11 @@
 
 <mat-sidenav-container>
   <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
-    <!-- src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{lider.imgPerfil}}"-->
-    <img *ngIf="lider?.imgPerfil" class="avatar mat-elevation-z8"
-      src="http://localhost:8080/api/uploads/img/{{lider.imgPerfil}}" />
+     <img *ngIf="lider?.imgPerfil" class="avatar mat-elevation-z8"
+      src="https://d1imuac6pxhb6q.cloudfront.net/api/uploads/img/{{lider.imgPerfil}}" />
 
     <img *ngIf="!lider?.imgPerfil" class="avatar mat-elevation-z8"
-      src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" />
+      src="https://d1imuac6pxhb6q.cloudfront.net/images/no-usuario.png" />
 
     <div *ngIf="!logueado">
       <h6 class="name">Nombre del lider </h6>

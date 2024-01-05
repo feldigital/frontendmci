@@ -3,6 +3,7 @@
     <div class="card-body">
         <h6 class="card-title">Reporte semanal del ministerio de {{nombreActual}}. </h6>
         <div class="row my-2 text-left">
+            
             <div class="col">
                 <div class="input-group">
                     <span class="input-group-text bg-transparent">
@@ -11,7 +12,14 @@
                     <input type="text" name="listFilter" class="form-control border-end-0"
                         placeholder="Filtrar por nombre del lider" [(ngModel)]="listFilter">                
                 </div>
-            </div>           
+                
+                 
+            </div>
+            <div class="col">
+                <button class="btn btn-rounded btn btn-success card-header" type="button"  (click)="reporteTemas()">             
+                    <i class="fa fa-file-pdf" [ngStyle]="{'color':'#50D2AC'}"></i> Generar reporte PDF             
+                  </button>
+                  </div>           
         </div>
 
         <div class="alert alert-info my-4" *ngIf="listtema?.length == 0">

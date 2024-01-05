@@ -1,13 +1,18 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/internal/operators/map';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArchivosService {
-  private url = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com';
+  
+  //private url = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com';
+  private url = 'https://d1imuac6pxhb6q.cloudfront.net';
+  //private url = 'http://18.212.243.217:8080';
+  
 
   constructor(private http: HttpClient) {
   }

@@ -1,22 +1,27 @@
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { NuevoI } from '../models/nuevo.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class NuevoService {
   
   //private urlEndPoint: string = 'http://localhost:8080/api/ganados';
-   private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/ganados';
+  //private urlEndPoint: string = 'https://d1imuac6pxhb6q.cloudfront.net/api/ganados';
+  //private urlEndPoint: string = 'http://18.212.243.217:8080/api/ganados';
+
+  private urlEndPoint = environment.apiUrl+'/ganados';
   
  constructor(private http: HttpClient, private router: Router) { }
 
 
   getNuevos(id: any): Observable<NuevoI> {
-    return this.http.get<NuevoI>(`${this.urlEndPoint}/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get<NuevoI>(`${this.urlEndPoint}/unico`,{params}).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
           this.router.navigate(['/nuevo']);
@@ -27,7 +32,8 @@ export class NuevoService {
   }
   
   getHistorialNuevo(id: any): Observable<NuevoI> {
-    return this.http.get<NuevoI>(`${this.urlEndPoint}/historial/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get<NuevoI>(`${this.urlEndPoint}/historial`,{params}).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
          //this.router.navigate(['/nuevo']);
@@ -37,7 +43,8 @@ export class NuevoService {
       }));
   }
   getReportelNuevo(id: any): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/reporte/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get(`${this.urlEndPoint}/reporte`,{params}).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
          //this.router.navigate(['/nuevo']);
@@ -60,7 +67,8 @@ export class NuevoService {
 
 
   getNuevosMinisterio(id: any): Observable<NuevoI> {
-    return this.http.get<NuevoI>(`${this.urlEndPoint}/ministerio/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get<NuevoI>(`${this.urlEndPoint}/ministerio`,{params}).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
          //this.router.navigate(['/nuevo']);
@@ -93,8 +101,9 @@ export class NuevoService {
         }));
     }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.urlEndPoint}/${id}`).pipe(
+  delete(id: any): Observable<void> {
+    const params = new HttpParams().set('id', id);
+    return this.http.delete<void>(`${this.urlEndPoint}`,{params}).pipe(
       catchError(e => {
         if (e.error.mensaje) {
           console.error(e.error.mensaje);

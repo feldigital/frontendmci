@@ -13,7 +13,6 @@ import * as d3 from 'd3';
 
 export class InicioComponent implements OnInit { //AfterViewInit
 
- // data: any[];
   lider: any;
   ministerio12!: any;
   ministerio144!: any;

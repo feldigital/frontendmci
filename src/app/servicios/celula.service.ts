@@ -4,17 +4,20 @@ import { CelulaI } from 'src/app/models/celula.model';
 import { MiembroI } from 'src/app/models/miembro.model';
 import { RedI } from 'src/app/models/red.model';
 import { MedioI } from 'src/app/models/medio.model';
-import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEvent, HttpParams } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { MiembroService } from './miembro.service';
 import { MiembroCelula } from '../models/miembrocelula.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class CelulaService {
   //private urlEndPoint: string = 'http://localhost:8080/api/celulas';
-  private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/celulas';
+  //private urlEndPoint: string = 'http://18.212.243.217:8080/api/celulas';
+  //private urlEndPoint: string = 'https://d1imuac6pxhb6q.cloudfront.net/api/celulas';
+  private urlEndPoint = environment.apiUrl+'/celulas';
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -45,7 +48,8 @@ export class CelulaService {
    
 
   getCelulasMinisterio(id: any): Observable<any> {
-    return this.http.get(this.urlEndPoint + `/ministerio/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get(this.urlEndPoint + `/ministerio`,{params}).pipe(
       catchError(e => {
         return throwError(e);
       })
@@ -53,7 +57,8 @@ export class CelulaService {
   }
 
   getCelulasMinisterioReporte(id: any): Observable<any> {
-    return this.http.get(this.urlEndPoint + `/reporteministerio/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get(this.urlEndPoint + `/reporteministerio`,{params}).pipe(
       catchError(e => {
         return throwError(e);
       })
@@ -71,7 +76,8 @@ export class CelulaService {
 
 
   getCelulaId(id: any): Observable<CelulaI> {
-    return this.http.get<CelulaI>(`${this.urlEndPoint}/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get<CelulaI>(`${this.urlEndPoint}/unico`,{params}).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
           this.router.navigate(['/celula']);
@@ -83,7 +89,8 @@ export class CelulaService {
   }
 
   getCelulaDiscipulos(id: any): Observable<any> {
-    return this.http.get<MiembroCelula[]>(this.urlEndPoint + `/discipulos/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get<MiembroCelula[]>(this.urlEndPoint + `/discipulos`,{params}).pipe(
       catchError(e => {
         return throwError(e);
       })
@@ -104,8 +111,9 @@ export class CelulaService {
       }));
   }
 
-  public delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.urlEndPoint}/${id}`).pipe(
+  public delete(id: any): Observable<void> {
+    const params = new HttpParams().set('id', id);
+    return this.http.delete<void>(`${this.urlEndPoint}`,{params}).pipe(
       catchError(e => {
         if (e.error.mensaje) {
           console.error(e.error.mensaje);
@@ -115,7 +123,8 @@ export class CelulaService {
   }
 
   getCelulaLider(id: any): Observable<CelulaI> {
-    return this.http.get<CelulaI>(`${this.urlEndPoint}/lider/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get<CelulaI>(`${this.urlEndPoint}/lider`,{params}).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
           this.router.navigate(['/celula']);
@@ -127,7 +136,8 @@ export class CelulaService {
 
 
   filtrarMiembros(term: string): Observable<MiembroI[]> {
-    return this.http.get<MiembroI[]>(`${this.urlEndPoint}/filtrar-miembros/${term}`);
+    const params = new HttpParams().set('id', term);
+    return this.http.get<MiembroI[]>(`${this.urlEndPoint}/filtrar-miembros`,{params});
   }
 
 

@@ -56,13 +56,19 @@ export class LoginComponent implements OnInit {
                         });
                     }   
                     else {
+                 
                         if (this.lider.pwd == pwd) {
                             //console.log("si son igauales los adtos y cierra ciclo para inicir")
                             let miembro = this.lider.idMiembro
                             localStorage.setItem("lidersistema", miembro);
                             localStorage.setItem("nombsistema", this.lider.nomCompleto);
-                            this.tokenService.setToken(miembro);        
-                            window.location.assign('www.mcisantamarta.com/');                                         
+                            this.tokenService.setToken(miembro);                              
+                            //this.router.navigate(['/inicio']); 
+                            //window.location.assign('http://34.226.141.169/'); 
+                            window.location.assign('https://www.mcisantamarta.com/#/inicio'); 
+                          
+                             
+                                             
 
                         } else {
                             //console.log(" existe el usuario pero no son igauales los adtos de la contraseña")
@@ -75,9 +81,11 @@ export class LoginComponent implements OnInit {
                     }
                     (err: any) => { console.error(err) }
                 });
-            if (this.lider === null) {
+
+
+            if (this.lider === null || this.lider === undefined) {
                   Swal.fire({
-                    icon: 'success',
+                    icon: 'warning',
                     title: "!Alerta",
                     text: 'El usuario que esta intentando acceder a la plataforma de la iglesia MCI no existe!'
                 });

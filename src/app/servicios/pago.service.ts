@@ -1,36 +1,45 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpParams} from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { PagoI } from '../models/pago.model';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable()
 export class PagoService {
-  // private urlEndPoint: string = 'http://localhost:8080/api/pagos';
-   private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/pagos';
+  //private urlEndPoint: string = 'http://localhost:8080/api/pagos';
+  //private urlEndPoint: string = 'https://d1imuac6pxhb6q.cloudfront.net/api/pagos';
+  //private urlEndPoint: string = 'http://18.212.243.217:8080/api/pagos';
+
+  private urlEndPoint = environment.apiUrl+'/pagos';
 
   constructor(private http: HttpClient, private router: Router) { }
 
  
-  getPagosXEvento(ideve: number): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/evento/${ideve}`).pipe(
+  getPagosXEvento(ideve: any): Observable<any> {
+    const params = new HttpParams().set('id', ideve);
+    return this.http.get(`${this.urlEndPoint}/evento`,{params}).pipe(
       catchError(e => {
         return throwError(e);
       })
     );
   }
   
-  getPagosXEventoXDiscipulo(ideve: number,iddisc: number): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/evento/${ideve}/discipulo/${iddisc}`).pipe(
+  getPagosXEventoXDiscipulo(ideve: any,iddisc: any): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('evento', ideve);
+    params = params.append('discipulo', iddisc);
+    return this.http.get(`${this.urlEndPoint}/evento/discipulo`,{params}).pipe(
       catchError(e => {
         return throwError(e);
       })
     );
   }
-  getPagosXEventoCruzado(ideve: number): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/cruzado/${ideve}`).pipe(
+  getPagosXEventoCruzado(ideve: any): Observable<any> {
+    const params = new HttpParams().set('id', ideve);
+    return this.http.get(`${this.urlEndPoint}/cruzado`,{params}).pipe(
       catchError(e => {
         return throwError(e);
       })
@@ -38,7 +47,8 @@ export class PagoService {
   }
 
   getPagoId(id: any): Observable<any> {
-    return this.http.get<PagoI>(`${this.urlEndPoint}/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get<PagoI>(`${this.urlEndPoint}/unico`,{params}).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
           this.router.navigate(['/pagos']);
@@ -71,8 +81,9 @@ export class PagoService {
       }));
   }
 
-  public delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.urlEndPoint}/${id}`).pipe(
+  public delete(id: any): Observable<void> {
+    const params = new HttpParams().set('id', id);
+    return this.http.delete<void>(`${this.urlEndPoint}`,{params}).pipe(
       catchError(e => {
         if (e.error.mensaje) {
           console.error(e.error.mensaje);

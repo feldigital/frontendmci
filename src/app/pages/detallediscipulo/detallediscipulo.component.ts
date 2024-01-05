@@ -6,8 +6,8 @@ import Swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
 import { MiembroI } from 'src/app/models/miembro.model';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { NuevoI } from 'src/app/models/nuevo.model';
 import { NuevoService } from 'src/app/servicios/nuevo.service';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -24,6 +24,7 @@ export class DetallediscipuloComponent implements OnInit {
   public fotoSeleccionada!: File;
   progreso: number = 0;
   
+  urlrecurso = environment.urlRecursos;
 
   constructor(
     private miembroService: MiembroService,

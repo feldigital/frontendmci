@@ -72,9 +72,14 @@
           <th *ngIf="mostrar()">T2</th>
           <th *ngIf="mostrar()">T3</th>
           <th *ngIf="mostrar()">Nivelatorio</th>
-          <th>	  <button type="button" class="btn btn-line btn-sm" (click)='pagina()'>
-            <mat-icon *ngIf="!mostrar()">skip_previous</mat-icon> Encuentro <mat-icon *ngIf="mostrar()">skip_next</mat-icon> </button>
-            
+          <th>	 
+            Encuentro
+             <!-- <button type="button" class="btn btn-line btn-sm" (click)='pagina()'>
+            <mat-icon *ngIf="!mostrar()">skip_previous</mat-icon> 
+            Encuentro 
+            <mat-icon *ngIf="mostrar()">skip_next</mat-icon> 
+          </button>
+            -->
             </th>
           <th>Bautizad@ </th>
           <th *ngIf="!mostrar()">T5</th>
@@ -136,7 +141,7 @@
             <i *ngIf="!item.t8" class="fa fa-times-circle" [ngStyle]="{'color':'red'}"></i>
           </td>
           <td *ngIf="!mostrar()" class="text-center">
-            <i *ngIf="item.graduado" class="fa fa-graduation-cap" aria-hidden="true" [ngStyle]="{'color':'#01C191'}"> Si</i>
+            <i *ngIf="item.graduado" class="fa fa-graduation-cap" aria-hidden="true" [ngStyle]="{'color':'black'}"> Si</i>
            </td>
 
           <td>{{ item.nomCompletoLiderInmediato | titlecase }}</td>

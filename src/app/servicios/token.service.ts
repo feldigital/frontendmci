@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 
-const  TOKEN_KEY = 'AuthToken';
+const  TOKEN_KEY = 'AuthToken' ;
 
 @Injectable({
   providedIn: 'root'

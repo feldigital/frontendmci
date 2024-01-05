@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
 import { MiembroI } from 'src/app/models/miembro.model';
 import { TipoDocI } from 'src/app/models/tipodoc.model';
-import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEvent, HttpParams, HttpHeaders } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { ReunionI } from '../models/reunion.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class MiembroService {
   
-  //private urlEndPoint: string = 'http://localhost:8080/api/miembros';
-  private urlEndPoint: string = 'http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/miembros';
+  //private urlEndPoint: string = 'http://localhost:8080/api/miembros';  
+  //private urlEndPoint: string = 'https://d1imuac6pxhb6q.cloudfront.net/api/miembros';
+  //private urlEndPoint: string = 'http://18.212.243.217:8080/api/miembros';
   
+  private urlEndPoint = environment.apiUrl+'/miembros';
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -57,15 +60,25 @@ export class MiembroService {
 
 
   getMiembrosLideres(id: any): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/lideres/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get(`${this.urlEndPoint}/lideres`,{params}).pipe(
       catchError(e => {
         return throwError(e);
       })
     );
   }
 
-  getMiembrosDocumento(documento: String): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/documento/${documento}`).pipe(
+
+// const params = new HttpParams().set('id', documento);  
+  getMiembrosDocumento(documento: string): Observable<any> {
+    let parametros = new HttpParams();
+    parametros = parametros.append('id', documento);  
+    const opciones = {
+      headers: new HttpHeaders({
+      }),
+      params: parametros
+    };      
+    return this.http.get(`${this.urlEndPoint}/documento`,opciones).pipe(
       catchError(e => {
         return throwError(e);
       })
@@ -73,16 +86,17 @@ export class MiembroService {
   }
 
   getMinisterio12(idLider: any): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/ministerio12/${idLider}`).pipe(
-      //console.log(${this.urlEndPoint}/ministerio/${idLider});
+    const params = new HttpParams().set('id', idLider);
+    return this.http.get(`${this.urlEndPoint}/ministerio12`,{params}).pipe(
       catchError(e => {
         return throwError(e);
       })
     );
   }
   getMinisterio144(idLider: any): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/ministerio144/${idLider}`).pipe(
-      //console.log(${this.urlEndPoint}/ministerio/${idLider});
+    const params = new HttpParams().set('id', idLider);
+    return this.http.get(`${this.urlEndPoint}/ministerio144`,{params}).pipe(
+    
       catchError(e => {
         return throwError(e);
       })
@@ -90,8 +104,8 @@ export class MiembroService {
   }
 
   getMiembrosMinisterio(idLider: any): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/ministerio/${idLider}`).pipe(
-      //console.log(${this.urlEndPoint}/ministerio/${idLider});
+    const params = new HttpParams().set('id', idLider);
+    return this.http.get(`${this.urlEndPoint}/ministerio`,{params}).pipe(    
       catchError(e => {
         return throwError(e);
       })
@@ -99,8 +113,8 @@ export class MiembroService {
   }
   
   getReporteMinisterio(idLider: any): Observable<any> {
-    return this.http.get(`${this.urlEndPoint}/reporteministerio/${idLider}`).pipe(
-      //console.log(${this.urlEndPoint}/ministerio/${idLider});
+    const params = new HttpParams().set('id', idLider);
+    return this.http.get(`${this.urlEndPoint}/reporteministerio`,{params}).pipe(      
       catchError(e => {
         return throwError(e);
       })
@@ -109,7 +123,8 @@ export class MiembroService {
 
 
   getMiembro(id: any): Observable<MiembroI> {
-    return this.http.get<MiembroI>(`${this.urlEndPoint}/${id}`).pipe(
+    const params = new HttpParams().set('id', id);
+    return this.http.get<MiembroI>(`${this.urlEndPoint}/unico`,{params}).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {
           this.router.navigate(['/miembros']);
@@ -142,8 +157,9 @@ export class MiembroService {
       }));
   }
 
-  public delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.urlEndPoint}/${id}`).pipe(
+  public delete(id: any): Observable<void> {
+    const params = new HttpParams().set('id', id);
+    return this.http.delete<void>(`${this.urlEndPoint}`,{params}).pipe(
       catchError(e => {
         if (e.error.mensaje) {
           console.error(e.error.mensaje);

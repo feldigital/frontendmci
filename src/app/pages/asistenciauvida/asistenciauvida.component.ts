@@ -71,7 +71,7 @@ export class AsistenciauvidaComponent implements OnInit {
   cargarCiclo() {
     this.consolidaruvidaServicio.getCiclo(this.parametro)
       .subscribe((ciclos: any) => {
-        this.cicloAct = ciclos;        
+        this.cicloAct = ciclos;
         this.postuladoUvida = ciclos.postulados;
         this.postuladoUvida.sort((a: any, b: any) => a.nomCompleto.localeCompare(b.nomCompleto));
         this.filterPostulados = this.postuladoUvida;
@@ -180,9 +180,9 @@ export class AsistenciauvidaComponent implements OnInit {
         doc.setFontSize(30);
         doc.addImage(imgData, 'JPEG', 10, 10, 275, 190);
         var width = doc.internal.pageSize.getWidth()
-        doc.text(postulado.nomCompleto, width / 2, 140, { align: 'center' });
+        doc.text(this.primerasmayusculas(postulado.nomCompleto), width / 2, 140, { align: 'center' });
         doc.setFontSize(10);
-        doc.text("21      10      2023", width / 2, 175, { align: 'center' });
+        doc.text("  21      /     10      /    2023", width / 2, 179, { align: 'center' });
         doc.addPage();
       }
     });
@@ -203,17 +203,19 @@ export class AsistenciauvidaComponent implements OnInit {
         doc.addImage(imgData, 'JPEG', 10, 10, 275, 190);
         doc.setFontSize(30);
         var width = doc.internal.pageSize.getWidth()
-        doc.text(postulado.nomCompleto, width / 2, 120, { align: 'center' });
+        // doc.text(postulado.nomCompleto.toLocaleUpperCase(), width / 2, 108, { align: 'center' });
+        doc.text(this.primerasmayusculas(postulado.nomCompleto), width / 2, 108, { align: 'center' });
+
         doc.addPage();
       }
     });
-  
+
 
     doc.save(fileName);
 
   }
 
-  exportarpdfindividualbautismo(item: any): void {    
+  exportarpdfindividualbautismo(item: any): void {
     var doc = new jsPDF({
       orientation: 'l',
       unit: 'mm',
@@ -224,9 +226,9 @@ export class AsistenciauvidaComponent implements OnInit {
     doc.addImage(imgData, 'JPEG', 10, 10, 275, 190);
     doc.setFontSize(30);
     var width = doc.internal.pageSize.getWidth()
-    doc.text(item.nomCompleto, width / 2, 140, { align: 'center' });
+    doc.text(this.primerasmayusculas(item.nomCompleto), width / 2, 140, { align: 'center' });
     doc.setFontSize(10);
-    doc.text("21      10      2023", width / 2, 175, { align: 'center' });
+    doc.text("  21      /     10      /    2023", width / 2, 179, { align: 'center' });
     doc.save('Certificado_bautismo.pdf');
   }
 
@@ -241,8 +243,9 @@ export class AsistenciauvidaComponent implements OnInit {
     doc.addImage(imgData, 'JPEG', 10, 10, 275, 190);
     doc.setFontSize(30);
     var width = doc.internal.pageSize.getWidth()
-    doc.text(item.nomCompleto, width / 2, 120, { align: 'center' });
-    doc.line(100, 30, width / 2, 125);
+    // doc.text(item.nomCompleto, width / 2, 120, { align: 'center' });
+    doc.text(this.primerasmayusculas(item.nomCompleto), width / 2, 108, { align: 'center' });
+
     doc.save('Certificado_uvida.pdf');
   }
 
@@ -253,15 +256,15 @@ export class AsistenciauvidaComponent implements OnInit {
       unit: 'mm',
       format: 'letter',
       putOnlyUsedFonts: true
-    });  
-    let paginaActual = 1; 
+    });
+    let paginaActual = 1;
     autoTable(doc, {
       head: [['Nro', 'Nombre del discípulo', 'T1', 'T2', 'T3', 'N1', 'E.', 'B.', 'T5', 'T6', 'T7', 'N2', 'G.', 'Lider inmediato']],
       body: this.datosAsistencia(),
       startY: 40,
       //theme: 'striped',
       theme: 'grid',
-      
+
       willDrawPage: function (data) {
         doc.addImage('/assets/vertical.jpg', 'JPEG', 0, 5, 15, 60);
         doc.addImage('/assets/logo.jpg', 'JPEG', 240, 5, 20, 20);
@@ -277,18 +280,18 @@ export class AsistenciauvidaComponent implements OnInit {
         doc.setDrawColor(26, 189, 156);
         doc.line(titleXPos - 10, 38, (titleXPos + doc.getTextWidth(cicAct.nombreCoordinador)) + 10, 38);
       },
-      
+
       didDrawPage: function (data) {
         // Agrega el número de página en la parte superior derecha de cada página
         doc.setFontSize(10);
         doc.text('Página ' + paginaActual, 185, doc.internal.pageSize.height - 10);
         doc.text('Calle 15 # 20-17 Barrio Jardin, Tel: 4239150 ', 12, doc.internal.pageSize.height - 12);
         doc.text('Cel: 3157033591, Email: santamarta@mci12.com', 12, doc.internal.pageSize.height - 7);
-        doc.setLineWidth(1.3);       
-        doc.setDrawColor(236,255,83); // draw red lines 
-        doc.line(10, doc.internal.pageSize.height - 20, 10,doc.internal.pageSize.height - 5 ); 
+        doc.setLineWidth(1.3);
+        doc.setDrawColor(236, 255, 83); // draw red lines 
+        doc.line(10, doc.internal.pageSize.height - 20, 10, doc.internal.pageSize.height - 5);
         paginaActual++;
-       
+
       },
     });
     var pdfDataUri = doc.output('datauri');
@@ -307,7 +310,7 @@ export class AsistenciauvidaComponent implements OnInit {
     for (let i = 0; i < this.postuladoUvida.length; i++) {
       const rowData = [
         (i + 1).toString(),
-        this.postuladoUvida[i].nomCompleto.toString(),
+        this.primerasmayusculas(this.postuladoUvida[i].nomCompleto),
         this.respuesta(this.postuladoUvida[i].t1),
         this.respuesta(this.postuladoUvida[i].t2),
         this.respuesta(this.postuladoUvida[i].t3),
@@ -319,7 +322,7 @@ export class AsistenciauvidaComponent implements OnInit {
         this.respuesta(this.postuladoUvida[i].t7),
         this.respuesta(this.postuladoUvida[i].t8),
         this.respuesta(this.postuladoUvida[i].graduado),
-        this.postuladoUvida[i].nomCompletoLiderInmediato.toString(),
+        this.postuladoUvida[i].nomCompletoLiderInmediato.toUpperCase(),
       ];
       data.push(rowData);
     }
@@ -330,7 +333,7 @@ export class AsistenciauvidaComponent implements OnInit {
   private calcularTotal(columna: string): string {
     const total = this.postuladoUvida.reduce((accum: number, current: any) => {
       return accum + (current[columna] ? 1 : 0);
-    }, 0);  
+    }, 0);
     return total.toString();
   }
 
@@ -346,8 +349,8 @@ export class AsistenciauvidaComponent implements OnInit {
       unit: 'mm',
       format: 'letter',
       putOnlyUsedFonts: true
-    });  
-    let paginaActual = 1;    
+    });
+    let paginaActual = 1;
     autoTable(doc, {
       head: [['Nro', 'Nombre del discípulo', 'T1', 'T2', 'T3', 'N1', 'E.', 'B.', 'T5', 'T6', 'T7', 'N2', 'G.', 'Lider inmediato']],
       body: this.datosAsistenciaPost(),
@@ -375,12 +378,12 @@ export class AsistenciauvidaComponent implements OnInit {
         doc.text('Página ' + paginaActual, 185, doc.internal.pageSize.height - 10);
         doc.text('Calle 15 # 20-17 Barrio Jardin, Tel: 4239150 ', 12, doc.internal.pageSize.height - 12);
         doc.text('Cel: 3157033591, Email: santamarta@mci12.com', 12, doc.internal.pageSize.height - 7);
-        doc.setLineWidth(1.3);       
-        doc.setDrawColor(236,255,83); // draw red lines 
-        doc.line(10, doc.internal.pageSize.height - 20, 10,doc.internal.pageSize.height - 5 ); 
-        paginaActual++;  
-      }          
-    }); 
+        doc.setLineWidth(1.3);
+        doc.setDrawColor(236, 255, 83); // draw red lines 
+        doc.line(10, doc.internal.pageSize.height - 20, 10, doc.internal.pageSize.height - 5);
+        paginaActual++;
+      }
+    });
     var pdfDataUri = doc.output('datauri');
     var newWindow = window.open();
     if (newWindow) {
@@ -398,32 +401,32 @@ export class AsistenciauvidaComponent implements OnInit {
     let contador = 1;
     for (let i = 0; i < this.postuladoUvida.length; i++) {
       if (this.postuladoUvida[i].asistioEncuentro) {
-      const rowData = [
-        contador.toString(),
-        this.postuladoUvida[i].nomCompleto.toString(),
-        this.respuesta(this.postuladoUvida[i].t1),
-        this.respuesta(this.postuladoUvida[i].t2),
-        this.respuesta(this.postuladoUvida[i].t3),
-        this.respuesta(this.postuladoUvida[i].t4),
-        this.respuesta(this.postuladoUvida[i].asistioEncuentro),
-        this.respuesta(this.postuladoUvida[i].bautizadoEncuentro),
-        this.respuesta(this.postuladoUvida[i].t5),
-        this.respuesta(this.postuladoUvida[i].t6),
-        this.respuesta(this.postuladoUvida[i].t7),
-        this.respuesta(this.postuladoUvida[i].t8),
-        this.respuesta(this.postuladoUvida[i].graduado),
-        this.postuladoUvida[i].nomCompletoLiderInmediato.toString(),
-      ];
-      data.push(rowData);
-      contador++;
+        const rowData = [
+          contador.toString(),
+          this.primerasmayusculas(this.postuladoUvida[i].nomCompleto),
+          this.respuesta(this.postuladoUvida[i].t1),
+          this.respuesta(this.postuladoUvida[i].t2),
+          this.respuesta(this.postuladoUvida[i].t3),
+          this.respuesta(this.postuladoUvida[i].t4),
+          this.respuesta(this.postuladoUvida[i].asistioEncuentro),
+          this.respuesta(this.postuladoUvida[i].bautizadoEncuentro),
+          this.respuesta(this.postuladoUvida[i].t5),
+          this.respuesta(this.postuladoUvida[i].t6),
+          this.respuesta(this.postuladoUvida[i].t7),
+          this.respuesta(this.postuladoUvida[i].t8),
+          this.respuesta(this.postuladoUvida[i].graduado),
+          this.postuladoUvida[i].nomCompletoLiderInmediato.toUpperCase(),
+        ];
+        data.push(rowData);
+        contador++;
       }
     }
     data.push(this.calcularTotalesRow());
-       return data;
+    return data;
   }
 
   private calcularTotalesRow() {
-    const consolidadoRow = [     
+    const consolidadoRow = [
       '',
       'SUB - TOTALES :',
       this.calcularTotal('t1'),
@@ -436,8 +439,8 @@ export class AsistenciauvidaComponent implements OnInit {
       this.calcularTotal('t6'),
       this.calcularTotal('t7'),
       this.calcularTotal('t8'),
-      this.calcularTotal('graduado'),     
-    ];  
+      this.calcularTotal('graduado'),
+    ];
     return consolidadoRow;
   }
 
@@ -448,8 +451,8 @@ export class AsistenciauvidaComponent implements OnInit {
       unit: 'mm',
       format: 'letter',
       putOnlyUsedFonts: true
-    });  
-    let paginaActual = 1;    
+    });
+    let paginaActual = 1;
     autoTable(doc, {
       head: [['Nro', 'Nombre del discípulo', 'T1', 'T2', 'T3', 'N1', 'E.', 'B.', 'T5', 'T6', 'T7', 'N2', 'G.', 'Lider inmediato']],
       body: this.datosAsistenciaNoEncuentro(),
@@ -477,9 +480,9 @@ export class AsistenciauvidaComponent implements OnInit {
         doc.text('Página ' + paginaActual, 185, doc.internal.pageSize.height - 10);
         doc.text('Calle 15 # 20-17 Barrio Jardin, Tel: 4239150 ', 12, doc.internal.pageSize.height - 12);
         doc.text('Cel: 3157033591, Email: santamarta@mci12.com', 12, doc.internal.pageSize.height - 7);
-        doc.setLineWidth(1.3);       
-        doc.setDrawColor(236,255,83); // draw red lines 
-        doc.line(10, doc.internal.pageSize.height - 20, 10,doc.internal.pageSize.height - 5 ); 
+        doc.setLineWidth(1.3);
+        doc.setDrawColor(236, 255, 83); // draw red lines 
+        doc.line(10, doc.internal.pageSize.height - 20, 10, doc.internal.pageSize.height - 5);
         paginaActual++;
       },
     });
@@ -500,29 +503,36 @@ export class AsistenciauvidaComponent implements OnInit {
     let contador = 1;
     for (let i = 0; i < this.postuladoUvida.length; i++) {
       if (!this.postuladoUvida[i].asistioEncuentro) {
-      const rowData = [
-        contador.toString(),
-        this.postuladoUvida[i].nomCompleto.toString(),
-        this.respuesta(this.postuladoUvida[i].t1),
-        this.respuesta(this.postuladoUvida[i].t2),
-        this.respuesta(this.postuladoUvida[i].t3),
-        this.respuesta(this.postuladoUvida[i].t4),
-        this.respuesta(this.postuladoUvida[i].asistioEncuentro),
-        this.respuesta(this.postuladoUvida[i].bautizadoEncuentro),
-        this.respuesta(this.postuladoUvida[i].t5),
-        this.respuesta(this.postuladoUvida[i].t6),
-        this.respuesta(this.postuladoUvida[i].t7),
-        this.respuesta(this.postuladoUvida[i].t8),
-        this.respuesta(this.postuladoUvida[i].graduado),
-        this.postuladoUvida[i].nomCompletoLiderInmediato.toString(),
-      ];
-      data.push(rowData);
-      contador++;
+        const rowData = [
+          contador.toString(),
+          this.primerasmayusculas(this.postuladoUvida[i].nomCompleto),
+          this.respuesta(this.postuladoUvida[i].t1),
+          this.respuesta(this.postuladoUvida[i].t2),
+          this.respuesta(this.postuladoUvida[i].t3),
+          this.respuesta(this.postuladoUvida[i].t4),
+          this.respuesta(this.postuladoUvida[i].asistioEncuentro),
+          this.respuesta(this.postuladoUvida[i].bautizadoEncuentro),
+          this.respuesta(this.postuladoUvida[i].t5),
+          this.respuesta(this.postuladoUvida[i].t6),
+          this.respuesta(this.postuladoUvida[i].t7),
+          this.respuesta(this.postuladoUvida[i].t8),
+          this.respuesta(this.postuladoUvida[i].graduado),
+          this.postuladoUvida[i].nomCompletoLiderInmediato.toUpperCase(),
+        ];
+        data.push(rowData);
+        contador++;
       }
-    }   
+    }
     return data;
   }
 
+  public primerasmayusculas(str: string): string {
+    if (!str) {
+      return str;
+    }
+    str = str.toLowerCase();
+    return str.replace(/\b\w/g, (char) => char.toLocaleUpperCase());
+  }
 
 }
 

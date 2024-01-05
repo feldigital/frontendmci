@@ -98,51 +98,51 @@ export class ConsolidaruvidaComponent implements OnInit {
   create() {
     this.uvidaForm.value.usuario = localStorage.getItem("lidersistema");
     console.log(this.uvidaForm.value);
-    if (this.uvidaForm.status == 'VALID') {     
+    if (this.uvidaForm.status == 'VALID') {
       console.log(this.uvidaForm.value);
-        if (this.nombrebtn == "Crear") {
-          this.uvidaForm.value.fechaCreacion = new Date();       
-          this.consolidaruvidaServicio.create(this.uvidaForm.value).subscribe(ciclo => {
-            console.log(ciclo);
-            this.cargarCiclos();
+      if (this.nombrebtn == "Crear") {
+        this.uvidaForm.value.fechaCreacion = new Date();
+        this.consolidaruvidaServicio.create(this.uvidaForm.value).subscribe(ciclo => {
+          console.log(ciclo);
+          this.cargarCiclos();
+          Swal.fire({
+            icon: 'success',
+            title: `Ok`,
+            text: `El ciclo de universidad de la vida  ${this.uvidaForm.value.cicloUvida} ha sido creado correctamente`,
+          });
+          this.uvidaForm.reset();
+        },
+          err => {
             Swal.fire({
-              icon: 'success',
-              title: `Ok`,
-              text: `El ciclo de universidad de la vida  ${this.uvidaForm.value.cicloUvida} ha sido creado correctamente`,
-            });
-            this.uvidaForm.reset();
-          },
-            err => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error...',
-                text: 'No se pudo guardar el ciclo de la universidad de la vida en la base de datos!',
-                footer: err.mensaje //JSON.stringify(err)
-              });
-            }
-          );
-        }
-        else {
-          this.consolidaruvidaServicio.update(this.uvidaForm.value).subscribe(ciclo => {
-            console.log(ciclo);
-            this.cargarCiclos();
-            Swal.fire({
-              icon: 'success',
-              title: `Ok`,
-              text: `El ciclo de universidad de la vida  ${this.uvidaForm.value.cicloUvida} ha sido actualizado correctameente`,
-            });
-            this.uvidaForm.reset();
-
-          },
-            err => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error...',
-                text: 'No se pudo actualizar el ciclo de la universidad de la vida en la base de datos!',
-                footer: err.mensaje
-              });
+              icon: 'error',
+              title: 'Error...',
+              text: 'No se pudo guardar el ciclo de la universidad de la vida en la base de datos!',
+              footer: err.mensaje //JSON.stringify(err)
             });
           }
+        );
+      }
+      else {
+        this.consolidaruvidaServicio.update(this.uvidaForm.value).subscribe(ciclo => {
+          console.log(ciclo);
+          this.cargarCiclos();
+          Swal.fire({
+            icon: 'success',
+            title: `Ok`,
+            text: `El ciclo de universidad de la vida  ${this.uvidaForm.value.cicloUvida} ha sido actualizado correctameente`,
+          });
+          this.uvidaForm.reset();
+
+        },
+          err => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error...',
+              text: 'No se pudo actualizar el ciclo de la universidad de la vida en la base de datos!',
+              footer: err.mensaje
+            });
+          });
+      }
 
     } else {
       Swal.fire({
@@ -199,14 +199,14 @@ export class ConsolidaruvidaComponent implements OnInit {
   cargarMembresia() {
     this.lideres = null;
     let liderAct = localStorage.getItem("lidersistema");
-    this.miembroService.getMiembrosLideres(liderAct)  
+    this.miembroService.getMiembrosLideres(liderAct)
       .subscribe((resp: MiembroI) => {
         this.lideres = resp;
       },
         (err: any) => { console.error(err) }
       );
   }
- 
+
 
   listadoPostulados(ciclolistar: any): void {
     // const fileName = "MCI_POSTULADOS" + ciclolistar.cicloUvida.replace(' ', '_') + '_' + Math.floor((Math.random() * 1000000) + 1) + '.pdf';
@@ -280,7 +280,7 @@ export class ConsolidaruvidaComponent implements OnInit {
     for (let i = 0; i < this.tPostulados.length; i++) {
       const rowData = [
         (i + 1).toString(),
-        this.tPostulados[i].nomCompleto.toString(),
+        this.primerasmayusculas(this.tPostulados[i].nomCompleto),
         this.respuesta(this.tPostulados[i].asistioEncuentro),
         this.respuesta(this.tPostulados[i].bautizadoEncuentro),
         this.respuesta(this.tPostulados[i].graduado),
@@ -364,7 +364,7 @@ export class ConsolidaruvidaComponent implements OnInit {
     for (let i = 0; i < this.tPostulados.length; i++) {
       if (this.tPostulados[i].asistioEncuentro) {
         const rowData = [this.contador.toString(),
-        this.tPostulados[i].nomCompleto.toString(),
+        this.primerasmayusculas(this.tPostulados[i].nomCompleto),
         this.respuesta(this.tPostulados[i].asistioEncuentro),
         this.respuesta(this.tPostulados[i].bautizadoEncuentro),
         this.respuesta(this.tPostulados[i].graduado),
@@ -443,7 +443,7 @@ export class ConsolidaruvidaComponent implements OnInit {
     for (let i = 0; i < this.tPostulados.length; i++) {
       if (this.tPostulados[i].bautizadoEncuentro) {
         const rowData = [this.contador.toString(),
-        this.tPostulados[i].nomCompleto.toString(),
+        this.primerasmayusculas(this.tPostulados[i].nomCompleto),
         this.respuesta(this.tPostulados[i].asistioEncuentro),
         this.respuesta(this.tPostulados[i].bautizadoEncuentro),
         this.respuesta(this.tPostulados[i].graduado),
@@ -522,7 +522,7 @@ export class ConsolidaruvidaComponent implements OnInit {
     for (let i = 0; i < this.tPostulados.length; i++) {
       if (this.tPostulados[i].graduado) {
         const rowData = [this.contador.toString(),
-        this.tPostulados[i].nomCompleto.toString(),
+        this.primerasmayusculas(this.tPostulados[i].nomCompleto),
         this.respuesta(this.tPostulados[i].asistioEncuentro),
         this.respuesta(this.tPostulados[i].bautizadoEncuentro),
         this.respuesta(this.tPostulados[i].graduado),
@@ -600,7 +600,7 @@ export class ConsolidaruvidaComponent implements OnInit {
     for (let i = 0; i < this.tPostulados.length; i++) {
       if (!this.tPostulados[i].asistioEncuentro) {
         const rowData = [this.contador.toString(),
-        this.tPostulados[i].nomCompleto.toString(),
+        this.primerasmayusculas(this.tPostulados[i].nomCompleto),
         this.respuesta(this.tPostulados[i].asistioEncuentro),
         this.respuesta(this.tPostulados[i].bautizadoEncuentro),
         this.respuesta(this.tPostulados[i].graduado),
@@ -614,23 +614,33 @@ export class ConsolidaruvidaComponent implements OnInit {
   }
 
 
-  
+
   private calcularTotal(columna: string): string {
     const total = this.tPostulados.reduce((accum: number, current: any) => {
       return accum + (current[columna] ? 1 : 0);
-    }, 0);  
+    }, 0);
     return total.toString();
   }
   private calcularTotalesRow() {
-    const consolidadoRow = [     
+    const consolidadoRow = [
       '',
-      'SUB - TOTALES :',     
+      'SUB - TOTALES :',
       this.calcularTotal('asistioEncuentro'),
-      this.calcularTotal('bautizadoEncuentro'),     
-      this.calcularTotal('graduado'),    
-      '', 
-    ];  
+      this.calcularTotal('bautizadoEncuentro'),
+      this.calcularTotal('graduado'),
+      '',
+    ];
     return consolidadoRow;
+  }
+
+  public primerasmayusculas(str: string): string {
+    if (!str) {
+      return str;
+    }
+    str = str.toLowerCase();
+    return str.replace(/\b\w/g, (char) => char.toLocaleUpperCase());
+
+
   }
 
 }

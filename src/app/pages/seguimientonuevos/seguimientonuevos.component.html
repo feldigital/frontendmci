@@ -18,9 +18,23 @@
                 </button>
             </div>
             <div class="col">
-                <button class="btn btn-rounded btn btn-success" type="button" (click)="generatePDF()">
-                    <i class="fa fa-download" ></i> Generar PDF
+                <button class="btn btn-rounded btn btn-success card-header" type="button"   [matMenuTriggerFor]="menuN">
+                    <i class="fa fa-file-pdf" [ngStyle]="{'color':'#50D2AC'}"></i> Generar reporte PDF
                 </button>
+                <mat-menu #menuN="matMenu">             
+                    <button  (click)="reporteTGestion()" mat-menu-item>
+                      <mat-icon [ngStyle]="{'color':'orange'}">group</mat-icon>
+                      <span>Todos</span>
+                    </button>
+                    <button  (click)="reporteSGestion()" mat-menu-item>
+                      <mat-icon [ngStyle]="{'color':'#009A94'}">group_add</mat-icon>
+                      <span>Gestionados</span>
+                    </button>    
+                    <button  (click)="reporteNGestion()" mat-menu-item>
+                      <mat-icon [ngStyle]="{'color':'red'}">group_add</mat-icon>
+                      <span>No gestionados</span>
+                    </button>  
+                  </mat-menu>
             </div>
             <div class="col">
                 <label>Convencciones de Tipo de invitado</label>
@@ -49,16 +63,17 @@
                     <th>Editar</th>
                 </tr>
             </thead>
+           <!-- src="http://18.212.243.217:8080/api/uploads/img/{{item.imgPerfil}}"-->
             <tbody>
                 <tr *ngFor="let item of filterNuevos ; let i= index"
                     [ngStyle]="{'background-color': item.estado =='Activo' ? 'white' : 'orange' }">
                     <td>
                         <img (click)="agregarimg(item.idMiembro)" *ngIf="item.imgPerfil"
-                        src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/api/uploads/img/{{item.imgPerfil}}"
+                        src="{{urlrecurso}}/api/uploads/img/{{item.imgPerfil}}"
                         alt="{{item.imgPerfil}}" class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
           
                       <img (click)="agregarimg(item.idMiembro)" *ngIf="!item.imgPerfil"
-                        src="http://Backend-env.eba-acyvuvgp.us-east-1.elasticbeanstalk.com/images/no-usuario.png" alt="Sin foto"
+                        src="{{urlrecurso}}/images/no-usuario.png" alt="Sin foto"
                         class="img-thumbnail rounded" style="width:32px; cursor: pointer;">
           
                     </td>

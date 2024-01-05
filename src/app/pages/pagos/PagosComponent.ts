@@ -113,7 +113,7 @@ export class PagosComponent implements OnInit {
           this.pagoNuevo.usuario = <string>localStorage.getItem("lidersistema");
           this.pagoNuevo.fechaCreacion = new Date();
           this.pagoNuevo.nomUsuario = <string>localStorage.getItem("nombsistema");
-          console.log(this.pagoNuevo);
+          
           this.pagoService.create(this.pagoNuevo).subscribe((resp: any) => {
             Swal.fire({
               icon: 'success',
@@ -285,7 +285,8 @@ export class PagosComponent implements OnInit {
     //doc.text('Saldo pendiente: ', 5, 100);
     doc.line(5, 105, 75, 105);
 
-    doc.text('Genesis: 12:2', 5, 115);
+    doc.text('Genesis: 12:2 Y haré de ti una nación grande, y te bendeciré, y engrandeceré tu nombre, y serás bendición.  Bendeciré a los que te bendijeren, y a los que te maldijeren maldeciré; y serán benditas en ti todas las familias de la tierra', 5, 115);
+
 
     var pdfDataUri = doc.output('datauri');
     var newWindow = window.open();
@@ -302,7 +303,6 @@ export class PagosComponent implements OnInit {
 
   public descargarReciboPDF(recibo: any) {
     const fileName = "MCI_Recibo_pago_" + recibo.idPago + '.pdf';
-
     const doc = new jsPDF({
       orientation: 'p',
       unit: 'mm',
@@ -339,14 +339,15 @@ export class PagosComponent implements OnInit {
     doc.text('Medio de pago: ' + recibo.medioPago, 5, 100);
     //doc.text('Saldo pendiente: ', 5, 100);
     doc.line(5, 105, 75, 105);
-    doc.text('Genesis: 12:2', 5, 115);
+    doc.text('Genesis: 12:2 Y haré de ti una nación grande, y te bendeciré, y engrandeceré tu nombre, y serás bendición.  Bendeciré a los que te bendijeren, y a los que te maldijeren maldeciré; y serán benditas en ti todas las familias de la tierra', 5, 115);
 
-    const mensaje = "Recibo #: " + recibo.idPago + " Iglesia MCI Santa Marta fecha y hora del pago " + recibo.fechaCreacion +
-      ' R. G12: ' + recibo.nomUsuario + ' Documento: ' + this.registro.numDocumento + ' a nombre de: ' + this.registro?.nomCompleto + ' al evento: '
-      + this.pagoForm.value.idEvento.nomEvento + ' Valor pagado: ' + recibo.valorPago + ' Medio de pago: ' + recibo.medioPago
-    console.log(mensaje);
+    const mensaje = "Iglesia MCI Santa Marta \nFecha y hora del pago " + recibo.fechaCreacion  + ' \nDocumento: ' + this.registro.numDocumento + ' \nA nombre de: ' + this.registro?.nomCompleto + ' \nEvento: '
+      + this.pagoForm.value.idEvento.nomEvento + ' \nValor pagado: ' + recibo.valorPago + ' \nMedio de pago: ' + recibo.medioPago
+     // + "\nRecibo #: " + recibo.idPago 
+      + '\nRecurso. g12: ' + recibo.nomUsuario;
+    
     doc.save(fileName);
-
+    
     this.mensajeWhat.phone = "57" + this.registro?.celular.replace(' ', '');
     this.mensajeWhat.message = mensaje;
     this.enviarWhatsApp();
